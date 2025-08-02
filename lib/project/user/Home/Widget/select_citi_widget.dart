@@ -1,0 +1,95 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import '../../../../../../../config/colors/colors.dart';
+
+class CityDropdown extends StatefulWidget {
+  const CityDropdown(
+      {super.key, required this.title, required this.hint, required this.list});
+  final String title;
+  final String hint;
+  final List<String> list;
+  // final String selectedCity;
+
+  @override
+  State<CityDropdown> createState() => _CityDropdownState();
+}
+
+class _CityDropdownState extends State<CityDropdown> {
+  String? selectedCity;
+  // String? text;
+
+  final List<String> cities = [
+    'Riyadh',
+    'Jeddah',
+    'Dammam',
+    'Alula',
+    'Abha',
+    'Makkah',
+    'Jazan',
+    'Tabuk',
+   
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          widget.title,
+          style: GoogleFonts.poppins(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: AppColors.secondTextColor,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          height: 40,
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.lightGray),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: DropdownButtonFormField<String>(
+            dropdownColor: Colors.white,
+            value: selectedCity,
+            style: GoogleFonts.poppins(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: AppColors.grayTextColor,
+                ),
+            decoration: InputDecoration(
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  borderSide: BorderSide(color: AppColors.primaryWhite)),
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                   borderSide: BorderSide(color: AppColors.lightGray) ),
+              hintText: widget.hint,
+              contentPadding: EdgeInsets.symmetric(horizontal: 12),
+              border: InputBorder.none,
+            ),
+            icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.grayTextColor),
+            onChanged: (String? newValue) {
+              setState(() {
+                selectedCity = newValue;
+              });
+            },
+            items: widget.list.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value,
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.grayTextColor,
+                ),),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+}
