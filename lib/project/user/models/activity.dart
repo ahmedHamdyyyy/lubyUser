@@ -4,15 +4,35 @@ import 'package:equatable/equatable.dart';
 class CustomActivityModel extends Equatable {
   final String id, name, image, address, vendorId;
   final int price;
+  final bool isFavorite;
 
-  const CustomActivityModel({required this.id, required this.name,
-  
-   required this.image, required this.price, required this.address, required this.vendorId});
+  const CustomActivityModel({
+    required this.id,
+    required this.name,
+    required this.image,
+    required this.price,
+    required this.address,
+    required this.vendorId,
+    this.isFavorite = false,
+  });
 
-  CustomActivityModel copyWith({String? id, String? name, String? image, int? price, String? address, String? vendorId}) =>
-      CustomActivityModel(id: id ?? this.id,
-      vendorId: vendorId ?? this.vendorId,
-       name: name ?? this.name, image: image ?? this.image, price: price ?? this.price, address: address ?? this.address);
+  CustomActivityModel copyWith({
+    String? id,
+    String? name,
+    String? image,
+    int? price,
+    String? address,
+    String? vendorId,
+    bool? isFavorite,
+  }) => CustomActivityModel(
+    id: id ?? this.id,
+    vendorId: vendorId ?? this.vendorId,
+    name: name ?? this.name,
+    image: image ?? this.image,
+    price: price ?? this.price,
+    address: address ?? this.address,
+    isFavorite: isFavorite ?? this.isFavorite,
+  );
 
   factory CustomActivityModel.fromJson(Map<String, dynamic> json) => CustomActivityModel(
     id: json['_id'] ?? '',
@@ -21,6 +41,7 @@ class CustomActivityModel extends Equatable {
     address: json['address'] ?? '',
     vendorId: json['vendorId'] ?? '',
     image: (json['medias'] ?? []).isNotEmpty ? json['medias'][0] : '',
+    isFavorite: json['isFavorite'] ?? false,
   );
 
   factory CustomActivityModel.fromProperty(ActivityModel property) => CustomActivityModel(
@@ -30,17 +51,18 @@ class CustomActivityModel extends Equatable {
     address: property.address,
     price: property.price,
     image: property.medias.isNotEmpty ? property.medias.first : '',
+    isFavorite: false, // Default to false, can be updated later
   );
 
   @override
-  List<Object> get props => [id, name, image];
+  List<Object> get props => [id, name, image, isFavorite];
 }
 
 class ActivityModel extends Equatable {
   final String id, vendorId, name, address, details, date, time, activityTime;
   final int price;
   final List<String> tags, medias;
-  final bool verified;
+  final bool verified, isFavorite;
 
   const ActivityModel({
     required this.id,
@@ -55,6 +77,7 @@ class ActivityModel extends Equatable {
     required this.price,
     required this.medias,
     required this.verified,
+    this.isFavorite = false,
   });
 
   static const non = ActivityModel(
@@ -70,6 +93,7 @@ class ActivityModel extends Equatable {
     price: 0,
     medias: [],
     verified: false,
+    isFavorite: false,
   );
 
   factory ActivityModel.fromJson(Map<String, dynamic> json) => ActivityModel(
@@ -85,6 +109,7 @@ class ActivityModel extends Equatable {
     name: json['name'] ?? '',
     verified: json['verified'] ?? false,
     medias: List<String>.from(json['medias'] ?? []),
+    isFavorite: json['isFavorite'] ?? false,
   );
 
   Future<FormData> create() async => FormData.fromMap({
@@ -98,6 +123,7 @@ class ActivityModel extends Equatable {
     'vendorId': vendorId,
     'verified': verified,
     'activityTime': activityTime,
+    'isFavorite': isFavorite,
     for (final tag in tags) 'tags': tag,
     for (final media in medias)
       if (media.isNotEmpty) 'medias': await MultipartFile.fromFile(media, filename: media.split('/').last),
@@ -116,6 +142,7 @@ class ActivityModel extends Equatable {
     String? activityTime,
     String? vendorId,
     bool? verified,
+    bool? isFavorite,
   }) {
     return ActivityModel(
       id: id ?? this.id,
@@ -130,9 +157,24 @@ class ActivityModel extends Equatable {
       activityTime: activityTime ?? this.activityTime,
       vendorId: vendorId ?? this.vendorId,
       verified: verified ?? this.verified,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 
   @override
-  List<Object?> get props => [id, address, details, tags, price, medias, name, date, time, activityTime, vendorId, verified];
+  List<Object?> get props => [
+    id,
+    address,
+    details,
+    tags,
+    price,
+    medias,
+    name,
+    date,
+    time,
+    activityTime,
+    vendorId,
+    verified,
+    isFavorite,
+  ];
 }

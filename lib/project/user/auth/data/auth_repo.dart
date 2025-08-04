@@ -19,7 +19,7 @@ class AuthRepo {
       throw Exception('An unexpected error occurred');
     }
   }
-  
+
   Future<UserModel> signin({required String email, required String password}) async {
     try {
       return await _authData.signin(email: email, password: password);
@@ -42,4 +42,39 @@ class AuthRepo {
     }
   }
 
+  Future<void> verifyEmail({required String email}) async {
+    try {
+      await _authData.verifyEmail(email: email);
+    } on DioException catch (e) {
+      debugPrint(e.response?.data.toString());
+      throw Exception(e.response?.data['error']);
+    } catch (e) {
+      debugPrint(e.toString());
+      throw Exception('An unexpected error occurred');
+    }
+  }
+
+  Future<void> confirmOtp(String email, String otp, bool willSignup) async {
+    try {
+      await _authData.confirmOtpSignUp(email, otp, willSignup);
+    } on DioException catch (e) {
+      debugPrint(e.response?.data.toString());
+      throw Exception(e.response?.data['error']);
+    } catch (e) {
+      debugPrint(e.toString());
+      throw Exception('An unexpected error occurred');
+    }
+  }
+
+  Future<String> resetPassword(String email, String newPassword) async {
+    try {
+      return await _authData.resetPassword(email, newPassword);
+    } on DioException catch (e) {
+      debugPrint(e.response?.data.toString());
+      throw Exception(e.response?.data['error']);
+    } catch (e) {
+      debugPrint(e.toString());
+      throw Exception('An unexpected error occurred');
+    }
+  }
 }

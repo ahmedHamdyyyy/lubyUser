@@ -5,6 +5,10 @@ class ApiConstance {
   static const signup = "auth/signup";
   static const logout = "auth/logout";
   static const refreshToken = "auth/refresh-token";
+  static const resetpassword = "auth/reset-password";
+  static const confirmOtpSignUp = "auth/signup/verify";
+  static const confirmOtpResetPassword = "auth/confirm-otp-reset-password";
+  static const forgetPasswordReset = "auth/forget-password/reset";
 
   static const userProfile = "users/me";
   static getProperty(String id) => "properties/$id";
@@ -12,4 +16,9 @@ class ApiConstance {
   static updateProperty(String id) => "properties/$id";
   static const createProperty = "properties";
   static const getActivities = "activities";
+  static const verifyEmail = "auth/signup/initiate";
+
+  static const getFavorites = 'favourites/me';
+  static const addFavorites = 'favourites/add';
+  static const removeFavorites = 'favourites/remove';
 }

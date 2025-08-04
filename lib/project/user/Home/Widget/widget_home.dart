@@ -1,20 +1,23 @@
 // ignore_for_file: deprecated_member_use, unnecessary_to_list_in_spreads, avoid_print, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import '../../models/property.dart';
-import '../../models/activity.dart';
-import '../../activities/cubit/cubit.dart';
-import '../../../../../../../config/colors/colors.dart';
-import '../../../../../../../config/images/image_assets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../../../../../../config/colors/colors.dart';
+import '../../../../../../../config/images/image_assets.dart';
+import '../../../../locator.dart';
 import '../../User/screens/Notifications/notifications_screen.dart';
 import '../../User/screens/propreties/views/rental_details_view.dart';
+import '../../activities/cubit/cubit.dart';
+import '../../favorites/cubit/cubit.dart';
+import '../../models/activity.dart';
+import '../../models/favorite.dart';
+import '../../models/property.dart';
 import '../cubit/home_cubit.dart';
 import 'select_citi_widget.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 
 class IconNotifcationHome extends StatefulWidget {
   const IconNotifcationHome({super.key});
@@ -23,7 +26,7 @@ class IconNotifcationHome extends StatefulWidget {
   _IconNotifcationHome createState() => _IconNotifcationHome();
 }
 
-class _IconNotifcationHome  extends State<IconNotifcationHome> {
+class _IconNotifcationHome extends State<IconNotifcationHome> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,17 +39,9 @@ class _IconNotifcationHome  extends State<IconNotifcationHome> {
       ),
       child: InkWell(
         onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => NotificationsScreen(),
-              ));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationsScreen()));
         },
-        child: SvgPicture.asset(
-          ImageAssets.notificationsIcon,
-          width: 30,
-          height: 30,
-        ),
+        child: SvgPicture.asset(ImageAssets.notificationsIcon, width: 30, height: 30),
       ),
     );
   }
@@ -62,7 +57,7 @@ class IconNotifcationVendor extends StatelessWidget {
       right: 20,
       child: GestureDetector(
         onTap: () {
-        /*   Navigator.push(
+          /*   Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => NotificationsScreenVendor(),
@@ -76,11 +71,7 @@ class IconNotifcationVendor extends StatelessWidget {
             color: AppColors.primaryColor,
             shape: BoxShape.rectangle,
           ),
-          child: SvgPicture.asset(
-            ImageAssets.notificationsIcon,
-            width: 30,
-            height: 30,
-          ),
+          child: SvgPicture.asset(ImageAssets.notificationsIcon, width: 30, height: 30),
         ),
       ),
     );
@@ -92,87 +83,68 @@ Row iconImageTaxt(HomeState state) {
     children: [
       ClipRRect(
         borderRadius: BorderRadius.circular(50),
-        child:  state.user.profilePicture.isNotEmpty
-            ? Image.network(
-                state.user.profilePicture,
-                width: 50,
-                height: 50,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+        child:
+            state.user.profilePicture.isNotEmpty
+                ? Image.network(
+                  state.user.profilePicture,
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(50)),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                        ),
                       ),
-                    ),
-                  );
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.blue.shade300, Colors.blue.shade600],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.blue.shade300, Colors.blue.shade600],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(50),
                       ),
-                      borderRadius: BorderRadius.circular(50),
+                      child: Icon(Icons.person, color: Colors.white, size: 28),
+                    );
+                  },
+                )
+                : Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.blue.shade300, Colors.blue.shade600],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-                    child: Icon(
-                      Icons.person,
-                      color: Colors.white,
-                      size: 28,
-                    ),
-                  );
-                },
-              )
-            : Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.blue.shade300, Colors.blue.shade600],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+                    borderRadius: BorderRadius.circular(50),
                   ),
-                  borderRadius: BorderRadius.circular(50),
+                  child: Icon(Icons.person, color: Colors.white, size: 28),
                 ),
-                child: Icon(
-                  Icons.person,
-                  color: Colors.white,
-                  size: 28,
-                ),
-              ),
       ),
-      const SizedBox(width: 8), 
+      const SizedBox(width: 8),
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             "${state.user.firstName} ${state.user.lastName}",
-            style: GoogleFonts.poppins(
-              color: Colors.white, 
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-             
-              ),
+            style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
           ),
           Text(
             "Welcome to our App",
-            style: GoogleFonts.poppins(
-              color: Colors.white, 
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-              ),
+            style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -182,11 +154,7 @@ Row iconImageTaxt(HomeState state) {
   );
 }
 
-
-Widget buildBottomNavigationBar({
-  int currentIndex = 0,
-  Function(int)? onTap,
-}) {
+Widget buildBottomNavigationBar({int currentIndex = 0, Function(int)? onTap}) {
   return BottomNavigationBar(
     backgroundColor: Colors.white,
     selectedItemColor: Colors.red,
@@ -205,19 +173,13 @@ Widget buildBottomNavigationBar({
           ImageAssets.home,
           width: 24,
           height: 24,
-          colorFilter: ColorFilter.mode(
-            Colors.grey.shade600,
-            BlendMode.srcIn,
-          ),
+          colorFilter: ColorFilter.mode(Colors.grey.shade600, BlendMode.srcIn),
         ),
         activeIcon: SvgPicture.asset(
           ImageAssets.home,
           width: 24,
           height: 24,
-          colorFilter: ColorFilter.mode(
-            Colors.red,
-            BlendMode.srcIn,
-          ),
+          colorFilter: ColorFilter.mode(Colors.red, BlendMode.srcIn),
         ),
         label: "Home",
       ),
@@ -226,19 +188,13 @@ Widget buildBottomNavigationBar({
           ImageAssets.heart,
           width: 24,
           height: 24,
-          colorFilter: ColorFilter.mode(
-            Colors.grey.shade600,
-            BlendMode.srcIn,
-          ),
+          colorFilter: ColorFilter.mode(Colors.grey.shade600, BlendMode.srcIn),
         ),
         activeIcon: SvgPicture.asset(
           ImageAssets.heart,
           width: 24,
           height: 24,
-          colorFilter: ColorFilter.mode(
-            Colors.red,
-            BlendMode.srcIn,
-          ),
+          colorFilter: ColorFilter.mode(Colors.red, BlendMode.srcIn),
         ),
         label: "Favorites",
       ),
@@ -247,19 +203,13 @@ Widget buildBottomNavigationBar({
           ImageAssets.clipboardTick,
           width: 24,
           height: 24,
-          colorFilter: ColorFilter.mode(
-            Colors.grey.shade600,
-            BlendMode.srcIn,
-          ),
+          colorFilter: ColorFilter.mode(Colors.grey.shade600, BlendMode.srcIn),
         ),
         activeIcon: SvgPicture.asset(
           ImageAssets.clipboardTick,
           width: 24,
           height: 24,
-          colorFilter: ColorFilter.mode(
-            Colors.red,
-            BlendMode.srcIn,
-          ),
+          colorFilter: ColorFilter.mode(Colors.red, BlendMode.srcIn),
         ),
         label: "Bookings",
       ),
@@ -268,19 +218,13 @@ Widget buildBottomNavigationBar({
           ImageAssets.messages,
           width: 24,
           height: 24,
-          colorFilter: ColorFilter.mode(
-            Colors.grey.shade600,
-            BlendMode.srcIn,
-          ),
+          colorFilter: ColorFilter.mode(Colors.grey.shade600, BlendMode.srcIn),
         ),
         activeIcon: SvgPicture.asset(
           ImageAssets.messages,
           width: 24,
           height: 24,
-          colorFilter: ColorFilter.mode(
-            Colors.red,
-            BlendMode.srcIn,
-          ),
+          colorFilter: ColorFilter.mode(Colors.red, BlendMode.srcIn),
         ),
         label: "Messages",
       ),
@@ -289,19 +233,13 @@ Widget buildBottomNavigationBar({
           ImageAssets.userIcon,
           width: 24,
           height: 24,
-          colorFilter: ColorFilter.mode(
-            Colors.grey.shade600,
-            BlendMode.srcIn,
-          ),
+          colorFilter: ColorFilter.mode(Colors.grey.shade600, BlendMode.srcIn),
         ),
         activeIcon: SvgPicture.asset(
           ImageAssets.userIcon,
           width: 24,
           height: 24,
-          colorFilter: ColorFilter.mode(
-            Colors.red,
-            BlendMode.srcIn,
-          ),
+          colorFilter: ColorFilter.mode(Colors.red, BlendMode.srcIn),
         ),
         label: "Profile",
       ),
@@ -309,25 +247,15 @@ Widget buildBottomNavigationBar({
   );
 }
 
-Widget buildPickerList({
-  required String title,
-  required List<String> items,
-  required Function(String) onSelect,
-}) {
+Widget buildPickerList({required String title, required List<String> items, required Function(String) onSelect}) {
   return Container(
     height: 400,
     padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-    ),
+    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
+        Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 16),
         Expanded(
           child: ListView.builder(
@@ -359,14 +287,7 @@ Widget buildSliderItem(String imagePath, String text) {
       Positioned(
         left: 20,
         bottom: 50,
-        child: Text(
-          text,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        child: Text(text, style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
       ),
     ],
   );
@@ -386,18 +307,9 @@ Widget buildImageSlider(PageController pageController) {
                 PageView(
                   controller: pageController,
                   children: [
-                    buildSliderItem(
-                      "assets/images/pageview.png",
-                      "BOOK YOUR\nAPARTMENT NOW",
-                    ),
-                    buildSliderItem(
-                      "assets/images/pageview.png",
-                      "FIND YOUR DREAM HOME",
-                    ),
-                    buildSliderItem(
-                      "assets/images/pageview.png",
-                      "EXPERIENCE LUXURY LIVING",
-                    ),
+                    buildSliderItem("assets/images/pageview.png", "BOOK YOUR\nAPARTMENT NOW"),
+                    buildSliderItem("assets/images/pageview.png", "FIND YOUR DREAM HOME"),
+                    buildSliderItem("assets/images/pageview.png", "EXPERIENCE LUXURY LIVING"),
                   ],
                 ),
                 Positioned(
@@ -427,16 +339,15 @@ Widget buildImageSlider(PageController pageController) {
   );
 }
 
-Widget buildPropertyList(
-    {required String title, 
-     required BuildContext context, 
-     required HomeState state, 
-     String? selectedPropertyCategory}) {
+Widget buildPropertyList({
+  required String title,
+  required BuildContext context,
+  required HomeState state,
+  String? selectedPropertyCategory,
+}) {
   final screenWidth = MediaQuery.of(context).size.width;
-  final cardWidth = (screenWidth - 48) /
-      2; // Calculate card width (subtracting padding and spacing)
-  final cardHeight = cardWidth *
-      1.2; // Reduce aspect ratio from 1.3 to 1.2 to save vertical space
+  final cardWidth = (screenWidth - 48) / 2; // Calculate card width (subtracting padding and spacing)
+  final cardHeight = cardWidth * 1.2; // Reduce aspect ratio from 1.3 to 1.2 to save vertical space
 
   String? selectedPropertyType;
   String? selectedPriceRange;
@@ -454,9 +365,10 @@ Widget buildPropertyList(
   // Filter properties based on selected category
   List<PropertyModel> filteredProperties = state.properties;
   if (selectedPropertyCategory != null && selectedPropertyCategory != "Properties") {
-    filteredProperties = state.properties.where((property) {
-      return property.type.toLowerCase() == selectedPropertyCategory.toLowerCase();
-    }).toList();
+    filteredProperties =
+        state.properties.where((property) {
+          return property.type.toLowerCase() == selectedPropertyCategory.toLowerCase();
+        }).toList();
   }
 
   return Container(
@@ -473,23 +385,19 @@ Widget buildPropertyList(
             children: [
               Text(
                 title,
-                style: GoogleFonts.poppins(
-                  fontSize: 16, 
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.secondTextColor,
-                 
-                ),
+                style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.secondTextColor),
               ),
               InkWell(
-                onTap: () => showFilterOptions(
-                  context,
-                  propertyTypes,
-                  priceRanges,
-                  ratingRanges,
-                  selectedPropertyType ?? '',
-                  selectedPriceRange ?? '',
-                  selectedRatingRange ?? '',
-                ),
+                onTap:
+                    () => showFilterOptions(
+                      context,
+                      propertyTypes,
+                      priceRanges,
+                      ratingRanges,
+                      selectedPropertyType ?? '',
+                      selectedPriceRange ?? '',
+                      selectedRatingRange ?? '',
+                    ),
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
                   decoration: BoxDecoration(
@@ -497,12 +405,7 @@ Widget buildPropertyList(
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: AppColors.primaryColor),
                   ),
-                  child: Image.asset(
-                    'assets/images/setting-4.png',
-                    color: Colors.white,
-                    width: 30,
-                    height: 30,
-                  ),
+                  child: Image.asset('assets/images/setting-4.png', color: Colors.white, width: 30, height: 30),
                 ),
               ),
             ],
@@ -511,45 +414,37 @@ Widget buildPropertyList(
 
         SizedBox(
           height: cardHeight * 2.2 + 90, // Increased height for taller cards
-          child: filteredProperties.isEmpty 
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.search_off,
-                        size: 64,
-                        color: Colors.grey[400],
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        "No ${selectedPropertyCategory ?? 'properties'} found",
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          color: Colors.grey[600],
-                          fontWeight: FontWeight.w500,
+          child:
+              filteredProperties.isEmpty
+                  ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.search_off, size: 64, color: Colors.grey[400]),
+                        SizedBox(height: 16),
+                        Text(
+                          "No ${selectedPropertyCategory ?? 'properties'} found",
+                          style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[600], fontWeight: FontWeight.w500),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
+                  )
+                  : GridView.builder(
+                    itemCount: filteredProperties.length,
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 1 / 1.7, // Increased aspect ratio for taller cards
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                    ),
+                    itemBuilder: (context, index) {
+                      return buildPropertyCard(context, state, filteredProperties, index);
+                    },
                   ),
-                )
-              : GridView.builder(
-                  itemCount: filteredProperties.length,
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                 
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio:
-                        1 / 1.7, // Increased aspect ratio for taller cards
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                  ),
-                  itemBuilder: (context, index) {
-                    return buildPropertyCard(context, state, filteredProperties, index);
-                  },
-                ),
         ),
       ],
     ),
@@ -557,12 +452,14 @@ Widget buildPropertyList(
 }
 
 Widget buildPropertyCard(BuildContext context, HomeState state, List<PropertyModel> properties, int index) {
-  bool isFavorite = false;
+  bool isFavorite = properties[index].isFavorite;
   return InkWell(
     onTap: () {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => RentalDetailScreen(id: properties[index].id, index: properties[index].medias.length)),
+        MaterialPageRoute(
+          builder: (context) => RentalDetailScreen(id: properties[index].id, index: properties[index].medias.length),
+        ),
       );
     },
     child: Card(
@@ -578,11 +475,7 @@ Widget buildPropertyCard(BuildContext context, HomeState state, List<PropertyMod
           // Image with fixed aspect ratio and heart icon
           Stack(
             children: [
-             Image.network(
-                  height: 155,
-                  width: 155,
-                  properties[index].medias.first,
-                  fit: BoxFit.cover),
+              Image.network(height: 155, width: 155, properties[index].medias.first, fit: BoxFit.cover),
               Positioned(
                 top: 10,
                 right: 10,
@@ -592,22 +485,17 @@ Widget buildPropertyCard(BuildContext context, HomeState state, List<PropertyMod
                       padding: const EdgeInsets.all(5.0),
                       child: GestureDetector(
                         onTap: () {
-                          setState(() {
-                            isFavorite = !isFavorite;
-                          });
+                          if (isFavorite) {
+                            getIt<FavoritesCubit>().removeFromFavorites(properties[index].id, FavoriteType.property);
+                          } else {
+                            getIt<FavoritesCubit>().addToFavorites(properties[index].id, FavoriteType.property);
+                          }
+                          setState(() => isFavorite = !isFavorite);
                         },
-                        child: isFavorite ? SvgPicture.asset(
-                                ImageAssets.heartBlack,
-                                fit: BoxFit.cover,
-                                width: 20,
-                                height: 20,
-                              )
-                            : SvgPicture.asset(
-                                ImageAssets.heart,
-                                fit: BoxFit.cover,
-                                width: 20,
-                                height: 20,
-                              ),
+                        child:
+                            isFavorite
+                                ? SvgPicture.asset(ImageAssets.heartBlack, fit: BoxFit.cover, width: 20, height: 20)
+                                : SvgPicture.asset(ImageAssets.heart, fit: BoxFit.cover, width: 20, height: 20),
                       ),
                     );
                   },
@@ -618,10 +506,7 @@ Widget buildPropertyCard(BuildContext context, HomeState state, List<PropertyMod
 
           // Content with minimal padding and layout
           Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 6.0,
-              vertical: 3.0,
-            ), // Reduced padding
+            padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 3.0), // Reduced padding
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -635,7 +520,6 @@ Widget buildPropertyCard(BuildContext context, HomeState state, List<PropertyMod
                           fontSize: 14,
                           color: AppColors.secondTextColor,
                           fontWeight: FontWeight.w500,
-                         
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -643,23 +527,17 @@ Widget buildPropertyCard(BuildContext context, HomeState state, List<PropertyMod
                     ),
                     Icon(Icons.star, color: AppColors.primaryColor, size: 14),
                     SizedBox(width: 1),
-                    Text("4.9", style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14, color: AppColors.primaryColor,
-                     
-                    )),
+                    Text(
+                      "4.9",
+                      style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 14, color: AppColors.primaryColor),
+                    ),
                   ],
                 ),
 
                 // Location with tiny font
                 Text(
-                  properties[index].address ,
-                  style: GoogleFonts.poppins(
-                    fontSize: 14, 
-                    color: AppColors.grayTextColor,
-                    fontWeight: FontWeight.w400,
-                    
-                  ),
+                  properties[index].address,
+                  style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor, fontWeight: FontWeight.w400),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -670,24 +548,18 @@ Widget buildPropertyCard(BuildContext context, HomeState state, List<PropertyMod
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "${properties[index].guestNumber } Guests",
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        color: AppColors.grayTextColor,
-                        fontWeight: FontWeight.w400,
-                       
-                      ),
+                      "${properties[index].guestNumber} Guests",
+                      style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor, fontWeight: FontWeight.w400),
                     ),
                     Row(
                       children: [
                         Flexible(
                           child: Text(
-                            "${properties[index].pricePerNight } SAR",
+                            "${properties[index].pricePerNight} SAR",
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
                               color: AppColors.primaryColor,
-                             
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -699,7 +571,6 @@ Widget buildPropertyCard(BuildContext context, HomeState state, List<PropertyMod
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             color: AppColors.grayTextColor,
-                           
                           ),
                         ),
                       ],
@@ -715,83 +586,59 @@ Widget buildPropertyCard(BuildContext context, HomeState state, List<PropertyMod
   );
 }
 
-Widget categoryButton(
-  String text,
-  String selected,
-  Function(String) onTap, {
-  bool isMain = true,
-}) {
+Widget categoryButton(String text, String selected, Function(String) onTap, {bool isMain = true}) {
   bool isSelected = selected == text;
 
   return ElevatedButton(
-      
-      onPressed: () => onTap(text),
-      style: ElevatedButton.styleFrom(
-        minimumSize: Size( !isMain ?73 : 160, !isMain ? 32:48),
-    
-        backgroundColor: isSelected ? AppColors.primaryColor : Colors.white,
-        side: BorderSide(color: AppColors.primaryColor),
-        //padding: EdgeInsets.symmetric(horizontal: 15),
-        
-        // Reduced padding to match regular category buttons
-        padding: EdgeInsets.symmetric(
-          horizontal: isMain ? 2 : 12,
-          vertical: isMain ? 2 : 10,
-        ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      ),
-      child: Row(
-        //mainAxisSize: MainAxisSize.min,
-        children: [
-          // Safely display SVG or fallback icon without try/catch
-          const SizedBox(width: 3), // Reduced spacing
-          Text(
-            text,
-            style: GoogleFonts.poppins(
-              color: isSelected ? Colors.white : 
-              AppColors.primaryColor,
-              // Reduced font size to match regular button
-              fontSize: isMain ? 16 : 14,
-              fontWeight: isSelected ? FontWeight.w400 : FontWeight.w400,
-             
-            ),
+    onPressed: () => onTap(text),
+    style: ElevatedButton.styleFrom(
+      minimumSize: Size(!isMain ? 73 : 160, !isMain ? 32 : 48),
+
+      backgroundColor: isSelected ? AppColors.primaryColor : Colors.white,
+      side: BorderSide(color: AppColors.primaryColor),
+      //padding: EdgeInsets.symmetric(horizontal: 15),
+
+      // Reduced padding to match regular category buttons
+      padding: EdgeInsets.symmetric(horizontal: isMain ? 2 : 12, vertical: isMain ? 2 : 10),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    ),
+    child: Row(
+      //mainAxisSize: MainAxisSize.min,
+      children: [
+        // Safely display SVG or fallback icon without try/catch
+        const SizedBox(width: 3), // Reduced spacing
+        Text(
+          text,
+          style: GoogleFonts.poppins(
+            color: isSelected ? Colors.white : AppColors.primaryColor,
+            // Reduced font size to match regular button
+            fontSize: isMain ? 16 : 14,
+            fontWeight: isSelected ? FontWeight.w400 : FontWeight.w400,
           ),
-        ],
-      ),
-    );
- 
+        ),
+      ],
+    ),
+  );
 }
 
-
-
-
 /*  */
-Widget buildRadioOption(
-  String text,
-  bool isSelected,
-  Function(String) onSelect,
-) {
+Widget buildRadioOption(String text, bool isSelected, Function(String) onSelect) {
   return InkWell(
     onTap: () => onSelect(text),
     child: Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
-         isSelected?SvgPicture.asset(ImageAssets.cracalBlack,
-          width: 20,
-          height: 20,
-          color: AppColors.primaryColor,
-          )
-          :SvgPicture.asset(ImageAssets.cracalWhite,
-          width: 20,
-          height: 20,
-          //color: AppColors.,
-          ),
+          isSelected
+              ? SvgPicture.asset(ImageAssets.cracalBlack, width: 20, height: 20, color: AppColors.primaryColor)
+              : SvgPicture.asset(
+                ImageAssets.cracalWhite,
+                width: 20,
+                height: 20,
+                //color: AppColors.,
+              ),
           const SizedBox(width: 10),
-          Text(text, style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w400,
-            fontSize: 16, color: AppColors.grayTextColor,
-          )),
+          Text(text, style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 16, color: AppColors.grayTextColor)),
         ],
       ),
     ),
@@ -799,13 +646,14 @@ Widget buildRadioOption(
 }
 
 void showFilterOptions(
-    BuildContext context,
-    List<String> propertyTypes,
-    List<String> priceRanges,
-    List<String> ratingRanges,
-    String selectedPropertyType,
-    String selectedPriceRange,
-    String selectedRatingRange) {
+  BuildContext context,
+  List<String> propertyTypes,
+  List<String> priceRanges,
+  List<String> ratingRanges,
+  String selectedPropertyType,
+  String selectedPriceRange,
+  String selectedRatingRange,
+) {
   showModalBottomSheet(
     context: context,
     backgroundColor: Colors.transparent,
@@ -815,10 +663,7 @@ void showFilterOptions(
         builder: (context, setState) {
           return Container(
             height: MediaQuery.of(context).size.height * 0.65,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-            ),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -831,10 +676,9 @@ void showFilterOptions(
                       Text(
                         "Filter",
                         style: GoogleFonts.poppins(
-                          fontSize: 16, 
+                          fontSize: 16,
                           color: AppColors.secondTextColor,
                           fontWeight: FontWeight.w500,
-                         
                         ),
                       ),
                       TextButton(
@@ -847,7 +691,6 @@ void showFilterOptions(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                             color: AppColors.primaryColor,
-                           
                           ),
                         ),
                       ),
@@ -859,10 +702,8 @@ void showFilterOptions(
                   child: ListView(
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     children: [
-                      
-
                       // Property Type section
-                   /*    Text(
+                      /*    Text(
                         "Property Type",
                         style: TextStyle(
                           fontSize: 16,
@@ -870,18 +711,13 @@ void showFilterOptions(
                           fontWeight: FontWeight.w400,
                         ),
                       ), */
-                   
                       ...propertyTypes
                           .map(
-                            (type) => buildRadioOption(
-                              type,
-                              type == selectedPropertyType,
-                              (value) {
-                                setState(() {
-                                  selectedPropertyType = value;
-                                });
-                              },
-                            ),
+                            (type) => buildRadioOption(type, type == selectedPropertyType, (value) {
+                              setState(() {
+                                selectedPropertyType = value;
+                              });
+                            }),
                           )
                           .toList(),
 
@@ -894,22 +730,16 @@ void showFilterOptions(
                           fontSize: 16,
                           color: AppColors.primaryTextColor,
                           fontWeight: FontWeight.w400,
-                         
                         ),
                       ),
                       SizedBox(height: 8),
                       ...priceRanges
                           .map(
-                            (range) => buildRadioOption(
-                              
-                              range,
-                              range == selectedPriceRange,
-                              (value) {
-                                setState(() {
-                                  selectedPriceRange = value;
-                                });
-                              },
-                            ),
+                            (range) => buildRadioOption(range, range == selectedPriceRange, (value) {
+                              setState(() {
+                                selectedPriceRange = value;
+                              });
+                            }),
                           )
                           .toList(),
 
@@ -922,21 +752,16 @@ void showFilterOptions(
                           fontSize: 16,
                           color: AppColors.secondGrayTextColor,
                           fontWeight: FontWeight.w400,
-                         
                         ),
                       ),
                       SizedBox(height: 8),
                       ...ratingRanges
                           .map(
-                            (rate) => buildRadioOption(
-                              rate,
-                              rate == selectedRatingRange,
-                              (value) {
-                                setState(() {
-                                  selectedRatingRange = value;
-                                });
-                              },
-                            ),
+                            (rate) => buildRadioOption(rate, rate == selectedRatingRange, (value) {
+                              setState(() {
+                                selectedRatingRange = value;
+                              });
+                            }),
                           )
                           .toList(),
 
@@ -954,9 +779,7 @@ void showFilterOptions(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),
                       onPressed: () {
                         // تطبيق الفلتر والعودة للشاشة الرئيسية
@@ -968,13 +791,7 @@ void showFilterOptions(
                         print('- Price Range: $selectedPriceRange');
                         print('- Rating Range: $selectedRatingRange');
                       },
-                      child: Text(
-                        "Search",
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
+                      child: Text("Search", style: GoogleFonts.poppins(fontSize: 16, color: Colors.white)),
                     ),
                   ),
                 ),
@@ -986,8 +803,7 @@ void showFilterOptions(
     },
   );
 }
-  
- 
+
 // ------------------------ Home Main Screen Widgets ------------------------
 
 class HomeScreenMainContent extends StatefulWidget {
@@ -1005,7 +821,7 @@ class HomeScreenMainContent extends StatefulWidget {
   final VoidCallback onGuestsIncrement;
   final VoidCallback onGuestsDecrement;
   final VoidCallback onSearch;
-  
+
   const HomeScreenMainContent({
     super.key,
     required this.pageController,
@@ -1041,29 +857,18 @@ class _HomeScreenMainContentState extends State<HomeScreenMainContent> {
             children: [
               Material(
                 shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20),
-                  ),
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
                 ),
                 clipBehavior: Clip.antiAlias,
                 child: Container(
                   height: 250,
                   width: double.infinity,
                   decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/image5.png'),
-                      fit: BoxFit.cover,
-                    ),
+                    image: DecorationImage(image: AssetImage('assets/images/image5.png'), fit: BoxFit.cover),
                   ),
                 ),
               ),
-              Positioned(
-                top: 40,
-                left: 20,
-                right: 20,
-                child: iconImageTaxt(widget.state),
-              ),
+              Positioned(top: 40, left: 20, right: 20, child: iconImageTaxt(widget.state)),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Column(
@@ -1103,15 +908,15 @@ class _HomeScreenMainContentState extends State<HomeScreenMainContent> {
                       Column(
                         children: [
                           buildPropertyList(
-                            title: "Top Rated", 
-                            context: context, 
+                            title: "Top Rated",
+                            context: context,
                             state: widget.state,
                             selectedPropertyCategory: selectedPropertyCategory,
                           ),
                           const SizedBox(height: 16),
                           buildPropertyList(
-                            title: "Most Viewed", 
-                            context: context, 
+                            title: "Most Viewed",
+                            context: context,
                             state: widget.state,
                             selectedPropertyCategory: selectedPropertyCategory,
                           ),
@@ -1123,14 +928,14 @@ class _HomeScreenMainContentState extends State<HomeScreenMainContent> {
                           return Column(
                             children: [
                               buildActivitiesList(
-                                title: "Popular Activities", 
-                                context: context, 
+                                title: "Popular Activities",
+                                context: context,
                                 activitiesState: activitiesState,
                               ),
                               const SizedBox(height: 16),
                               buildActivitiesList(
-                                title: "Recommended Activities", 
-                                context: context, 
+                                title: "Recommended Activities",
+                                context: context,
                                 activitiesState: activitiesState,
                               ),
                             ],
@@ -1140,9 +945,9 @@ class _HomeScreenMainContentState extends State<HomeScreenMainContent> {
                     const SizedBox(height: 16),
                   ],
                 ),
-              )
+              ),
             ],
-          )
+          ),
         ],
       ),
     );
@@ -1163,13 +968,9 @@ class HomeSearchSection extends StatelessWidget {
   final VoidCallback onGuestsDecrement;
   final VoidCallback onSearch;
 
-  final List<String> cities = [
-    'Riyadh', 'Jeddah', 'Dammam', 'Alula', 'Makkah', 'Jazan', 'Tabuk', 'Abha',
-  ];
+  final List<String> cities = ['Riyadh', 'Jeddah', 'Dammam', 'Alula', 'Makkah', 'Jazan', 'Tabuk', 'Abha'];
 
-  final List<String> district = [
-    'East Riyadh', 'West Riyadh', 'North Riyadh', 'South Riyadh', 'Central Riyadh', 'Other',
-  ];
+  final List<String> district = ['East Riyadh', 'West Riyadh', 'North Riyadh', 'South Riyadh', 'Central Riyadh', 'Other'];
 
   HomeSearchSection({
     super.key,
@@ -1195,28 +996,14 @@ class HomeSearchSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            spreadRadius: 2,
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, spreadRadius: 2)],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CityDropdown(
-            title: 'City',
-            hint: 'City',
-            list: cities,
-          ),
+          CityDropdown(title: 'City', hint: 'City', list: cities),
           SizedBox(height: 12),
-          CityDropdown(
-            title: 'District (optional)',
-            hint: 'District',
-            list: district,
-          ),
+          CityDropdown(title: 'District (optional)', hint: 'District', list: district),
 
           SizedBox(height: 12),
 
@@ -1229,15 +1016,17 @@ class HomeSearchSection extends StatelessWidget {
                     Text(
                       "Check in",
                       style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.secondTextColor),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.secondTextColor,
+                      ),
                     ),
                     SizedBox(height: 6),
                     HomeInputBox(
-                      text: checkInDate != null
-                          ? "${checkInDate!.day}/${checkInDate!.month}/${checkInDate!.year}"
-                          : "Add dates",
+                      text:
+                          checkInDate != null
+                              ? "${checkInDate!.day}/${checkInDate!.month}/${checkInDate!.year}"
+                              : "Add dates",
                       onPressed: () => _selectDate(context, checkInDate, onCheckInSelect),
                     ),
                   ],
@@ -1251,16 +1040,25 @@ class HomeSearchSection extends StatelessWidget {
                     Text(
                       "Check out",
                       style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.secondTextColor),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.secondTextColor,
+                      ),
                     ),
                     SizedBox(height: 6),
                     HomeInputBox(
-                      text: checkOutDate != null
-                          ? "${checkOutDate!.day}/${checkOutDate!.month}/${checkOutDate!.year}"
-                          : "Add dates",
-                      onPressed: () => _selectDate(context, checkOutDate, onCheckOutSelect, isCheckIn: false, checkInDate: checkInDate),
+                      text:
+                          checkOutDate != null
+                              ? "${checkOutDate!.day}/${checkOutDate!.month}/${checkOutDate!.year}"
+                              : "Add dates",
+                      onPressed:
+                          () => _selectDate(
+                            context,
+                            checkOutDate,
+                            onCheckOutSelect,
+                            isCheckIn: false,
+                            checkInDate: checkInDate,
+                          ),
                     ),
                   ],
                 ),
@@ -1276,17 +1074,10 @@ class HomeSearchSection extends StatelessWidget {
             children: [
               Text(
                 "Guests No.",
-                style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.secondTextColor),
+                style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.secondTextColor),
               ),
               SizedBox(height: 6),
-              HomeGuestsSelector(
-                guestsCount: guestsCount,
-                onIncrement: onGuestsIncrement,
-                onDecrement: onGuestsDecrement,
-              ),
+              HomeGuestsSelector(guestsCount: guestsCount, onIncrement: onGuestsIncrement, onDecrement: onGuestsDecrement),
             ],
           ),
 
@@ -1298,20 +1089,14 @@ class HomeSearchSection extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 backgroundColor: AppColors.primaryColor,
                 padding: EdgeInsets.symmetric(vertical: 14),
               ),
               onPressed: onSearch,
               child: Text(
                 "Search",
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.white,
-                ),
+                style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white),
               ),
             ),
           ),
@@ -1321,15 +1106,17 @@ class HomeSearchSection extends StatelessWidget {
   }
 
   Future<void> _selectDate(
-    BuildContext context, 
-    DateTime? initialDate, 
-    Function(DateTime) onDateSelect, 
-    {bool isCheckIn = true, DateTime? checkInDate}
-  ) async {
-    DateTime firstDate = isCheckIn 
-        ? DateTime.now() 
-        : (checkInDate != null ? checkInDate.add(Duration(days: 1)) : DateTime.now().add(Duration(days: 1)));
-    
+    BuildContext context,
+    DateTime? initialDate,
+    Function(DateTime) onDateSelect, {
+    bool isCheckIn = true,
+    DateTime? checkInDate,
+  }) async {
+    DateTime firstDate =
+        isCheckIn
+            ? DateTime.now()
+            : (checkInDate != null ? checkInDate.add(Duration(days: 1)) : DateTime.now().add(Duration(days: 1)));
+
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: initialDate ?? firstDate,
@@ -1348,39 +1135,22 @@ class HomeInputBox extends StatelessWidget {
   final VoidCallback onPressed;
   final bool isCity;
 
-  const HomeInputBox({       
-    super.key,
-    required this.text,
-    required this.onPressed,
-    this.isCity = false,
-  });
+  const HomeInputBox({super.key, required this.text, required this.onPressed, this.isCity = false});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 40,
       padding: EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade400),
-        borderRadius: BorderRadius.circular(5),
-      ),
+      decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade400), borderRadius: BorderRadius.circular(5)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            text,
-            style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: AppColors.grayTextColor),
-          ),
+          Text(text, style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.grayTextColor)),
           InkWell(
             focusColor: Colors.transparent,
             onTap: onPressed,
-            child: Icon(
-              Icons.keyboard_arrow_down,
-              color: AppColors.grayColorIcon,
-            ),
+            child: Icon(Icons.keyboard_arrow_down, color: AppColors.grayColorIcon),
           ),
         ],
       ),
@@ -1393,57 +1163,33 @@ class HomeGuestsSelector extends StatelessWidget {
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
 
-  const HomeGuestsSelector({
-    super.key,
-    required this.guestsCount,
-    required this.onIncrement,
-    required this.onDecrement,
-  });
+  const HomeGuestsSelector({super.key, required this.guestsCount, required this.onIncrement, required this.onDecrement});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 40,
       padding: EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.lightGray),
-        borderRadius: BorderRadius.circular(5),
-      ),
+      decoration: BoxDecoration(border: Border.all(color: AppColors.lightGray), borderRadius: BorderRadius.circular(5)),
       child: Row(
         children: [
           Expanded(
             child: Text(
               "$guestsCount Guests",
-              style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.grayTextColor),
+              style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.grayTextColor),
             ),
           ),
           IconButton(
             onPressed: guestsCount > 0 ? onDecrement : null,
-            icon: SvgPicture.asset(
-              'assets/svg/message-minus.svg',
-              width: 20,
-              height: 20,
-              color: AppColors.primaryColor,
-            ),
+            icon: SvgPicture.asset('assets/svg/message-minus.svg', width: 20, height: 20, color: AppColors.primaryColor),
           ),
           Text(
             "$guestsCount",
-            style: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-                color: AppColors.grayTextColor),
+            style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400, color: AppColors.grayTextColor),
           ),
           IconButton(
             onPressed: onIncrement,
-            icon: SvgPicture.asset(
-              'assets/svg/message-add.svg',
-              width: 20,
-              height: 20,
-              color: AppColors.primaryColor,
-            ),
+            icon: SvgPicture.asset('assets/svg/message-add.svg', width: 20, height: 20, color: AppColors.primaryColor),
           ),
         ],
       ),
@@ -1454,17 +1200,13 @@ class HomeGuestsSelector extends StatelessWidget {
 class HomeCategoryButtons extends StatelessWidget {
   final Function(String)? onCategoryChanged;
   final Function(String)? onMainCategoryChanged;
-  
+
   const HomeCategoryButtons({super.key, this.onCategoryChanged, this.onMainCategoryChanged});
 
   @override
   Widget build(BuildContext context) {
-    ValueNotifier<String> selectedMainCategory = ValueNotifier<String>(
-      "Rental Services",
-    );
-    ValueNotifier<String> selectedSubCategory = ValueNotifier<String>(
-      "Properties",
-    );
+    ValueNotifier<String> selectedMainCategory = ValueNotifier<String>("Rental Services");
+    ValueNotifier<String> selectedSubCategory = ValueNotifier<String>("Properties");
 
     return ValueListenableBuilder<String>(
       valueListenable: selectedMainCategory,
@@ -1490,7 +1232,7 @@ class HomeCategoryButtons extends StatelessWidget {
                     padding: const EdgeInsets.only(right: 15),
                     child: categoryButton("Tourist Activities", mainCategory, (value) {
                       selectedMainCategory.value = value;
-                      
+
                       if (onMainCategoryChanged != null) {
                         onMainCategoryChanged!(value);
                       }
@@ -1540,12 +1282,12 @@ class HomeCategoryButtons extends StatelessWidget {
     );
   }
 }
-  
- 
-Widget buildActivitiesList(
-    {required String title, 
-     required BuildContext context, 
-     required ActivitiesState activitiesState}) {
+
+Widget buildActivitiesList({
+  required String title,
+  required BuildContext context,
+  required ActivitiesState activitiesState,
+}) {
   final screenWidth = MediaQuery.of(context).size.width;
   final cardWidth = (screenWidth - 48) / 2;
   final cardHeight = cardWidth * 1.2;
@@ -1564,11 +1306,7 @@ Widget buildActivitiesList(
             children: [
               Text(
                 title,
-                style: GoogleFonts.poppins(
-                  fontSize: 16, 
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.secondTextColor,
-                ),
+                style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.secondTextColor),
               ),
             ],
           ),
@@ -1576,43 +1314,36 @@ Widget buildActivitiesList(
 
         SizedBox(
           height: cardHeight * 2.2 + 90,
-          child: activitiesState.activities.isEmpty 
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.search_off,
-                        size: 64,
-                        color: Colors.grey[400],
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        "No activities found",
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          color: Colors.grey[600],
-                          fontWeight: FontWeight.w500,
+          child:
+              activitiesState.activities.isEmpty
+                  ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.search_off, size: 64, color: Colors.grey[400]),
+                        SizedBox(height: 16),
+                        Text(
+                          "No activities found",
+                          style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[600], fontWeight: FontWeight.w500),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
+                  )
+                  : GridView.builder(
+                    itemCount: activitiesState.activities.length,
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 1 / 1.7,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                    ),
+                    itemBuilder: (context, index) {
+                      return buildActivityCard(context, activitiesState.activities, index);
+                    },
                   ),
-                )
-              : GridView.builder(
-                  itemCount: activitiesState.activities.length,
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 1 / 1.7,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                  ),
-                  itemBuilder: (context, index) {
-                    return buildActivityCard(context, activitiesState.activities, index);
-                  },
-                ),
         ),
       ],
     ),
@@ -1620,7 +1351,7 @@ Widget buildActivitiesList(
 }
 
 Widget buildActivityCard(BuildContext context, List<CustomActivityModel> activities, int index) {
-  bool isFavorite = false;
+  bool isFavorite = activities[index].isFavorite;
   return InkWell(
     onTap: () {
       // Navigate to activity details if needed
@@ -1641,8 +1372,8 @@ Widget buildActivityCard(BuildContext context, List<CustomActivityModel> activit
               Image.network(
                 height: 155,
                 width: 155,
-                activities[index].image.isNotEmpty 
-                    ? activities[index].image 
+                activities[index].image.isNotEmpty
+                    ? activities[index].image
                     : 'https://via.placeholder.com/155x155?text=Activity',
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
@@ -1650,11 +1381,7 @@ Widget buildActivityCard(BuildContext context, List<CustomActivityModel> activit
                     height: 155,
                     width: 155,
                     color: Colors.grey[300],
-                    child: Icon(
-                      Icons.local_activity,
-                      size: 50,
-                      color: Colors.grey[600],
-                    ),
+                    child: Icon(Icons.local_activity, size: 50, color: Colors.grey[600]),
                   );
                 },
               ),
@@ -1667,23 +1394,17 @@ Widget buildActivityCard(BuildContext context, List<CustomActivityModel> activit
                       padding: const EdgeInsets.all(5.0),
                       child: GestureDetector(
                         onTap: () {
-                          setState(() {
-                            isFavorite = !isFavorite;
-                          });
+                          if (isFavorite) {
+                            getIt<FavoritesCubit>().removeFromFavorites(activities[index].id, FavoriteType.activity);
+                          } else {
+                            getIt<FavoritesCubit>().addToFavorites(activities[index].id, FavoriteType.activity);
+                          }
+                          setState(() => isFavorite = !isFavorite);
                         },
-                        child: isFavorite 
-                            ? SvgPicture.asset(
-                                ImageAssets.heartBlack,
-                                fit: BoxFit.cover,
-                                width: 20,
-                                height: 20,
-                              )
-                            : SvgPicture.asset(
-                                ImageAssets.heart,
-                                fit: BoxFit.cover,
-                                width: 20,
-                                height: 20,
-                              ),
+                        child:
+                            isFavorite
+                                ? SvgPicture.asset(ImageAssets.heartBlack, fit: BoxFit.cover, width: 20, height: 20)
+                                : SvgPicture.asset(ImageAssets.heart, fit: BoxFit.cover, width: 20, height: 20),
                       ),
                     );
                   },
@@ -1694,10 +1415,7 @@ Widget buildActivityCard(BuildContext context, List<CustomActivityModel> activit
 
           // Content
           Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 6.0,
-              vertical: 3.0,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 3.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -1718,22 +1436,17 @@ Widget buildActivityCard(BuildContext context, List<CustomActivityModel> activit
                     ),
                     Icon(Icons.star, color: AppColors.primaryColor, size: 14),
                     SizedBox(width: 1),
-                    Text("4.8", style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14, 
-                      color: AppColors.primaryColor,
-                    )),
+                    Text(
+                      "4.8",
+                      style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 14, color: AppColors.primaryColor),
+                    ),
                   ],
                 ),
 
                 // Activity type or location
                 Text(
                   "Tourist Activity",
-                  style: GoogleFonts.poppins(
-                    fontSize: 14, 
-                    color: AppColors.grayTextColor,
-                    fontWeight: FontWeight.w400,
-                  ),
+                  style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor, fontWeight: FontWeight.w400),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -1745,11 +1458,7 @@ Widget buildActivityCard(BuildContext context, List<CustomActivityModel> activit
                   children: [
                     Text(
                       "Full Day Experience",
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        color: AppColors.grayTextColor,
-                        fontWeight: FontWeight.w400,
-                      ),
+                      style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor, fontWeight: FontWeight.w400),
                     ),
                     Row(
                       children: [
@@ -1785,5 +1494,3 @@ Widget buildActivityCard(BuildContext context, List<CustomActivityModel> activit
     ),
   );
 }
-  
- 

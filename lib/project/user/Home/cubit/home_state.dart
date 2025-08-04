@@ -1,6 +1,5 @@
 part of 'home_cubit.dart';
 
-
 class HomeState extends Equatable {
   final Status userStatus;
   final UserModel user;
@@ -15,7 +14,7 @@ class HomeState extends Equatable {
     this.propertiesStatus = Status.initial,
     this.userStatus = Status.initial,
     this.signoutStatus = Status.initial,
-    this.user = UserModel.non,
+    this.user = UserModel.initial,
     this.properties = const [],
     this.propertyStatus = Status.initial,
     this.property = PropertyModel.non,
@@ -43,6 +42,5 @@ class HomeState extends Equatable {
   );
 
   @override
-  List<Object?> get props => [userStatus, user,
-   propertyStatus, property, msg, properties, propertiesStatus, signoutStatus];
+  List<Object?> get props => [userStatus, user, propertyStatus, property, msg, properties, propertiesStatus, signoutStatus];
 }

@@ -20,10 +20,8 @@ class HomeScreenMain extends StatefulWidget {
 class _HomeScreenMainState extends State<HomeScreenMain> {
   final PageController _pageController = PageController();
 
-  final List<String> saudiCities = [
-    'Riyadh', 'Jeddah', 'Dammam', 'Alula', 'Makkah', 'mohamed', 'Tabuk', 'Jazan',
-  ];
-  
+  final List<String> saudiCities = ['Riyadh', 'Jeddah', 'Dammam', 'Alula', 'Makkah', 'mohamed', 'Tabuk', 'Jazan'];
+
   String? selectedCity;
   String selectedDistrict = 'District';
   DateTime? checkInDate;
@@ -49,77 +47,72 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
     super.initState();
     selectedCity = 'city';
 
-        getIt<HomeCubit>().fetchUser();
-        getIt<HomeCubit>().getProperties();
-        getIt<ActivitiesCubit>().getActivities();
-  
+    getIt<HomeCubit>().fetchUser();
+    getIt<HomeCubit>().getProperties();
+    getIt<ActivitiesCubit>().getActivities();
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-       // BlocProvider(create: (context) => getIt<HomeCubit>()),
+        // BlocProvider(create: (context) => getIt<HomeCubit>()),
         BlocProvider.value(value: getIt<ActivitiesCubit>()),
       ],
-      
+
       child: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
           return Scaffold(
-          body: RefreshIndicator(
-            onRefresh: () async {
-              getIt<HomeCubit>().getProperties();
-            },
-            child: HomeScreenMainContent(
-              state: state,
-              pageController: _pageController,
-              selectedCity: selectedCity,
-              selectedDistrict: selectedDistrict,
-              checkInDate: checkInDate,
-              checkOutDate: checkOutDate,
-              guestsCount: guestsCount,
-              onCitySelect: () {
-                showCityDropdown(context);
+            body: RefreshIndicator(
+              onRefresh: () async {
+                getIt<HomeCubit>().getProperties();
               },
-              onDistrictSelect: () {
-             
-              },
-              onCheckInSelect: (date) {
-                setState(() {
-                  checkInDate = date;
-                  // Reset checkout date if it's before check-in
-                  if (checkOutDate != null && checkOutDate!.isBefore(checkInDate!)) {
-                    checkOutDate = null;
-                  }
-                });
-              },
-              onCheckOutSelect: (date) {
-                setState(() {
-                  checkOutDate = date;
-                });
-              },
-              onGuestsIncrement: () {
-                setState(() {
-                  guestsCount++;
-                  print(guestsCount);
-                });
-              },
-              onGuestsDecrement: () {
-                if (guestsCount > 0) {
+              child: HomeScreenMainContent(
+                state: state,
+                pageController: _pageController,
+                selectedCity: selectedCity,
+                selectedDistrict: selectedDistrict,
+                checkInDate: checkInDate,
+                checkOutDate: checkOutDate,
+                guestsCount: guestsCount,
+                onCitySelect: () {
+                  showCityDropdown(context);
+                },
+                onDistrictSelect: () {},
+                onCheckInSelect: (date) {
                   setState(() {
-                    guestsCount--;
+                    checkInDate = date;
+                    // Reset checkout date if it's before check-in
+                    if (checkOutDate != null && checkOutDate!.isBefore(checkInDate!)) {
+                      checkOutDate = null;
+                    }
+                  });
+                },
+                onCheckOutSelect: (date) {
+                  setState(() {
+                    checkOutDate = date;
+                  });
+                },
+                onGuestsIncrement: () {
+                  setState(() {
+                    guestsCount++;
                     print(guestsCount);
                   });
-                }
-              },
-              onSearch: () {
-              },
+                },
+                onGuestsDecrement: () {
+                  if (guestsCount > 0) {
+                    setState(() {
+                      guestsCount--;
+                      print(guestsCount);
+                    });
+                  }
+                },
+                onSearch: () {},
+              ),
             ),
-          ),
-        );
-      
+          );
         },
-        ),
+      ),
     );
   }
 
@@ -130,20 +123,13 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
         return Container(
           height: 350,
           padding: EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-          ),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 "Select City",
-                style: GoogleFonts.poppins(
-                  color: AppColors.primaryTextColor,
-                  fontSize: 18, 
-                  fontWeight: FontWeight.bold
-                ),
+                style: GoogleFonts.poppins(color: AppColors.primaryTextColor, fontSize: 18, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 16),
               Expanded(
@@ -151,12 +137,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                   itemCount: saudiCities.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Text(saudiCities[index],
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      ),
+                      title: Text(saudiCities[index], style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400)),
                       onTap: () {
                         setState(() {
                           selectedCity = saudiCities[index];

@@ -5,32 +5,40 @@ import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart'; // Added for debugPrint
 // ignore: depend_on_referenced_packages
-import 'package:http_parser/http_parser.dart' ;
+import 'package:http_parser/http_parser.dart';
 
 import '../../../../config/constants/api_constance.dart';
 import '../../../config/constants/constance.dart';
 
 class CustomPropertyModel extends Equatable {
   final String id, type, image;
-  final bool available;
+  final bool available, isFavorite;
   final String vendorId;
 
   const CustomPropertyModel({
     required this.id,
     required this.vendorId,
+    required this.isFavorite,
     required this.type,
     required this.image,
     required this.available,
   });
 
-  CustomPropertyModel copyWith({String? vendorId, String? id, String? type, String? image, bool? available}) =>
-      CustomPropertyModel(
-        id: id ?? this.id,
-        type: type ?? this.type,
-        vendorId: vendorId ?? this.vendorId,
-        image: image ?? this.image,
-        available: available ?? this.available,
-      );
+  CustomPropertyModel copyWith({
+    String? vendorId,
+    String? id,
+    String? type,
+    String? image,
+    bool? available,
+    bool? isFavorite,
+  }) => CustomPropertyModel(
+    id: id ?? this.id,
+    type: type ?? this.type,
+    vendorId: vendorId ?? this.vendorId,
+    image: image ?? this.image,
+    available: available ?? this.available,
+    isFavorite: isFavorite ?? this.isFavorite,
+  );
 
   factory CustomPropertyModel.fromJson(Map<String, dynamic> json) {
     String getFirstMedia(dynamic medias) {
@@ -52,28 +60,33 @@ class CustomPropertyModel extends Equatable {
       type: json[AppConst.type] ?? '',
       image: getFirstMedia(json[AppConst.medias]),
       available: json[AppConst.available] ?? false,
+      isFavorite: json[AppConst.isFavorite] ?? false,
     );
   }
 
   factory CustomPropertyModel.fromProperty(PropertyModel property) => CustomPropertyModel(
     id: property.id,
     type: property.type,
-    image: property.medias.isNotEmpty
-        ? (property.medias.first.startsWith('http') ? property.medias.first : ApiConstance.baseUrl + property.medias.first)
-        : '',
+    image:
+        property.medias.isNotEmpty
+            ? (property.medias.first.startsWith('http')
+                ? property.medias.first
+                : ApiConstance.baseUrl + property.medias.first)
+            : '',
     available: property.available,
     vendorId: property.id,
+    isFavorite: false, // Default to false, can be updated later
   );
 
   @override
-  List<Object> get props => [id, type, image, available];
+  List<Object> get props => [id, type, image, available, isFavorite];
 }
 
 class PropertyModel extends Equatable {
   final String id, type, address, details;
   final int guestNumber, bedrooms, bathrooms, beds, pricePerNight, maxDays;
   final List<String> tags, availableDates, medias, ownershipContract, facilityLicense;
-  final bool available;
+  final bool available, isFavorite;
 
   const PropertyModel({
     required this.id,
@@ -92,6 +105,7 @@ class PropertyModel extends Equatable {
     required this.ownershipContract,
     required this.medias,
     required this.facilityLicense,
+    required this.isFavorite,
   });
 
   static const non = PropertyModel(
@@ -111,6 +125,7 @@ class PropertyModel extends Equatable {
     ownershipContract: [],
     facilityLicense: [],
     medias: [],
+    isFavorite: false,
   );
 
   factory PropertyModel.fromJson(Map<String, dynamic> json) {
@@ -138,6 +153,7 @@ class PropertyModel extends Equatable {
       ownershipContract: parseStringOrList(json[AppConst.ownershipContract]),
       facilityLicense: parseStringOrList(json[AppConst.facilityLicense]),
       medias: parseStringOrList(json[AppConst.medias]),
+      isFavorite: json[AppConst.isFavorite] ?? false,
     );
   }
 
@@ -157,7 +173,6 @@ class PropertyModel extends Equatable {
       MapEntry(AppConst.pricePerNight, pricePerNight.toString()),
       MapEntry(AppConst.maxDays, maxDays.toString()),
     ]);
-
 
     for (final tag in tags) {
       formData.fields.add(MapEntry('tags[]', tag));
@@ -251,6 +266,7 @@ class PropertyModel extends Equatable {
     List<String>? ownershipContract,
     List<String>? facilityLicense,
     List<String>? medias,
+    bool? isFavorite,
   }) {
     return PropertyModel(
       id: id ?? this.id,
@@ -269,6 +285,7 @@ class PropertyModel extends Equatable {
       maxDays: maxDays ?? this.maxDays,
       ownershipContract: ownershipContract ?? this.ownershipContract,
       medias: medias ?? this.medias,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 
@@ -290,5 +307,6 @@ class PropertyModel extends Equatable {
     ownershipContract,
     medias,
     facilityLicense,
+    isFavorite,
   ];
 }

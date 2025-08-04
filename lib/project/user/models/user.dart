@@ -19,7 +19,7 @@ class UserModel extends Equatable {
     required this.profilePicture,
   });
 
-  static const non = UserModel(
+  static const initial = UserModel(
     password: '',
     firstName: '',
     lastName: '',

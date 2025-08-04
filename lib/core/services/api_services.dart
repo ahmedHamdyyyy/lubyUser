@@ -19,11 +19,7 @@ class ApiService {
           receiveTimeout: const Duration(seconds: 30),
           sendTimeout: const Duration(seconds: 30),
           validateStatus: (status) => status! < 500,
-          headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json',
-            'Connection': 'keep-alive',
-          },
+          headers: {'Accept': '*/*', 'Content-Type': 'application/json', 'Connection': 'keep-alive'},
         ),
       );
 
@@ -41,29 +37,47 @@ class _ApiInterceptor extends InterceptorsWrapper {
   final CacheService _cacheService;
   final Dio dio;
   int _counter = 0;
+
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     debugPrint('REQUEST[${options.method}] => PATH: ${options.path}');
     final isMultipart = options.data is FormData;
-    final token = _cacheService.storage.getString(AppConst.accessToken);
-    options.headers['Content-Type'] =
-        isMultipart ? 'multipart/form-data' : 'application/json';
+    final accessToken = _cacheService.storage.getString(AppConst.accessToken);
+    options.headers['Content-Type'] = isMultipart ? 'multipart/form-data' : 'application/json';
     if (isMultipart) options.headers['Accept-Encoding'] = 'gzip, deflate, br';
-    if (token != null && token.isNotEmpty) {
-      options.headers['Authorization'] = 'Bearer $token';
-    }
+    if (accessToken != null && accessToken.isNotEmpty) options.headers['Authorization'] = 'Bearer $accessToken';
     return handler.next(options);
   }
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) async {
-    debugPrint(
-      'RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}',
-    );
-    if (response.data != null) {
-      final token = (response.data['data'] ?? {})['accessToken'];
-      if (token != null) {
-       await _cacheService.storage.setString(AppConst.accessToken, token);
+    debugPrint('RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
+    if ([ApiConstance.signin, ApiConstance.signup, ApiConstance.resetpassword].contains(response.requestOptions.path)) {
+      if (response.data != null && response.data['success']) {
+        final accessToken = (response.data['data'] ?? {})['accessToken'];
+        final refreshToken = (response.data['data'] ?? {})['refreshToken'];
+        if (accessToken != null) await _cacheService.storage.setString(AppConst.accessToken, accessToken);
+        if (refreshToken != null) await _cacheService.storage.setString(AppConst.refreshToken, refreshToken);
+      }
+    }
+    if (response.statusCode == 401) {
+      if (_counter > 5) return handler.next(response);
+      _counter++;
+      final refreshToken = _cacheService.storage.getString(AppConst.refreshToken);
+      if (refreshToken != null && refreshToken.isNotEmpty) {
+        final response = await dio.post(ApiConstance.refreshToken, data: {AppConst.refreshToken: refreshToken});
+        if (response.statusCode == 200) {
+          final accessToken = (response.data['data'] ?? {})['accessToken'];
+          if (accessToken != null) {
+            await _cacheService.storage.setString(AppConst.accessToken, accessToken);
+            await dio.request(
+              response.requestOptions.path,
+              data: response.requestOptions.data,
+              options: Options(headers: response.requestOptions.headers..addAll({'Authorization': 'Bearer $accessToken'})),
+            );
+            return;
+          }
+        }
       }
     }
     return handler.next(response);
@@ -71,22 +85,16 @@ class _ApiInterceptor extends InterceptorsWrapper {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
-    debugPrint(
-      'ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}',
-    );
+    debugPrint('ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}');
     debugPrint(err.response?.data.toString());
+    debugPrint(err.message);
+    debugPrint(err.error.toString());
     if (err.response?.statusCode == 401) {
       if (_counter > 5) return handler.next(err);
       _counter++;
-      final refreshToken = _cacheService.storage.getString(
-        AppConst.refreshToken,
-      );
+      final refreshToken = _cacheService.storage.getString(AppConst.refreshToken);
       if (refreshToken != null && refreshToken.isNotEmpty) {
-        final response = await dio.post(
-          ApiConstance.refreshToken,
-          data: {AppConst.refreshToken: refreshToken},
-        );
-
+        final response = await dio.post(ApiConstance.refreshToken, data: {AppConst.refreshToken: refreshToken});
         if (response.statusCode == 200) {
           final accessToken = (response.data['data'] ?? {})['accessToken'];
           if (accessToken != null) {
@@ -94,11 +102,7 @@ class _ApiInterceptor extends InterceptorsWrapper {
             await dio.request(
               err.requestOptions.path,
               data: err.requestOptions.data,
-              options: Options(
-                headers:
-                    err.requestOptions.headers
-                      ..addAll({'Authorization': 'Bearer $accessToken'}),
-              ),
+              options: Options(headers: err.requestOptions.headers..addAll({'Authorization': 'Bearer $accessToken'})),
             );
             return;
           }
@@ -106,7 +110,6 @@ class _ApiInterceptor extends InterceptorsWrapper {
       }
     }
     _counter = 0;
-
     return handler.next(err);
   }
 }

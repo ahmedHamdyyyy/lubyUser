@@ -6,11 +6,12 @@ import 'core/services/api_services.dart';
 import 'core/services/cach_services.dart';
 import 'locator.dart';
 import 'project/user/Home/cubit/home_cubit.dart';
+import 'project/user/activities/cubit/cubit.dart';
 import 'project/user/auth/cubit/auth_cubit.dart';
 import 'project/user/auth/view/Screen/splash/luby_screen_splash.dart';
+import 'project/user/favorites/cubit/cubit.dart';
 
 Future<void> main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
   setup();
   await getIt<CacheService>().init();
@@ -27,14 +28,17 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => getIt<AuthCubit>()),
         BlocProvider(create: (context) => getIt<HomeCubit>()),
+        BlocProvider(create: (context) => getIt<ActivitiesCubit>()),
+        BlocProvider(create: (context) => getIt<FavoritesCubit>()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(360, 690),
         minTextAdapt: true,
         splitScreenMode: true,
-        builder: (context, child) => MaterialApp(
-            debugShowCheckedModeBanner: false,
-         /*    theme: ThemeData(
+        builder:
+            (context, child) => MaterialApp(
+              debugShowCheckedModeBanner: false,
+              /*    theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
               textTheme: GoogleFonts.poppinsTextTheme(
@@ -51,8 +55,9 @@ class MyApp extends StatelessWidget {
                 ),
               ),
             ),
-           */  home: const LubyScreenSplash(),
-          ),
+           */
+              home: const LubyScreenSplash(),
+            ),
       ),
     );
   }

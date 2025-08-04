@@ -1,17 +1,19 @@
 import 'package:get_it/get_it.dart';
 import 'package:luby2/project/user/Home/data/home_data.dart';
 import 'package:luby2/project/user/Home/data/home_repo.dart';
-import 'package:luby2/project/user/auth/cubit/auth_cubit.dart';
-import 'package:luby2/project/user/auth/data/auth_data.dart';
 import 'package:luby2/project/user/activities/cubit/cubit.dart';
 import 'package:luby2/project/user/activities/data/data.dart';
 import 'package:luby2/project/user/activities/data/repository.dart';
+import 'package:luby2/project/user/auth/cubit/auth_cubit.dart';
+import 'package:luby2/project/user/auth/data/auth_data.dart';
 
 import 'core/services/api_services.dart';
 import 'core/services/cach_services.dart';
 import 'project/user/Home/cubit/home_cubit.dart';
 import 'project/user/auth/data/auth_repo.dart';
-
+import 'project/user/favorites/cubit/cubit.dart';
+import 'project/user/favorites/data/data.dart';
+import 'project/user/favorites/data/repository.dart';
 
 final getIt = GetIt.instance;
 
@@ -24,5 +26,5 @@ void setup() {
   getIt.registerSingleton<AuthCubit>(AuthCubit(AuthRepo(AuthData(getIt<ApiService>(), getIt<CacheService>()))));
   getIt.registerSingleton<HomeCubit>(HomeCubit(HomeRespository(HomeData(getIt<ApiService>()))));
   getIt.registerSingleton<ActivitiesCubit>(ActivitiesCubit(ActivitiesRespository(ActivitiesData(getIt<ApiService>()))));
-
+  getIt.registerSingleton<FavoritesCubit>(FavoritesCubit(FavoritesRepository(FavoritesData(getIt<ApiService>()))));
 }

@@ -15,6 +15,7 @@ class AppConst {
   static const lastName = 'lastName';
   static const property = 'Property';
   static const role = 'role';
+  static const otp = 'otp';
   static const accessToken = 'accessToken';
   static const refreshToken = 'refreshToken';
   static const userId = "_id";
@@ -32,6 +33,7 @@ class AppConst {
   static const bedrooms = 'bedrooms';
   static const bathrooms = 'bathrooms';
   static const beds = 'beds';
+  static const isFavorite = 'isFavorite';
   static const details = 'details';
   static const tags = 'tags';
   static const pricePerNight = 'pricePerNight';

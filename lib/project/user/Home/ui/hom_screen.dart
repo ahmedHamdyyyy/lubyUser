@@ -2,14 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:luby2/project/user/Home/Widget/widget_home.dart' show buildBottomNavigationBar;
+
 import '../../../../locator.dart';
 import '../../User/screens/Conversations/conversations_screen.dart';
 import '../../User/screens/account/account_info/account.dart';
-import '../../User/screens/favourite/favourite2.dart';
 import '../../User/screens/reservation/reservation_screen.dart';
+import '../../favorites/view/favourite2.dart';
 import '../cubit/home_cubit.dart';
 import 'home_main_screen.dart';
-
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,23 +20,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
-  final screen = [
-    HomeScreenMain(),
-    Favorite2Screen(),
-    ReservationScreen(),
-    ConversationScreen(),
-    AccountScreen(),
-  ];
+  final screen = [HomeScreenMain(), Favorite2Screen(), ReservationScreen(), ConversationScreen(), AccountScreen()];
   void updateCurrentIndex(int index) {
     setState(() {
       _currentIndex = index;
     });
   }
-@override
+
+  @override
   void initState() {
-   getIt<HomeCubit>().fetchUser();
+    getIt<HomeCubit>().fetchUser();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -46,17 +42,11 @@ class _HomeScreenState extends State<HomeScreen> {
           updateCurrentIndex(0);
         }
       },
-      
+
       child: Scaffold(
         body: screen[_currentIndex],
-         bottomNavigationBar: buildBottomNavigationBar(
-      
-          currentIndex: _currentIndex,
-          onTap: updateCurrentIndex,
-         
-        ),
-       
-          ),
+        bottomNavigationBar: buildBottomNavigationBar(currentIndex: _currentIndex, onTap: updateCurrentIndex),
+      ),
     );
   }
 }
