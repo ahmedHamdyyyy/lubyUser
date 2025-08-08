@@ -138,15 +138,17 @@ class _Favorite2ScreenState extends State<Favorite2Screen> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        '${item.price} per night',
-                                        style: const TextStyle(
-                                          height: 0.9,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          fontFamily: 'Poppins',
-                                          overflow: TextOverflow.ellipsis,
-                                          color: AppColors.primaryColor,
+                                      Expanded(
+                                        child: Text(
+                                          '${item.price} per night',
+                                          style: const TextStyle(
+                                            height: 0.9,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            fontFamily: 'Poppins',
+                                            overflow: TextOverflow.ellipsis,
+                                            color: AppColors.primaryColor,
+                                          ),
                                         ),
                                       ),
                                       const SizedBox(width: 5),
