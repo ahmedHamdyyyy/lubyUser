@@ -14,6 +14,9 @@ import 'project/user/auth/data/auth_repo.dart';
 import 'project/user/favorites/cubit/cubit.dart';
 import 'project/user/favorites/data/data.dart';
 import 'project/user/favorites/data/repository.dart';
+import 'project/user/reservation/cubit/cubit.dart';
+import 'project/user/reservation/data/data.dart';
+import 'project/user/reservation/data/repository.dart';
 
 final getIt = GetIt.instance;
 
@@ -27,4 +30,7 @@ void setup() {
   getIt.registerSingleton<HomeCubit>(HomeCubit(HomeRespository(HomeData(getIt<ApiService>()))));
   getIt.registerSingleton<ActivitiesCubit>(ActivitiesCubit(ActivitiesRespository(ActivitiesData(getIt<ApiService>()))));
   getIt.registerSingleton<FavoritesCubit>(FavoritesCubit(FavoritesRepository(FavoritesData(getIt<ApiService>()))));
+  getIt.registerSingleton<ReservationsCubit>(
+    ReservationsCubit(ReservationsRepository(ReservationsData(getIt<ApiService>()))),
+  );
 }

@@ -1,6 +1,7 @@
 part of 'home_cubit.dart';
 
 class HomeState extends Equatable {
+  final int currentScreenIndex;
   final Status userStatus;
   final UserModel user;
   final Status propertyStatus;
@@ -11,17 +12,19 @@ class HomeState extends Equatable {
   final String msg;
 
   const HomeState({
+    this.currentScreenIndex = 0,
     this.propertiesStatus = Status.initial,
     this.userStatus = Status.initial,
     this.signoutStatus = Status.initial,
     this.user = UserModel.initial,
     this.properties = const [],
     this.propertyStatus = Status.initial,
-    this.property = PropertyModel.non,
+    this.property = PropertyModel.initial,
     this.msg = '',
   });
 
   HomeState copyWith({
+    int? currentScreenIndex,
     Status? propertiesStatus,
     Status? userStatus,
     UserModel? user,
@@ -31,6 +34,7 @@ class HomeState extends Equatable {
     String? msg,
     List<PropertyModel>? properties,
   }) => HomeState(
+    currentScreenIndex: currentScreenIndex ?? this.currentScreenIndex,
     userStatus: userStatus ?? this.userStatus,
     user: user ?? this.user,
     propertyStatus: propertyStatus ?? this.propertyStatus,
@@ -42,5 +46,15 @@ class HomeState extends Equatable {
   );
 
   @override
-  List<Object?> get props => [userStatus, user, propertyStatus, property, msg, properties, propertiesStatus, signoutStatus];
+  List<Object?> get props => [
+    currentScreenIndex,
+    userStatus,
+    user,
+    propertyStatus,
+    property,
+    msg,
+    properties,
+    propertiesStatus,
+    signoutStatus,
+  ];
 }

@@ -123,7 +123,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                       Column(
                         children: [
                           const SizedBox(height: 112),
-                          const CardeReserve(),
+                          CardeReserve(property: state.property),
                           const SizedBox(height: 10),
                           BookingDetailsWidget(state: state),
                           const Driver(),

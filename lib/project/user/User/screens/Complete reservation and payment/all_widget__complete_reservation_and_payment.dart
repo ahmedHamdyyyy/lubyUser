@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/images/image_assets.dart';
 
@@ -31,32 +32,20 @@ class ReservationItemWidget extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         child: Row(
           children: [
-            CircleAvatar(
-              radius: 25,
-              backgroundImage: AssetImage(imagePath),
-            ),
+            CircleAvatar(radius: 25, backgroundImage: AssetImage(imagePath)),
             const SizedBox(width: 10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16,
-                    ),
-                  ),
+                  Text(title, style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 16)),
                   const SizedBox(height: 5),
                   RichText(
                     text: TextSpan(
                       children: [
                         TextSpan(
                           text: "Hosted by\n",
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.secondTextColor,
-                          ),
+                          style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: AppColors.secondTextColor),
                         ),
                         TextSpan(
                           text: hostName,
@@ -92,11 +81,7 @@ class SummaryRowWidget extends StatelessWidget {
   final String title;
   final String value;
 
-  const SummaryRowWidget({
-    super.key,
-    required this.title,
-    required this.value,
-  });
+  const SummaryRowWidget({super.key, required this.title, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -105,20 +90,8 @@ class SummaryRowWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            title,
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          Text(
-            value,
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
+          Text(title, style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400)),
+          Text(value, style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400)),
         ],
       ),
     );
@@ -136,24 +109,16 @@ class DownloadSummaryWidget extends StatelessWidget {
       color: Colors.white,
       child: Row(
         children: [
-          Image.asset(
-            ImageAssets.pdfIcon,
-            width: 30,
-            height: 30,
-          ),
+          Image.asset(ImageAssets.pdfIcon, width: 30, height: 30),
           const SizedBox(width: 10),
           Text(
             "View reservation summary",
-            style: GoogleFonts.poppins(
-              color: AppColors.secondTextColor,
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-            ),
+            style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 16, fontWeight: FontWeight.w400),
           ),
           const Spacer(),
           SvgPicture.asset(
             ImageAssets.arrowDown,
-            
+
             // ignore: deprecated_member_use
             color: AppColors.primaryColor,
           ),
@@ -171,11 +136,7 @@ class DisclaimerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       "Lobby disclaims responsibility for any financial\ntransfers outside the platform.\nIf there is a deposit or a balance, it is paid\nbefore you enter.",
-      style: GoogleFonts.poppins(
-        color: AppColors.secondTextColor,
-        fontSize: 14,
-        fontWeight: FontWeight.w400,
-      ),
+      style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 14, fontWeight: FontWeight.w400),
     );
   }
 }
@@ -184,10 +145,7 @@ class DisclaimerWidget extends StatelessWidget {
 class DoneButtonWidget extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const DoneButtonWidget({
-    super.key,
-    required this.onPressed,
-  });
+  const DoneButtonWidget({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -197,19 +155,10 @@ class DoneButtonWidget extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primaryColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onPressed: onPressed,
-        child: Text(
-          "Done",
-          style: GoogleFonts.poppins(
-            fontSize: 16,
-            color: Colors.white,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
+        child: Text("Done", style: GoogleFonts.poppins(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w400)),
       ),
     );
   }
@@ -242,11 +191,7 @@ class ConfirmedPaymentScreenContent extends StatelessWidget {
         children: [
           Text(
             "Confirmed reservation number $reservationNumber",
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: AppColors.secondTextColor,
-            ),
+            style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400, color: AppColors.secondTextColor),
           ),
           const SizedBox(height: 10),
           ...reservationItems.map(
@@ -254,26 +199,16 @@ class ConfirmedPaymentScreenContent extends StatelessWidget {
               imagePath: item['imagePath']!,
               title: item['title']!,
               hostName: item['hostName']!,
-              onMessageTap: () =>
-                  onMessagePressed(item['hostName']!, item['imagePath']!),
+              onMessageTap: () => onMessagePressed(item['hostName']!, item['imagePath']!),
             ),
           ),
           const SizedBox(height: 20),
           Text(
             "Summary",
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColors.primaryColor,
-            ),
+            style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.primaryColor),
           ),
           const SizedBox(height: 10),
-          ...summaryItems.map(
-            (item) => SummaryRowWidget(
-              title: item['title']!,
-              value: item['value']!,
-            ),
-          ),
+          ...summaryItems.map((item) => SummaryRowWidget(title: item['title']!, value: item['value']!)),
           const Divider(),
           const DownloadSummaryWidget(),
           const Divider(),
@@ -293,19 +228,11 @@ class ConfirmedPaymentScreenContent extends StatelessWidget {
 class AppLogoWidget extends StatelessWidget {
   final double size;
 
-  const AppLogoWidget({
-    super.key,
-    this.size = 120,
-  });
+  const AppLogoWidget({super.key, this.size = 120});
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
-      'assets/images/logo1.png',
-      color: AppColors.primary,
-      width: size,
-      height: size,
-    );
+    return Image.asset('assets/images/logo1.png', color: AppColors.primary, width: size, height: size);
   }
 }
 
@@ -313,20 +240,13 @@ class AppLogoWidget extends StatelessWidget {
 class WelcomeTitleWidget extends StatelessWidget {
   final double fontSize;
 
-  const WelcomeTitleWidget({
-    super.key,
-    this.fontSize = 22,
-  });
+  const WelcomeTitleWidget({super.key, this.fontSize = 22});
 
   @override
   Widget build(BuildContext context) {
     return Text(
       "Welcome !",
-      style: GoogleFonts.poppins(
-        fontSize: fontSize,
-        fontWeight: FontWeight.w500,
-        color: AppColors.primary,
-      ),
+      style: GoogleFonts.poppins(fontSize: fontSize, fontWeight: FontWeight.w500, color: AppColors.primary),
     );
   }
 }
@@ -335,21 +255,14 @@ class WelcomeTitleWidget extends StatelessWidget {
 class WelcomeSubtitleWidget extends StatelessWidget {
   final double fontSize;
 
-  const WelcomeSubtitleWidget({
-    super.key,
-    this.fontSize = 14,
-  });
+  const WelcomeSubtitleWidget({super.key, this.fontSize = 14});
 
   @override
   Widget build(BuildContext context) {
     return Text(
       "Please enter your mobile number to create an account or log in.",
       textAlign: TextAlign.start,
-      style: GoogleFonts.poppins(
-        fontSize: fontSize,
-        color: Colors.black54,
-        fontWeight: FontWeight.w400,
-      ),
+      style: GoogleFonts.poppins(fontSize: fontSize, color: Colors.black54, fontWeight: FontWeight.w400),
     );
   }
 }
@@ -364,17 +277,11 @@ class CountryCodePickerWidget extends StatelessWidget {
       width: double.infinity,
       height: 48,
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(10),
-      ),
+      decoration: BoxDecoration(border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(10)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Image.asset(
-            'assets/images/egypt_flag.png',
-            width: 24,
-          ),
+          Image.asset('assets/images/egypt_flag.png', width: 24),
           const Text("+02"),
           const Icon(Icons.arrow_drop_down),
         ],
@@ -387,10 +294,7 @@ class CountryCodePickerWidget extends StatelessWidget {
 class PhoneNumberFieldWidget extends StatelessWidget {
   final TextEditingController controller;
 
-  const PhoneNumberFieldWidget({
-    super.key,
-    required this.controller,
-  });
+  const PhoneNumberFieldWidget({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -399,13 +303,8 @@ class PhoneNumberFieldWidget extends StatelessWidget {
       keyboardType: TextInputType.phone,
       decoration: InputDecoration(
         hintText: "0123456789",
-        hintStyle: GoogleFonts.poppins(
-          color: const Color(0xFFCBCBCB),
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide.none,
-        ),
+        hintStyle: GoogleFonts.poppins(color: const Color(0xFFCBCBCB)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
       ),
     );
   }
@@ -416,11 +315,7 @@ class ContinueButtonWidget extends StatelessWidget {
   final VoidCallback onPressed;
   final double fontSize;
 
-  const ContinueButtonWidget({
-    super.key,
-    required this.onPressed,
-    this.fontSize = 16,
-  });
+  const ContinueButtonWidget({super.key, required this.onPressed, this.fontSize = 16});
 
   @override
   Widget build(BuildContext context) {
@@ -430,18 +325,12 @@ class ContinueButtonWidget extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onPressed: onPressed,
         child: Text(
           "Continue",
-          style: GoogleFonts.poppins(
-            fontSize: fontSize,
-            color: Colors.white,
-            fontWeight: FontWeight.w400,
-          ),
+          style: GoogleFonts.poppins(fontSize: fontSize, color: Colors.white, fontWeight: FontWeight.w400),
         ),
       ),
     );
@@ -454,12 +343,7 @@ class SocialButtonWidget extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
 
-  const SocialButtonWidget({
-    super.key,
-    required this.imagePath,
-    required this.text,
-    required this.onPressed,
-  });
+  const SocialButtonWidget({super.key, required this.imagePath, required this.text, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -472,27 +356,15 @@ class SocialButtonWidget extends StatelessWidget {
           style: OutlinedButton.styleFrom(
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             side: const BorderSide(color: AppColors.primary),
           ),
           onPressed: onPressed,
           child: Row(
             children: [
-              Image.asset(
-                imagePath,
-                width: 22,
-                height: 22,
-              ),
+              Image.asset(imagePath, width: 22, height: 22),
               const SizedBox(width: 20),
-              Text(
-                text,
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  color: const Color(0xFF414141),
-                ),
-              ),
+              Text(text, style: GoogleFonts.poppins(fontSize: 16, color: const Color(0xFF414141))),
             ],
           ),
         ),
@@ -525,8 +397,7 @@ class LoginScreenContent extends StatelessWidget {
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal:
-              isLargeScreen ? MediaQuery.of(context).size.width * 0.2 : 20,
+          horizontal: isLargeScreen ? MediaQuery.of(context).size.width * 0.2 : 20,
           vertical: 15,
         ),
         child: Column(
@@ -549,29 +420,17 @@ class LoginScreenContent extends StatelessWidget {
               children: [
                 const CountryCodePickerWidget(),
                 const SizedBox(width: 10),
-                Expanded(
-                    child: PhoneNumberFieldWidget(controller: phoneController)),
+                Expanded(child: PhoneNumberFieldWidget(controller: phoneController)),
               ],
             ),
             const SizedBox(height: 20),
 
             // Continue button
-            ContinueButtonWidget(
-              onPressed: onContinuePressed,
-              fontSize: isLargeScreen ? 20 : 16,
-            ),
+            ContinueButtonWidget(onPressed: onContinuePressed, fontSize: isLargeScreen ? 20 : 16),
             const SizedBox(height: 20),
 
             // "Or" text
-            Center(
-              child: Text(
-                "or",
-                style: GoogleFonts.poppins(
-                  color: Colors.black54,
-                  fontSize: 16,
-                ),
-              ),
-            ),
+            Center(child: Text("or", style: GoogleFonts.poppins(color: Colors.black54, fontSize: 16))),
             const SizedBox(height: 10),
 
             // Social login buttons
@@ -629,17 +488,11 @@ class PaymentOptionWidget extends StatelessWidget {
         ),
         child: Row(
           children: [
-            value == selectedValue
-                ? SvgPicture.asset(ImageAssets.cracalBlack)
-                : SvgPicture.asset(ImageAssets.cracalWhite),
+            value == selectedValue ? SvgPicture.asset(ImageAssets.cracalBlack) : SvgPicture.asset(ImageAssets.cracalWhite),
             const SizedBox(width: 10),
             Text(
               title,
-              style: GoogleFonts.poppins(
-                color: AppColors.secondTextColor,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-              ),
+              style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 14, fontWeight: FontWeight.w400),
             ),
             const Spacer(),
             // ignore: deprecated_member_use
@@ -679,43 +532,26 @@ class InputFieldWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label,
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              color: AppColors.secondTextColor,
-              fontWeight: FontWeight.w400,
-            )),
+        Text(label, style: GoogleFonts.poppins(fontSize: 16, color: AppColors.secondTextColor, fontWeight: FontWeight.w400)),
         const SizedBox(height: 5),
         Container(
           width: double.infinity,
           height: 48,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
           child: TextField(
             controller: controller,
             keyboardType: keyboardType,
             obscureText: obscureText,
-            style: GoogleFonts.poppins(
-              color: AppColors.grayTextColor,
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-            ),
-            inputFormatters: formatters ??
-                [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(maxLength),
-                ],
+            style: GoogleFonts.poppins(color: AppColors.grayTextColor, fontSize: 16, fontWeight: FontWeight.w400),
+            inputFormatters:
+                formatters ?? [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(maxLength)],
             onChanged: onChanged,
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: GoogleFonts.poppins(
-                color: const Color(0xFFCBCBCB),
-              ),
+              hintStyle: GoogleFonts.poppins(color: const Color(0xFFCBCBCB)),
               filled: true,
               fillColor: Colors.white,
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             ),
           ),
         ),
@@ -729,11 +565,7 @@ class SaveCardDataWidget extends StatelessWidget {
   final bool isSaved;
   final VoidCallback onTap;
 
-  const SaveCardDataWidget({
-    super.key,
-    required this.isSaved,
-    required this.onTap,
-  });
+  const SaveCardDataWidget({super.key, required this.isSaved, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -742,16 +574,12 @@ class SaveCardDataWidget extends StatelessWidget {
       children: [
         InkWell(
           onTap: onTap,
-          child: isSaved
-              ? SvgPicture.asset(ImageAssets.cracalBlack)
-              : SvgPicture.asset(ImageAssets.cracalWhite),
+          child: isSaved ? SvgPicture.asset(ImageAssets.cracalBlack) : SvgPicture.asset(ImageAssets.cracalWhite),
         ),
-        Text("  Save data when paying later",
-            style: GoogleFonts.poppins(
-              color: AppColors.secondTextColor,
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            )),
+        Text(
+          "  Save data when paying later",
+          style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 14, fontWeight: FontWeight.w400),
+        ),
       ],
     );
   }
@@ -779,23 +607,15 @@ class ActionButtonWidget extends StatelessWidget {
       height: 48,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: isEnabled
-              ? AppColors.primaryColor
-              // ignore: deprecated_member_use
-              : AppColors.primaryColor.withValues(alpha: 0.5),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          backgroundColor:
+              isEnabled
+                  ? AppColors.primaryColor
+                  // ignore: deprecated_member_use
+                  : AppColors.primaryColor.withValues(alpha: 0.5),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onPressed: isEnabled ? onPressed : null,
-        child: Text(
-          text,
-          style: GoogleFonts.poppins(
-            fontSize: fontSize,
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        child: Text(text, style: GoogleFonts.poppins(fontSize: fontSize, color: Colors.white, fontWeight: FontWeight.w600)),
       ),
     );
   }
@@ -837,17 +657,12 @@ class CardDetailsFormWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 10),
-          child: Divider(),
-        ),
+        const Padding(padding: EdgeInsets.symmetric(vertical: 10), child: Divider()),
         const SizedBox(height: 10),
-        Text("Card details",
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColors.primaryColor,
-            )),
+        Text(
+          "Card details",
+          style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.primaryColor),
+        ),
         const SizedBox(height: 20),
 
         // Card Number
@@ -858,10 +673,7 @@ class CardDetailsFormWidget extends StatelessWidget {
           keyboardType: TextInputType.number,
           maxLength: 19,
           onChanged: onCardNumberChanged,
-          formatters: [
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(16),
-          ],
+          formatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],
         ),
 
         const SizedBox(height: 10),
@@ -874,9 +686,7 @@ class CardDetailsFormWidget extends StatelessWidget {
           keyboardType: TextInputType.text,
           maxLength: 50,
           onChanged: onCardNameChanged,
-          formatters: [
-            FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
-          ],
+          formatters: [FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]'))],
         ),
 
         const SizedBox(height: 10),
@@ -892,10 +702,7 @@ class CardDetailsFormWidget extends StatelessWidget {
                 keyboardType: TextInputType.number,
                 maxLength: 5,
                 onChanged: onExpirationChanged,
-                formatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(4),
-                ],
+                formatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(4)],
               ),
             ),
             const SizedBox(width: 10),
@@ -908,10 +715,7 @@ class CardDetailsFormWidget extends StatelessWidget {
                 maxLength: 3,
                 onChanged: onCvvChanged,
                 obscureText: true,
-                formatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(3),
-                ],
+                formatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(3)],
               ),
             ),
           ],
@@ -920,20 +724,12 @@ class CardDetailsFormWidget extends StatelessWidget {
         const SizedBox(height: 10),
 
         // Save Data Checkbox
-        SaveCardDataWidget(
-          isSaved: saveData,
-          onTap: onSaveDataToggle,
-        ),
+        SaveCardDataWidget(isSaved: saveData, onTap: onSaveDataToggle),
 
         const SizedBox(height: 20),
 
         // Add Button
-        ActionButtonWidget(
-          text: "Add",
-          onPressed: onAddButtonPressed,
-          isEnabled: isFormValid,
-          fontSize: 18,
-        ),
+        ActionButtonWidget(text: "Add", onPressed: onAddButtonPressed, isEnabled: isFormValid, fontSize: 18),
 
         const SizedBox(height: 20),
       ],
@@ -963,10 +759,7 @@ class PromoCodeInputWidget extends StatelessWidget {
     return Container(
       height: 48,
       margin: const EdgeInsets.symmetric(vertical: 15),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.grey.shade300)),
       child: Row(
         children: [
           Expanded(
@@ -976,10 +769,7 @@ class PromoCodeInputWidget extends StatelessWidget {
                 hintText: hintText,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                 border: InputBorder.none,
-                hintStyle: GoogleFonts.poppins(
-                  color: Colors.grey.shade400,
-                  fontSize: 14,
-                ),
+                hintStyle: GoogleFonts.poppins(color: Colors.grey.shade400, fontSize: 14),
               ),
             ),
           ),
@@ -987,20 +777,14 @@ class PromoCodeInputWidget extends StatelessWidget {
             height: 48,
             decoration: BoxDecoration(
               color: isApplied ? Colors.grey.shade200 : AppColors.primaryColor,
-              borderRadius: const BorderRadius.only(
-                topRight: Radius.circular(10),
-                bottomRight: Radius.circular(10),
-              ),
+              borderRadius: const BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10)),
             ),
             child: TextButton(
               onPressed: onApplyPressed,
               style: TextButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
+                  borderRadius: BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10)),
                 ),
               ),
               child: Text(
@@ -1025,12 +809,7 @@ class DiscountRowWidget extends StatelessWidget {
   final String savedAmount;
   final String finalPrice;
 
-  const DiscountRowWidget({
-    super.key,
-    required this.discountText,
-    required this.savedAmount,
-    required this.finalPrice,
-  });
+  const DiscountRowWidget({super.key, required this.discountText, required this.savedAmount, required this.finalPrice});
 
   @override
   Widget build(BuildContext context) {
@@ -1041,28 +820,16 @@ class DiscountRowWidget extends StatelessWidget {
         children: [
           Text(
             discountText,
-            style: GoogleFonts.poppins(
-              color: AppColors.primaryColor,
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
+            style: GoogleFonts.poppins(color: AppColors.primaryColor, fontSize: 14, fontWeight: FontWeight.w600),
           ),
           Text(
             savedAmount,
-            style: GoogleFonts.poppins(
-              color: AppColors.secondTextColor,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            ),
+            style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 12, fontWeight: FontWeight.w600),
           ),
           const Spacer(),
           Text(
             finalPrice,
-            style: GoogleFonts.poppins(
-              color: AppColors.primaryColor,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
+            style: GoogleFonts.poppins(color: AppColors.primaryColor, fontSize: 16, fontWeight: FontWeight.w600),
           ),
         ],
       ),
@@ -1106,27 +873,21 @@ class PaymentMethodScreenContent extends StatelessWidget {
           Row(
             children: [
               InkWell(
-                  onTap: () => Navigator.pop(context),
-                  child: Icon(Icons.arrow_back_ios,
-                      color: AppColors.grayColorIcon)),
+                onTap: () => Navigator.pop(context),
+                child: Icon(Icons.arrow_back_ios, color: AppColors.grayColorIcon),
+              ),
               const SizedBox(width: 8),
               Text(
                 "Payment Method",
-                style: GoogleFonts.poppins(
-                  color: AppColors.grayTextColor,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                ),
-              )
+                style: GoogleFonts.poppins(color: AppColors.grayTextColor, fontWeight: FontWeight.w500, fontSize: 14),
+              ),
             ],
           ),
           const SizedBox(height: 22),
-          Text("Payment Method",
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: AppColors.secondTextColor,
-              )),
+          Text(
+            "Payment Method",
+            style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.secondTextColor),
+          ),
           const SizedBox(height: 10),
 
           // Payment options
@@ -1144,21 +905,14 @@ class PaymentMethodScreenContent extends StatelessWidget {
           if (selectedPaymentMethod == 0) cardDetailsForm,
 
           // Summary section
-          Text("Summary",
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: AppColors.secondTextColor,
-              )),
+          Text(
+            "Summary",
+            style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.secondTextColor),
+          ),
           const SizedBox(height: 10),
 
           // Summary items
-          ...summaryItems.map(
-            (item) => SummaryRowWidget(
-              title: item['title']!,
-              value: item['value']!,
-            ),
-          ),
+          ...summaryItems.map((item) => SummaryRowWidget(title: item['title']!, value: item['value']!)),
 
           const Divider(),
 
@@ -1168,10 +922,7 @@ class PaymentMethodScreenContent extends StatelessWidget {
           const SizedBox(height: 10),
 
           // Total price
-          const SummaryRowWidget(
-            title: "Total",
-            value: "1000 SAR",
-          ),
+          const SummaryRowWidget(title: "Total", value: "1000 SAR"),
 
           // Discount row (conditionally shown)
           if (showDiscount) discountRow,
@@ -1179,11 +930,7 @@ class PaymentMethodScreenContent extends StatelessWidget {
           const SizedBox(height: 20),
 
           // Confirm payment button
-          ActionButtonWidget(
-            text: "Confirm Payment",
-            onPressed: onConfirmPayment,
-            fontSize: 16,
-          ),
+          ActionButtonWidget(text: "Confirm Payment", onPressed: onConfirmPayment, fontSize: 16),
 
           const SizedBox(height: 20),
         ],
@@ -1200,7 +947,7 @@ class ReservedItemCardWidget extends StatelessWidget {
   final String title;
   final String location;
   final String dateDetails;
-  final String price;
+  final int price, guestNumber, nights, totalPrice;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
 
@@ -1211,6 +958,9 @@ class ReservedItemCardWidget extends StatelessWidget {
     required this.location,
     required this.dateDetails,
     required this.price,
+    required this.guestNumber,
+    required this.nights,
+    required this.totalPrice,
     this.onEdit,
     this.onDelete,
   });
@@ -1231,15 +981,8 @@ class ReservedItemCardWidget extends StatelessWidget {
                 child: Column(
                   children: [
                     ClipRRect(
-                      borderRadius: const BorderRadius.horizontal(
-                        left: Radius.circular(10),
-                        right: Radius.circular(10),
-                      ),
-                      child: Image.asset(
-                        imagePath,
-                        height: 120,
-                        fit: BoxFit.cover,
-                      ),
+                      borderRadius: const BorderRadius.horizontal(left: Radius.circular(10), right: Radius.circular(10)),
+                      child: FadeInImage.assetNetwork(placeholder: 'assets/images/IMAG.png', image: imagePath),
                     ),
                   ],
                 ),
@@ -1257,38 +1000,34 @@ class ReservedItemCardWidget extends StatelessWidget {
                           Expanded(
                             child: Text(
                               title,
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                color: AppColors.secondTextColor,
-                              ),
+                              style: GoogleFonts.poppins(fontSize: 14, color: AppColors.secondTextColor),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                             ),
                           ),
-                          Text(
-                            price,
-                            style: GoogleFonts.poppins(
-                              color: AppColors.secondTextColor,
-                              fontSize: 14,
-                            ),
-                          ),
+                          Text(price.toString(), style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 14)),
                         ],
                       ),
                       const SizedBox(height: 10),
+                      Text(location, style: GoogleFonts.poppins(color: AppColors.grayTextColor)),
+                      const SizedBox(height: 10),
+                      Text(dateDetails, style: GoogleFonts.poppins(color: AppColors.grayTextColor)),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("$guestNumber Guests", style: GoogleFonts.poppins(color: AppColors.grayTextColor)),
+                          Text("$nights Nights", style: GoogleFonts.poppins(color: AppColors.grayTextColor)),
+                        ],
+                      ),
                       Text(
-                        location,
+                        "Total Price: $totalPrice",
                         style: GoogleFonts.poppins(
-                          color: AppColors.grayTextColor,
+                          color: AppColors.secondTextColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      Text(
-                        dateDetails,
-                        style: GoogleFonts.poppins(
-                          color: AppColors.grayTextColor,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
                     ],
                   ),
                 ),
@@ -1301,28 +1040,16 @@ class ReservedItemCardWidget extends StatelessWidget {
               Expanded(
                 child: Text(
                   "Free cancellation before 27 October",
-                  style: GoogleFonts.poppins(
-                    color: AppColors.secondTextColor,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                  ),
+                  style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 14, fontWeight: FontWeight.w400),
                 ),
               ),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  if (onEdit != null)
-                    InkWell(
-                      onTap: onEdit,
-                      child: SvgPicture.asset(ImageAssets.editIcon),
-                    ),
+                  if (onEdit != null) InkWell(onTap: onEdit, child: SvgPicture.asset(ImageAssets.editIcon)),
                   const SizedBox(width: 10),
-                  if (onDelete != null)
-                    InkWell(
-                      onTap: onDelete,
-                      child: SvgPicture.asset(ImageAssets.deleteIcon),
-                    ),
+                  if (onDelete != null) InkWell(onTap: onDelete, child: SvgPicture.asset(ImageAssets.deleteIcon)),
                 ],
               ),
             ],
@@ -1338,10 +1065,7 @@ class ReservedItemCardWidget extends StatelessWidget {
 class PromoCodeSuccessMessageWidget extends StatelessWidget {
   final String message;
 
-  const PromoCodeSuccessMessageWidget({
-    super.key,
-    this.message = "The promo code has been applied successfully",
-  });
+  const PromoCodeSuccessMessageWidget({super.key, this.message = "The promo code has been applied successfully"});
 
   @override
   Widget build(BuildContext context) {
@@ -1349,11 +1073,7 @@ class PromoCodeSuccessMessageWidget extends StatelessWidget {
       padding: const EdgeInsets.only(top: 8.0),
       child: Text(
         message,
-        style: GoogleFonts.poppins(
-          color: AppColors.primaryColor,
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-        ),
+        style: GoogleFonts.poppins(color: AppColors.primaryColor, fontSize: 14, fontWeight: FontWeight.w400),
       ),
     );
   }
@@ -1365,185 +1085,48 @@ class SectionTitleWidget extends StatelessWidget {
   final double fontSize;
   final FontWeight fontWeight;
 
-  const SectionTitleWidget({
-    super.key,
-    required this.title,
-    this.fontSize = 18,
-    this.fontWeight = FontWeight.w600,
-  });
+  const SectionTitleWidget({super.key, required this.title, this.fontSize = 18, this.fontWeight = FontWeight.w600});
 
   @override
   Widget build(BuildContext context) {
     return Text(
       title,
-      style: GoogleFonts.poppins(
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-        color: AppColors.secondTextColor,
-      ),
+      style: GoogleFonts.poppins(fontSize: fontSize, fontWeight: fontWeight, color: AppColors.secondTextColor),
     );
   }
 }
 
-// Summary Screen Content Widget
-class SummaryScreenContent extends StatelessWidget {
-  final List<Map<String, dynamic>> rentalItems;
-  final List<Map<String, dynamic>> activityItems;
-  final List<Map<String, String>> summaryItems;
-  final Widget promoCodeInput;
-  final bool showSuccessMessage;
-  final String successMessage;
-  final bool isApplied;
-  final String discountText;
-  final String savedAmount;
-  final String finalPrice;
-  final VoidCallback onPaymentMethodPressed;
+// // Summary Screen Content Widget
+// class SummaryScreenContent extends StatelessWidget {
+//   final List<Map<String, dynamic>> rentalItems;
+//   final List<Map<String, dynamic>> activityItems;
+//   final List<Map<String, String>> summaryItems;
+//   final Widget promoCodeInput;
+//   final bool showSuccessMessage;
+//   final String successMessage;
+//   final bool isApplied;
+//   final String discountText;
+//   final String savedAmount;
+//   final String finalPrice;
+//   final VoidCallback onPaymentMethodPressed;
 
-  const SummaryScreenContent({
-    super.key,
-    required this.rentalItems,
-    required this.activityItems,
-    required this.summaryItems,
-    required this.promoCodeInput,
-    required this.showSuccessMessage,
-    this.successMessage = "The promo code has been applied successfully",
-    this.isApplied = false,
-    this.discountText = "After Discount",
-    this.savedAmount = "(You Saved 100 SAR)",
-    this.finalPrice = "900 SAR",
-    required this.onPaymentMethodPressed,
-  });
+//   const SummaryScreenContent({
+//     super.key,
+//     required this.rentalItems,
+//     required this.activityItems,
+//     required this.summaryItems,
+//     required this.promoCodeInput,
+//     required this.showSuccessMessage,
+//     this.successMessage = "The promo code has been applied successfully",
+//     this.isApplied = false,
+//     this.discountText = "After Discount",
+//     this.savedAmount = "(You Saved 100 SAR)",
+//     this.finalPrice = "900 SAR",
+//     required this.onPaymentMethodPressed,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 50),
-          Row(
-            children: [
-              InkWell(
-                onTap: () => Navigator.pop(context),
-                child:
-                    Icon(Icons.arrow_back_ios, color: AppColors.grayColorIcon),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                "Summary",
-                style: GoogleFonts.poppins(
-                  color: AppColors.grayTextColor,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                ),
-              )
-            ],
-          ),
-          const SizedBox(height: 22),
-
-          // Reserved items section
-          const SectionTitleWidget(title: "Reserved items"),
-          const SizedBox(height: 15),
-
-          // Rental property section
-          if (rentalItems.isNotEmpty) ...[
-            const SectionTitleWidget(
-              title: "Rental property",
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-            ),
-            const SizedBox(height: 10),
-            ...rentalItems.map(
-              (item) => ReservedItemCardWidget(
-                imagePath: item['imagePath'],
-                title: item['title'],
-                location: item['location'],
-                dateDetails: item['dateDetails'],
-                price: item['price'],
-                onEdit: item['onEdit'],
-                onDelete: item['onDelete'],
-              ),
-            ),
-          ],
-
-          // Tourist activities section
-          if (activityItems.isNotEmpty) ...[
-            const SectionTitleWidget(
-              title: "Tourist Activities",
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-            ),
-            const SizedBox(height: 10),
-            ...activityItems.map(
-              (item) => ReservedItemCardWidget(
-                imagePath: item['imagePath'],
-                title: item['title'],
-                location: item['location'],
-                dateDetails: item['dateDetails'],
-                price: item['price'],
-                onEdit: item['onEdit'],
-                onDelete: item['onDelete'],
-              ),
-            ),
-          ],
-
-          const SizedBox(height: 20),
-
-          // Summary section
-          const SectionTitleWidget(title: "Summary"),
-          const SizedBox(height: 10),
-
-          // Summary items
-          ...summaryItems.map(
-            (item) => SummaryRowWidget(
-              title: item['title']!,
-              value: item['value']!,
-            ),
-          ),
-
-          const Divider(),
-
-          // Promo code section
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              promoCodeInput,
-
-              // Success message
-              if (showSuccessMessage)
-                PromoCodeSuccessMessageWidget(message: successMessage),
-
-              const SizedBox(height: 20),
-
-              // Total price
-              const SummaryRowWidget(
-                title: "Total",
-                value: "1000 SAR",
-              ),
-
-              // Discount row
-              if (isApplied)
-                DiscountRowWidget(
-                  discountText: discountText,
-                  savedAmount: savedAmount,
-                  finalPrice: finalPrice,
-                ),
-
-              const SizedBox(height: 20),
-
-              // Payment method button
-              ActionButtonWidget(
-                text: "Payment Method",
-                onPressed: onPaymentMethodPressed,
-                fontSize: 18,
-              ),
-
-              const SizedBox(height: 24),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return ;
+//   }
+// }

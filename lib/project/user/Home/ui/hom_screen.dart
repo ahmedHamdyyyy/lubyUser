@@ -1,13 +1,14 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:luby2/project/user/Home/Widget/widget_home.dart' show buildBottomNavigationBar;
 
 import '../../../../locator.dart';
 import '../../User/screens/Conversations/conversations_screen.dart';
 import '../../User/screens/account/account_info/account.dart';
-import '../../User/screens/reservation/reservation_screen.dart';
 import '../../favorites/view/favourite2.dart';
+import '../../reservation/view/screens/reservation_screen.dart';
 import '../cubit/home_cubit.dart';
 import 'home_main_screen.dart';
 
@@ -19,13 +20,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;
   final screen = [HomeScreenMain(), Favorite2Screen(), ReservationScreen(), ConversationScreen(), AccountScreen()];
-  void updateCurrentIndex(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
+  // int _currentIndex = 0;
+
+  // void updateCurrentIndex(int index) {
+  //   setState(() {
+  //     _currentIndex = index;
+  //   });
+  // }
 
   @override
   void initState() {
@@ -39,13 +41,20 @@ class _HomeScreenState extends State<HomeScreen> {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
-          updateCurrentIndex(0);
+          getIt<HomeCubit>().updateCurrentScreenIndex(0);
         }
       },
-
-      child: Scaffold(
-        body: screen[_currentIndex],
-        bottomNavigationBar: buildBottomNavigationBar(currentIndex: _currentIndex, onTap: updateCurrentIndex),
+      child: BlocSelector<HomeCubit, HomeState, int>(
+        selector: (state) => state.currentScreenIndex,
+        builder: (context, currentScreenIndex) {
+          return Scaffold(
+            body: screen[currentScreenIndex],
+            bottomNavigationBar: buildBottomNavigationBar(
+              currentIndex: currentScreenIndex,
+              onTap: getIt<HomeCubit>().updateCurrentScreenIndex,
+            ),
+          );
+        },
       ),
     );
   }

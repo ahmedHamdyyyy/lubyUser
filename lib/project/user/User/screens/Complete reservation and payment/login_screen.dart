@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/widget/helper.dart';
 import 'all_widget__complete_reservation_and_payment.dart';
-import 'summary_screen.dart';
 
 // Changed from StatelessWidget to StatefulWidget
 class LoginScreenAfterHome extends StatefulWidget {
@@ -35,10 +35,10 @@ class _LoginScreenAfterHomeState extends State<LoginScreenAfterHome> {
         phoneController: phoneController,
         isLargeScreen: isLargeScreen,
         onContinuePressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => SummaryScreen()),
-          );
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => SummaryScreen()),
+          // );
         },
         onEmailPressed: () {
           // Handle email login

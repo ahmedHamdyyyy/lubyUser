@@ -10,6 +10,7 @@ import 'project/user/activities/cubit/cubit.dart';
 import 'project/user/auth/cubit/auth_cubit.dart';
 import 'project/user/auth/view/Screen/splash/luby_screen_splash.dart';
 import 'project/user/favorites/cubit/cubit.dart';
+import 'project/user/reservation/cubit/cubit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,15 +31,16 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => getIt<HomeCubit>()),
         BlocProvider(create: (context) => getIt<ActivitiesCubit>()),
         BlocProvider(create: (context) => getIt<FavoritesCubit>()),
+        BlocProvider(create: (context) => getIt<ReservationsCubit>()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(360, 690),
         minTextAdapt: true,
         splitScreenMode: true,
-        builder:
-            (context, child) => MaterialApp(
-              debugShowCheckedModeBanner: false,
-              /*    theme: ThemeData(
+        builder: (context, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            /*    theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
               textTheme: GoogleFonts.poppinsTextTheme(
@@ -55,9 +57,10 @@ class MyApp extends StatelessWidget {
                 ),
               ),
             ),
-           */
-              home: const LubyScreenSplash(),
-            ),
+                       */
+            home: const LubyScreenSplash(),
+          );
+        },
       ),
     );
   }

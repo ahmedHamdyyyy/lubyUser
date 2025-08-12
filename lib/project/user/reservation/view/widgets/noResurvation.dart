@@ -2,11 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart' show GoogleFonts;
+
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/images/image_assets.dart';
-import 'package:google_fonts/google_fonts.dart' show GoogleFonts;
 // import 'package:fondok/core/widget/widgets.dart';
-import 'reservation_screen.dart';
+import '../screens/reservation_screen.dart';
 
 class NoResurvation extends StatelessWidget {
   const NoResurvation({super.key});
@@ -26,12 +27,8 @@ class NoResurvation extends StatelessWidget {
                 const SizedBox(width: 20),
                 Text(
                   "Reservation",
-                  style: GoogleFonts.poppins(
-                    color: AppColors.grayTextColor,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
-                  ),
-                )
+                  style: GoogleFonts.poppins(color: AppColors.grayTextColor, fontWeight: FontWeight.w500, fontSize: 14),
+                ),
               ],
             ),
             const SizedBox(height: 22),
@@ -40,18 +37,11 @@ class NoResurvation extends StatelessWidget {
               padding: const EdgeInsets.only(left: 24, top: 16),
               child: InkWell(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ReservationScreen()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const ReservationScreen()));
                 },
-                child:  Text(
+                child: Text(
                   'Reservation',
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.primaryColor,
-                  ),
+                  style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.primaryColor),
                 ),
               ),
             ),

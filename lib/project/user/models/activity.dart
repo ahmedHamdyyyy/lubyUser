@@ -107,7 +107,7 @@ class ActivityModel extends Equatable {
     time: json['time'] ?? '',
     activityTime: json['activityTime'] ?? '',
     name: json['name'] ?? '',
-    verified: json['verified'] ?? false,
+    verified: bool.fromEnvironment(json['verified'] ?? 'false'),
     medias: List<String>.from(json['medias'] ?? []),
     isFavorite: json['isFavorite'] ?? false,
   );

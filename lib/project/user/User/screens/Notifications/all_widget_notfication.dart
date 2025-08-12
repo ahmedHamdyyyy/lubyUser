@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/images/image_assets.dart';
 import '../../../../../../config/widget/helper.dart';
+import '../../../reservation/view/screens/reservation_screen.dart';
 import 'notification_detail_screen.dart';
 import 'notification_details_reservation_screen.dart';
-import '../reservation/reservation_screen.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class NotificationDetailContent extends StatelessWidget {
   final Map<String, dynamic> notification;
-  
-  const NotificationDetailContent({
-    super.key,
-    required this.notification,
-  });
+
+  const NotificationDetailContent({super.key, required this.notification});
 
   @override
   Widget build(BuildContext context) {
@@ -26,34 +24,20 @@ class NotificationDetailContent extends StatelessWidget {
           // Notification title
           Text(
             'Notification Name',
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColors.primary,
-            ),
+            style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.primary),
           ),
           SizedBox(height: 25),
           Text(
             'Hello Ahmed Hamdy',
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: AppColors.secondTextColor,
-            ),
+            style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400, color: AppColors.secondTextColor),
           ),
           const SizedBox(height: 10),
-          Text(
-            '24/07/2024',
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              color: AppColors.grayTextColor,
-            ),
-          ),
+          Text('24/07/2024', style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor)),
           const SizedBox(height: 25),
 
           // Notification content
           buildLongText(),
-          
+
           const SizedBox(height: 130),
         ],
       ),
@@ -67,29 +51,17 @@ class NotificationDetailContent extends StatelessWidget {
       children: [
         Text(
           'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay lorem ipsum dolor sit amet, consecr text Diam habitant ',
-          style: GoogleFonts.poppins(
-            fontSize: 14,
-            color: Colors.grey[700],
-            height: 1.5,
-          ),
+          style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[700], height: 1.5),
         ),
         const SizedBox(height: 12),
         Text(
           'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay lorem ipsum dolor sit amet, consecr text Diam habitant.',
-          style: GoogleFonts.poppins(
-            fontSize: 14,
-            color: Colors.grey[700],
-            height: 1.5,
-          ),
+          style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[700], height: 1.5),
         ),
         const SizedBox(height: 12),
         Text(
           'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay lorem ipsum dolor sit amet.',
-          style: GoogleFonts.poppins(
-            fontSize: 14,
-            color: Colors.grey[700],
-            height: 1.5,
-          ),
+          style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[700], height: 1.5),
         ),
       ],
     );
@@ -98,11 +70,8 @@ class NotificationDetailContent extends StatelessWidget {
 
 class NotificationReservationContent extends StatelessWidget {
   final Map<String, dynamic> notification;
-  
-  const NotificationReservationContent({
-    super.key,
-    required this.notification,
-  });
+
+  const NotificationReservationContent({super.key, required this.notification});
 
   @override
   Widget build(BuildContext context) {
@@ -114,29 +83,15 @@ class NotificationReservationContent extends StatelessWidget {
           // Notification title
           Text(
             'Notification Name',
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColors.primary,
-            ),
+            style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.primary),
           ),
           SizedBox(height: 25),
           Text(
             'Hello Ahmed Hamdy',
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: AppColors.secondTextColor,
-            ),
+            style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400, color: AppColors.secondTextColor),
           ),
           const SizedBox(height: 10),
-          Text(
-            '24/07/2024',
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              color: AppColors.grayTextColor,
-            ),
-          ),
+          Text('24/07/2024', style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor)),
           const SizedBox(height: 25),
 
           // Reservation confirmation message
@@ -167,23 +122,14 @@ class NotificationReservationContent extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ReservationScreen()),
-          );
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ReservationScreen()));
         },
         child: Text(
           'Show reservation details',
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
+          style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
         ),
       ),
     );
@@ -203,11 +149,8 @@ PreferredSizeWidget notificationsListAppBar(BuildContext context) {
 // Widget for the notifications list title
 class NotificationsListTitle extends StatelessWidget {
   final VoidCallback onTap;
-  
-  const NotificationsListTitle({
-    super.key,
-    required this.onTap,
-  });
+
+  const NotificationsListTitle({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -217,11 +160,7 @@ class NotificationsListTitle extends StatelessWidget {
         onTap: onTap,
         child: Text(
           "Your Notifications",
-          style: GoogleFonts.poppins(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: AppColors.primary,
-          ),
+          style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500, color: AppColors.primary),
         ),
       ),
     );
@@ -239,25 +178,15 @@ class EmptyNotificationsState extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(
-            height: 180,
-          ),
+          SizedBox(height: 180),
           // Bell icon
-          SvgPicture.asset(
-            ImageAssets.noNotifications,
-            height: 130,
-            width: 130,
-          ),
+          SvgPicture.asset(ImageAssets.noNotifications, height: 130, width: 130),
           const SizedBox(height: 20),
           // Empty notifications message
           Text(
             'You don\'t have any notifications\nright now',
             textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(
-              color: AppColors.secondTextColor,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
+            style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 16, fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -268,11 +197,8 @@ class EmptyNotificationsState extends StatelessWidget {
 // Widget for a single notification item
 class NotificationItem extends StatelessWidget {
   final Map<String, dynamic> notification;
-  
-  const NotificationItem({
-    super.key,
-    required this.notification,
-  });
+
+  const NotificationItem({super.key, required this.notification});
 
   @override
   Widget build(BuildContext context) {
@@ -282,20 +208,12 @@ class NotificationItem extends StatelessWidget {
         if (notification['type'] == 'studio') {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => NotificationDetailsReservationScreen(
-                notification: notification,
-              ),
-            ),
+            MaterialPageRoute(builder: (context) => NotificationDetailsReservationScreen(notification: notification)),
           );
         } else {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => NotificationDetailScreen(
-                notification: notification,
-              ),
-            ),
+            MaterialPageRoute(builder: (context) => NotificationDetailScreen(notification: notification)),
           );
         }
       },
@@ -309,12 +227,7 @@ class NotificationItem extends StatelessWidget {
         child: Row(
           children: [
             if (notification['image'] != null)
-              Image.asset(
-                height: 100,
-                width: 100,
-                notification['image'],
-                fit: BoxFit.cover,
-              ),
+              Image.asset(height: 100, width: 100, notification['image'], fit: BoxFit.cover),
 
             if (notification['image'] != null) const SizedBox(width: 12),
 
@@ -325,28 +238,12 @@ class NotificationItem extends StatelessWidget {
                 children: [
                   Text(
                     notification['title'],
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.primary,
-                    ),
+                    style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500, color: AppColors.primary),
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    notification['subtitle'],
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      color: AppColors.secondTextColor,
-                    ),
-                  ),
+                  Text(notification['subtitle'], style: GoogleFonts.poppins(fontSize: 12, color: AppColors.secondTextColor)),
                   const SizedBox(height: 4),
-                  Text(
-                    notification['date'],
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: AppColors.grayTextColor,
-                    ),
-                  ),
+                  Text(notification['date'], style: TextStyle(fontSize: 14, color: AppColors.grayTextColor)),
                 ],
               ),
             ),
@@ -360,11 +257,8 @@ class NotificationItem extends StatelessWidget {
 // Widget for the notifications list
 class NotificationsList extends StatelessWidget {
   final List<Map<String, dynamic>> notifications;
-  
-  const NotificationsList({
-    super.key,
-    required this.notifications,
-  });
+
+  const NotificationsList({super.key, required this.notifications});
 
   @override
   Widget build(BuildContext context) {

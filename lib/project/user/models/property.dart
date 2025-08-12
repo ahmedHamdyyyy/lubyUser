@@ -108,7 +108,7 @@ class PropertyModel extends Equatable {
     required this.isFavorite,
   });
 
-  static const non = PropertyModel(
+  static const initial = PropertyModel(
     id: '',
     type: '',
     available: true,
