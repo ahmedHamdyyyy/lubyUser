@@ -21,4 +21,9 @@ class ApiConstance {
   static const getFavorites = 'favourites/me';
   static const addFavorites = 'favourites/add';
   static const removeFavorites = 'favourites/remove';
+
+  static deleteReview(String id) => "reviews/$id";
+  static updateReview(String id) => "reviews/$id";
+  static const reviews = "reviews";
+  static addReview(String itemId) => "reviews/$itemId";
 }

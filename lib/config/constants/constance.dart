@@ -43,6 +43,9 @@ class AppConst {
   static const facilityLicense = 'facilityLicense';
   static const medias = 'medias';
   static const images = 'images';
+  static const reviewId = 'reviewId';
+  static const comment = 'comment';
+  static const rate = 'rate';
 
   //screens
   static const splashScreen = '/';

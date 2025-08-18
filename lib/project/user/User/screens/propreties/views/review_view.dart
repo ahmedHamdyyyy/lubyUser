@@ -1,16 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../../../../../config/colors/colors.dart';
 // import 'package:go_router/go_router.dart';
 // import '../../../../../core/app_router.dart';
 import '../../../../../../config/images/assets.dart';
-import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/widget/helper.dart';
+import '../../../../Home/cubit/home_cubit.dart';
+import '../../../../models/review.dart';
 import '../widgets/show_review_dialoge.dart';
 import 'rental_details_view.dart';
 
 class ReviewsScreen extends StatelessWidget {
-  const ReviewsScreen({super.key});
-
+  const ReviewsScreen({
+    super.key,
+    required this.itemId,
+    required this.comment,
+    required this.rate,
+    required this.type,
+    required this.reviewId,
+  });
+  final String itemId, comment, reviewId;
+  final int rate;
+  final ReviewType type;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,42 +37,27 @@ class ReviewsScreen extends StatelessWidget {
                 IconButton(
                   onPressed: () {
                     Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const RentalDetailScreen(id: '', index: 0)));
-                    // GoRouter.of(context)
-                    //     .pushReplacement(AppRouter.kRentalDetailView);
+                      context,
+                      MaterialPageRoute(builder: (context) => const RentalDetailScreen(id: '', index: 0)),
+                    );
                   },
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new,
-                    size: 24,
-                  ),
+                  icon: const Icon(Icons.arrow_back_ios_new, size: 24),
                   color: const Color(0xFF757575),
                 ),
-                const TextWidget(
-                  text: 'Reviews',
-                  color: Color(0xFF757575),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
+                const TextWidget(text: 'Reviews', color: Color(0xFF757575), fontSize: 14, fontWeight: FontWeight.w500),
               ],
             ),
             const SizedBox(height: 14),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Material(
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
+                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                 clipBehavior: Clip.antiAlias,
                 child: Container(
                   height: 250,
                   width: double.infinity,
                   decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(AssetsData.apartmentView),
-                      fit: BoxFit.cover,
-                    ),
+                    image: DecorationImage(image: AssetImage(AssetsData.apartmentView), fit: BoxFit.cover),
                   ),
                 ),
               ),
@@ -77,7 +75,7 @@ class ReviewsScreen extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      showReviewDialoge(context);
+                      showReviewDialoge(context, itemId: itemId, type: type, comment: comment, rate: rate, id: reviewId);
                     },
                     child: const TextWidget(
                       text: 'Add Review',
@@ -93,12 +91,7 @@ class ReviewsScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               child: Row(
                 children: [
-                  const TextWidget(
-                    text: 'Rate ',
-                    color: Color(0xFF414141),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
+                  const TextWidget(text: 'Rate ', color: Color(0xFF414141), fontSize: 16, fontWeight: FontWeight.w400),
                   Row(
                     children: List.generate(
                       5,
@@ -123,9 +116,19 @@ class ReviewsScreen extends StatelessWidget {
               ),
             ),
             const Driver(),
-            ...List.generate(
-              4,
-              (index) => _buildReviewItem(),
+            BlocBuilder<HomeCubit, HomeState>(
+              builder: (context, state) {
+                if (state.reviews.isEmpty) {
+                  return Center(child: Padding(padding: EdgeInsetsGeometry.all(16), child: Text('No Reviews until now')));
+                }
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: state.reviews.length,
+                  itemBuilder: (context, index) {
+                    return _buildReviewItem(state.reviews[index]);
+                  },
+                );
+              },
             ),
           ],
         ),
@@ -134,7 +137,7 @@ class ReviewsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildReviewItem() {
+  Widget _buildReviewItem(ReviewModel review) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -147,18 +150,15 @@ class ReviewsScreen extends StatelessWidget {
                 width: 72,
                 height: 72,
                 decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(AssetsData.host2),
-                    fit: BoxFit.cover,
-                  ),
+                  image: DecorationImage(image: AssetImage(AssetsData.host2), fit: BoxFit.cover),
                 ),
               ),
               const SizedBox(width: 12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const TextWidget(
-                    text: 'Mohamed Ahmed',
+                  TextWidget(
+                    text: '${review.userFirstName} ${review.userLastName}',
                     color: Color(0xFF414141),
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -166,15 +166,10 @@ class ReviewsScreen extends StatelessWidget {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const TextWidget(
-                        text: 'Rate ',
-                        color: Color(0xFF414141),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
+                      const TextWidget(text: 'Rate ', color: Color(0xFF414141), fontSize: 16, fontWeight: FontWeight.w400),
                       Row(
                         children: List.generate(
-                          5,
+                          review.rating.toInt(),
                           (index) => Padding(
                             padding: const EdgeInsets.only(right: 4.0),
                             child: SvgPicture.asset(
@@ -193,15 +188,9 @@ class ReviewsScreen extends StatelessWidget {
             ],
           ),
         ),
-        const Padding(
+        Padding(
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-          child: TextWidget(
-            text:
-                'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay lorem ipsum dolor sit amet, consecr text Diam habitant.',
-            color: Color(0xFF757575),
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-          ),
+          child: TextWidget(text: review.comment, color: Color(0xFF757575), fontSize: 16, fontWeight: FontWeight.w400),
         ),
         const Driver(),
       ],

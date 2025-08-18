@@ -528,7 +528,7 @@ Widget buildPropertyCard(BuildContext context, HomeState state, List<PropertyMod
                     Icon(Icons.star, color: AppColors.primaryColor, size: 14),
                     SizedBox(width: 1),
                     Text(
-                      "4.9",
+                      properties[index].rate.toString(),
                       style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 14, color: AppColors.primaryColor),
                     ),
                   ],

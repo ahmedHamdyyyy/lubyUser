@@ -47,7 +47,6 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
     super.initState();
     selectedCity = 'city';
 
-    getIt<HomeCubit>().fetchUser();
     getIt<HomeCubit>().getProperties();
     getIt<ActivitiesCubit>().getActivities();
   }

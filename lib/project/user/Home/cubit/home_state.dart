@@ -10,6 +10,9 @@ class HomeState extends Equatable {
   final Status propertiesStatus;
   final Status signoutStatus;
   final String msg;
+  final List<ReviewModel> reviews;
+  final Status reviewStatus;
+  final Status reviewesStatus;
 
   const HomeState({
     this.currentScreenIndex = 0,
@@ -21,6 +24,9 @@ class HomeState extends Equatable {
     this.propertyStatus = Status.initial,
     this.property = PropertyModel.initial,
     this.msg = '',
+    this.reviews = const [],
+    this.reviewesStatus = Status.initial,
+    this.reviewStatus = Status.initial,
   });
 
   HomeState copyWith({
@@ -33,6 +39,9 @@ class HomeState extends Equatable {
     Status? signoutStatus,
     String? msg,
     List<PropertyModel>? properties,
+    List<ReviewModel>? reviews,
+    Status? reviewesStatus,
+    Status? reviewStatus,
   }) => HomeState(
     currentScreenIndex: currentScreenIndex ?? this.currentScreenIndex,
     userStatus: userStatus ?? this.userStatus,
@@ -43,6 +52,9 @@ class HomeState extends Equatable {
     signoutStatus: signoutStatus ?? this.signoutStatus,
     msg: msg ?? this.msg,
     properties: properties ?? this.properties,
+    reviews: reviews ?? this.reviews,
+    reviewesStatus: reviewesStatus ?? this.reviewesStatus,
+    reviewStatus: reviewStatus ?? this.reviewStatus,
   );
 
   @override
@@ -56,5 +68,8 @@ class HomeState extends Equatable {
     properties,
     propertiesStatus,
     signoutStatus,
+    reviews,
+    reviewesStatus,
+    reviewStatus,
   ];
 }

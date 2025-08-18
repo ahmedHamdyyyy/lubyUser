@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 // import 'package:go_router/go_router.dart';
 // import '../../../../../core/app_router.dart';
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/widget/helper.dart';
+import '../../../../../../locator.dart';
+import '../../../../Home/cubit/home_cubit.dart';
+import '../../../../models/review.dart';
 import '../views/review_view.dart';
 
 class ReviewsWidget extends StatelessWidget {
-  const ReviewsWidget({
-    super.key,
-  });
-
+  const ReviewsWidget({super.key, required this.id});
+  final String id;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -37,7 +39,7 @@ class ReviewsWidget extends StatelessWidget {
             fontSize: 16,
             fontWeight: FontWeight.w400,
           ),
-         
+
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -59,22 +61,27 @@ class ReviewsWidget extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  const TextWidget(
-                    text: '5.0',
-                    color: Color(0xFF414141),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  const TextWidget(text: '5.0', color: Color(0xFF414141), fontSize: 16, fontWeight: FontWeight.w500),
                 ],
               ),
               InkWell(
                 onTap: () {
+                  getIt<HomeCubit>().getReviewes(id, ReviewType.property);
+                  final property = getIt<HomeCubit>().state.property;
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ReviewsScreen()),
+                      builder: (context) {
+                        return ReviewsScreen(
+                          comment: '',
+                          itemId: id,
+                          rate: 5,
+                          type: ReviewType.property,
+                          reviewId: property.reviewId,
+                        );
+                      },
+                    ),
                   );
-
                   // GoRouter.of(context).push(AppRouter.kReviewsScreen);
                 },
                 child: const TextWidget(

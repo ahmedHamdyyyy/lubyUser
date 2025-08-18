@@ -8,7 +8,9 @@ class CustomTextField extends StatelessWidget {
     required this.text,
     required this.height,
     required this.width,
+    required this.controller,
   });
+  final TextEditingController controller;
   final int maxLines;
   final String text;
   final double height;
@@ -18,7 +20,7 @@ class CustomTextField extends StatelessWidget {
     return SizedBox(
       height: height,
       width: width,
-     
+
       child: TextFormField(
         validator: (value) {
           if (value?.isEmpty ?? true) {
@@ -28,22 +30,17 @@ class CustomTextField extends StatelessWidget {
           }
         },
         maxLines: maxLines,
+        controller: controller,
         decoration: InputDecoration(
           hintText: text,
-          hintStyle: GoogleFonts.poppins(
-            color: const Color(0xFFCBCBCB),
-          ),
+          hintStyle: GoogleFonts.poppins(color: const Color(0xFFCBCBCB)),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: Color(0xFFCBCBCB),
-            ),
+            borderSide: const BorderSide(color: Color(0xFFCBCBCB)),
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: Color(0xFFCBCBCB),
-            ),
+            borderSide: const BorderSide(color: Color(0xFFCBCBCB)),
           ),
         ),
       ),

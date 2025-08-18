@@ -83,10 +83,11 @@ class CustomPropertyModel extends Equatable {
 }
 
 class PropertyModel extends Equatable {
-  final String id, type, address, details;
+  final String id, type, address, details, reviewId, comment;
   final int guestNumber, bedrooms, bathrooms, beds, pricePerNight, maxDays;
   final List<String> tags, availableDates, medias, ownershipContract, facilityLicense;
   final bool available, isFavorite;
+  final double rate;
 
   const PropertyModel({
     required this.id,
@@ -106,6 +107,9 @@ class PropertyModel extends Equatable {
     required this.medias,
     required this.facilityLicense,
     required this.isFavorite,
+    required this.reviewId,
+    required this.comment,
+    required this.rate,
   });
 
   static const initial = PropertyModel(
@@ -126,6 +130,9 @@ class PropertyModel extends Equatable {
     facilityLicense: [],
     medias: [],
     isFavorite: false,
+    reviewId: '',
+    comment: '',
+    rate: 0,
   );
 
   factory PropertyModel.fromJson(Map<String, dynamic> json) {
@@ -154,6 +161,9 @@ class PropertyModel extends Equatable {
       facilityLicense: parseStringOrList(json[AppConst.facilityLicense]),
       medias: parseStringOrList(json[AppConst.medias]),
       isFavorite: json[AppConst.isFavorite] ?? false,
+      reviewId: json[AppConst.reviewId] ?? '',
+      comment: json[AppConst.comment] ?? '',
+      rate: (json['averageRating'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
@@ -172,6 +182,9 @@ class PropertyModel extends Equatable {
       MapEntry(AppConst.details, details),
       MapEntry(AppConst.pricePerNight, pricePerNight.toString()),
       MapEntry(AppConst.maxDays, maxDays.toString()),
+      MapEntry(AppConst.reviewId, reviewId),
+      MapEntry(AppConst.comment, comment),
+      MapEntry(AppConst.rate, rate.toString()),
     ]);
 
     for (final tag in tags) {
@@ -267,6 +280,9 @@ class PropertyModel extends Equatable {
     List<String>? facilityLicense,
     List<String>? medias,
     bool? isFavorite,
+    String? reviewId,
+    String? comment,
+    double? rate,
   }) {
     return PropertyModel(
       id: id ?? this.id,
@@ -286,6 +302,9 @@ class PropertyModel extends Equatable {
       ownershipContract: ownershipContract ?? this.ownershipContract,
       medias: medias ?? this.medias,
       isFavorite: isFavorite ?? this.isFavorite,
+      reviewId: reviewId ?? this.reviewId,
+      comment: comment ?? this.comment,
+      rate: rate ?? this.rate,
     );
   }
 
@@ -308,5 +327,8 @@ class PropertyModel extends Equatable {
     medias,
     facilityLicense,
     isFavorite,
+    reviewId,
+    comment,
+    rate,
   ];
 }
