@@ -12,6 +12,7 @@ import '../../../../locator.dart';
 import '../../User/screens/Notifications/notifications_screen.dart';
 import '../../User/screens/propreties/views/rental_details_view.dart';
 import '../../activities/cubit/cubit.dart';
+import '../../activities/view/screens/activity.dart';
 import '../../favorites/cubit/cubit.dart';
 import '../../models/activity.dart';
 import '../../models/favorite.dart';
@@ -455,12 +456,7 @@ Widget buildPropertyCard(BuildContext context, HomeState state, List<PropertyMod
   bool isFavorite = properties[index].isFavorite;
   return InkWell(
     onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => RentalDetailScreen(id: properties[index].id, index: properties[index].medias.length),
-        ),
-      );
+      Navigator.push(context, MaterialPageRoute(builder: (context) => RentalDetailScreen(id: properties[index].id)));
     },
     child: Card(
       color: Colors.white,
@@ -806,153 +802,153 @@ void showFilterOptions(
 
 // ------------------------ Home Main Screen Widgets ------------------------
 
-class HomeScreenMainContent extends StatefulWidget {
-  final PageController pageController;
-  final String? selectedCity;
-  final String selectedDistrict;
-  final DateTime? checkInDate;
-  final DateTime? checkOutDate;
-  final HomeState state;
-  final int guestsCount;
-  final VoidCallback onCitySelect;
-  final VoidCallback onDistrictSelect;
-  final Function(DateTime) onCheckInSelect;
-  final Function(DateTime) onCheckOutSelect;
-  final VoidCallback onGuestsIncrement;
-  final VoidCallback onGuestsDecrement;
-  final VoidCallback onSearch;
+// class HomeScreenMainContent extends StatefulWidget {
+//   final PageController pageController;
+//   final String? selectedCity;
+//   final String selectedDistrict;
+//   final DateTime? checkInDate;
+//   final DateTime? checkOutDate;
+//   final HomeState state;
+//   final int guestsCount;
+//   final VoidCallback onCitySelect;
+//   final VoidCallback onDistrictSelect;
+//   final Function(DateTime) onCheckInSelect;
+//   final Function(DateTime) onCheckOutSelect;
+//   final VoidCallback onGuestsIncrement;
+//   final VoidCallback onGuestsDecrement;
+//   final VoidCallback onSearch;
 
-  const HomeScreenMainContent({
-    super.key,
-    required this.pageController,
-    this.selectedCity,
-    required this.state,
-    required this.selectedDistrict,
-    this.checkInDate,
-    this.checkOutDate,
-    required this.guestsCount,
-    required this.onCitySelect,
-    required this.onDistrictSelect,
-    required this.onCheckInSelect,
-    required this.onCheckOutSelect,
-    required this.onGuestsIncrement,
-    required this.onGuestsDecrement,
-    required this.onSearch,
-  });
+//   const HomeScreenMainContent({
+//     super.key,
+//     required this.pageController,
+//     this.selectedCity,
+//     required this.state,
+//     required this.selectedDistrict,
+//     this.checkInDate,
+//     this.checkOutDate,
+//     required this.guestsCount,
+//     required this.onCitySelect,
+//     required this.onDistrictSelect,
+//     required this.onCheckInSelect,
+//     required this.onCheckOutSelect,
+//     required this.onGuestsIncrement,
+//     required this.onGuestsDecrement,
+//     required this.onSearch,
+//   });
 
-  @override
-  State<HomeScreenMainContent> createState() => _HomeScreenMainContentState();
-}
+//   @override
+//   State<HomeScreenMainContent> createState() => _HomeScreenMainContentState();
+// }
 
-class _HomeScreenMainContentState extends State<HomeScreenMainContent> {
-  String selectedPropertyCategory = "Properties";
-  String selectedMainCategory = "Rental Services";
+// class _HomeScreenMainContentState extends State<HomeScreenMainContent> {
+//   String selectedPropertyCategory = "Properties";
+//   String selectedMainCategory = "Rental Services";
 
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Stack(
-            children: [
-              Material(
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: Container(
-                  height: 250,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(image: AssetImage('assets/images/image5.png'), fit: BoxFit.cover),
-                  ),
-                ),
-              ),
-              Positioned(top: 40, left: 20, right: 20, child: iconImageTaxt(widget.state)),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 112),
-                    HomeSearchSection(
-                      selectedCity: widget.selectedCity,
-                      selectedDistrict: widget.selectedDistrict,
-                      checkInDate: widget.checkInDate,
-                      checkOutDate: widget.checkOutDate,
-                      guestsCount: widget.guestsCount,
-                      onCitySelect: widget.onCitySelect,
-                      onDistrictSelect: widget.onDistrictSelect,
-                      onCheckInSelect: widget.onCheckInSelect,
-                      onCheckOutSelect: widget.onCheckOutSelect,
-                      onGuestsIncrement: widget.onGuestsIncrement,
-                      onGuestsDecrement: widget.onGuestsDecrement,
-                      onSearch: widget.onSearch,
-                    ),
-                    const SizedBox(height: 16),
-                    buildImageSlider(widget.pageController),
-                    const SizedBox(height: 16),
-                    HomeCategoryButtons(
-                      onCategoryChanged: (category) {
-                        setState(() {
-                          selectedPropertyCategory = category;
-                        });
-                      },
-                      onMainCategoryChanged: (mainCategory) {
-                        setState(() {
-                          selectedMainCategory = mainCategory;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    if (selectedMainCategory == "Rental Services")
-                      Column(
-                        children: [
-                          buildPropertyList(
-                            title: "Top Rated",
-                            context: context,
-                            state: widget.state,
-                            selectedPropertyCategory: selectedPropertyCategory,
-                          ),
-                          const SizedBox(height: 16),
-                          buildPropertyList(
-                            title: "Most Viewed",
-                            context: context,
-                            state: widget.state,
-                            selectedPropertyCategory: selectedPropertyCategory,
-                          ),
-                        ],
-                      )
-                    else if (selectedMainCategory == "Tourist Activities")
-                      BlocBuilder<ActivitiesCubit, ActivitiesState>(
-                        builder: (context, activitiesState) {
-                          return Column(
-                            children: [
-                              buildActivitiesList(
-                                title: "Popular Activities",
-                                context: context,
-                                activitiesState: activitiesState,
-                              ),
-                              const SizedBox(height: 16),
-                              buildActivitiesList(
-                                title: "Recommended Activities",
-                                context: context,
-                                activitiesState: activitiesState,
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    const SizedBox(height: 16),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return SingleChildScrollView(
+//       child: Column(
+//         children: [
+//           Stack(
+//             children: [
+//               Material(
+//                 shape: const RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+//                 ),
+//                 clipBehavior: Clip.antiAlias,
+//                 child: Container(
+//                   height: 250,
+//                   width: double.infinity,
+//                   decoration: const BoxDecoration(
+//                     image: DecorationImage(image: AssetImage('assets/images/image5.png'), fit: BoxFit.cover),
+//                   ),
+//                 ),
+//               ),
+//               Positioned(top: 40, left: 20, right: 20, child: iconImageTaxt(widget.state)),
+//               Padding(
+//                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
+//                 child: Column(
+//                   children: [
+//                     const SizedBox(height: 112),
+//                     HomeSearchSection(
+//                       selectedCity: widget.selectedCity,
+//                       selectedDistrict: widget.selectedDistrict,
+//                       checkInDate: widget.checkInDate,
+//                       checkOutDate: widget.checkOutDate,
+//                       guestsCount: widget.guestsCount,
+//                       onCitySelect: widget.onCitySelect,
+//                       onDistrictSelect: widget.onDistrictSelect,
+//                       onCheckInSelect: widget.onCheckInSelect,
+//                       onCheckOutSelect: widget.onCheckOutSelect,
+//                       onGuestsIncrement: widget.onGuestsIncrement,
+//                       onGuestsDecrement: widget.onGuestsDecrement,
+//                       onSearch: widget.onSearch,
+//                     ),
+//                     const SizedBox(height: 16),
+//                     buildImageSlider(widget.pageController),
+//                     const SizedBox(height: 16),
+//                     HomeCategoryButtons(
+//                       onCategoryChanged: (category) {
+//                         setState(() {
+//                           selectedPropertyCategory = category;
+//                         });
+//                       },
+//                       onMainCategoryChanged: (mainCategory) {
+//                         setState(() {
+//                           selectedMainCategory = mainCategory;
+//                         });
+//                       },
+//                     ),
+//                     const SizedBox(height: 16),
+//                     if (selectedMainCategory == "Rental Services")
+//                       Column(
+//                         children: [
+//                           buildPropertyList(
+//                             title: "Top Rated",
+//                             context: context,
+//                             state: widget.state,
+//                             selectedPropertyCategory: selectedPropertyCategory,
+//                           ),
+//                           const SizedBox(height: 16),
+//                           buildPropertyList(
+//                             title: "Most Viewed",
+//                             context: context,
+//                             state: widget.state,
+//                             selectedPropertyCategory: selectedPropertyCategory,
+//                           ),
+//                         ],
+//                       )
+//                     else if (selectedMainCategory == "Tourist Activities")
+//                       BlocBuilder<ActivitiesCubit, ActivitiesState>(
+//                         builder: (context, activitiesState) {
+//                           return Column(
+//                             children: [
+//                               buildActivitiesList(
+//                                 title: "Popular Activities",
+//                                 context: context,
+//                                 activitiesState: activitiesState,
+//                               ),
+//                               const SizedBox(height: 16),
+//                               buildActivitiesList(
+//                                 title: "Recommended Activities",
+//                                 context: context,
+//                                 activitiesState: activitiesState,
+//                               ),
+//                             ],
+//                           );
+//                         },
+//                       ),
+//                     const SizedBox(height: 16),
+//                   ],
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class HomeSearchSection extends StatelessWidget {
   final String? selectedCity;
@@ -1354,7 +1350,7 @@ Widget buildActivityCard(BuildContext context, List<CustomActivityModel> activit
   bool isFavorite = activities[index].isFavorite;
   return InkWell(
     onTap: () {
-      // Navigate to activity details if needed
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ActivityScreen(id: activities[index].id)));
     },
     child: Card(
       color: Colors.white,

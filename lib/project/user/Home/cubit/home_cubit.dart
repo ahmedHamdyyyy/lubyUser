@@ -134,5 +134,9 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
+  void setPropertyReview(ReviewModel review) {
+    emit(state.copyWith(property: state.property.copyWith(reviewId: review.id, comment: review.comment)));
+  }
+
   void initReviewStatus() => emit(state.copyWith(reviewStatus: Status.initial));
 }

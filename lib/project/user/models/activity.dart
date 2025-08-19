@@ -1,9 +1,8 @@
-import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
 class CustomActivityModel extends Equatable {
   final String id, name, image, address, vendorId;
-  final int price;
+  final double price;
   final bool isFavorite;
 
   const CustomActivityModel({
@@ -20,7 +19,7 @@ class CustomActivityModel extends Equatable {
     String? id,
     String? name,
     String? image,
-    int? price,
+    double? price,
     String? address,
     String? vendorId,
     bool? isFavorite,
@@ -36,7 +35,7 @@ class CustomActivityModel extends Equatable {
 
   factory CustomActivityModel.fromJson(Map<String, dynamic> json) => CustomActivityModel(
     id: json['_id'] ?? '',
-    price: json['price'] ?? 0,
+    price: (json['price'] as num?)?.toDouble() ?? 0.0,
     name: json['name'] ?? '',
     address: json['address'] ?? '',
     vendorId: json['vendorId'] ?? '',
@@ -59,8 +58,9 @@ class CustomActivityModel extends Equatable {
 }
 
 class ActivityModel extends Equatable {
-  final String id, vendorId, name, address, details, date, time, activityTime;
-  final int price;
+  final String id, vendorId, vendorName, vendorImageUrl, name, address, details, date, time, activityTime, reviewId, comment;
+  final double price;
+  final double rate;
   final List<String> tags, medias;
   final bool verified, isFavorite;
 
@@ -77,7 +77,12 @@ class ActivityModel extends Equatable {
     required this.price,
     required this.medias,
     required this.verified,
-    this.isFavorite = false,
+    required this.isFavorite,
+    required this.vendorName,
+    required this.vendorImageUrl,
+    required this.reviewId,
+    required this.comment,
+    required this.rate,
   });
 
   static const non = ActivityModel(
@@ -94,6 +99,11 @@ class ActivityModel extends Equatable {
     medias: [],
     verified: false,
     isFavorite: false,
+    vendorName: '',
+    vendorImageUrl: '',
+    reviewId: '',
+    comment: '',
+    rate: 0,
   );
 
   factory ActivityModel.fromJson(Map<String, dynamic> json) => ActivityModel(
@@ -102,7 +112,7 @@ class ActivityModel extends Equatable {
     address: json['address'] ?? '',
     details: json['details'] ?? '',
     tags: List<String>.from(json['tags'] ?? []),
-    price: json['price'] ?? 0,
+    price: (json['price'] as num?)?.toDouble() ?? 0.0,
     date: json['date'] ?? '',
     time: json['time'] ?? '',
     activityTime: json['activityTime'] ?? '',
@@ -110,31 +120,34 @@ class ActivityModel extends Equatable {
     verified: bool.fromEnvironment(json['verified'] ?? 'false'),
     medias: List<String>.from(json['medias'] ?? []),
     isFavorite: json['isFavorite'] ?? false,
+    vendorName: json['vendorName'] ?? '',
+    vendorImageUrl: json['vendorImageUrl'] ?? '',
+    reviewId: json['reviewId'] ?? '',
+    comment: json['comment'] ?? '',
+    rate: (json['rate'] as num?)?.toDouble() ?? 0.0,
   );
 
-  Future<FormData> create() async => FormData.fromMap({
-    'address': address,
-    'details': details,
-    'price': price,
-    'medias': medias,
-    'name': name,
-    'date': date,
-    'time': time,
-    'vendorId': vendorId,
-    'verified': verified,
-    'activityTime': activityTime,
-    'isFavorite': isFavorite,
-    for (final tag in tags) 'tags': tag,
-    for (final media in medias)
-      if (media.isNotEmpty) 'medias': await MultipartFile.fromFile(media, filename: media.split('/').last),
-  });
+  // Future<FormData> create() async => FormData.fromMap({
+  //   'address': address,
+  //   'details': details,
+  //   'price': price,
+  //   'medias': medias,
+  //   'name': name,
+  //   'date': date,
+  //   'time': time,
+  //   'vendorId': vendorId,
+  //   'activityTime': activityTime,
+  //   for (final tag in tags) 'tags': tag,
+  //   for (final media in medias)
+  //     if (media.isNotEmpty) 'medias': await MultipartFile.fromFile(media, filename: media.split('/').last),
+  // });
 
   ActivityModel copyWith({
     String? id,
     String? address,
     String? details,
     List<String>? tags,
-    int? price,
+    double? price,
     List<String>? medias,
     String? name,
     String? date,
@@ -143,6 +156,11 @@ class ActivityModel extends Equatable {
     String? vendorId,
     bool? verified,
     bool? isFavorite,
+    String? vendorName,
+    String? vendorImageUrl,
+    String? reviewId,
+    String? comment,
+    double? rate,
   }) {
     return ActivityModel(
       id: id ?? this.id,
@@ -158,6 +176,11 @@ class ActivityModel extends Equatable {
       vendorId: vendorId ?? this.vendorId,
       verified: verified ?? this.verified,
       isFavorite: isFavorite ?? this.isFavorite,
+      vendorName: vendorName ?? this.vendorName,
+      vendorImageUrl: vendorImageUrl ?? this.vendorImageUrl,
+      reviewId: reviewId ?? this.reviewId,
+      comment: comment ?? this.comment,
+      rate: rate ?? this.rate,
     );
   }
 
@@ -176,5 +199,10 @@ class ActivityModel extends Equatable {
     vendorId,
     verified,
     isFavorite,
+    vendorName,
+    vendorImageUrl,
+    reviewId,
+    comment,
+    rate,
   ];
 }

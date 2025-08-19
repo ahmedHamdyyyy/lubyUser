@@ -6,7 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../config/colors/colors.dart';
-import '../../../../../config/widget/helper.dart';
 import '../../../../config/constants/constance.dart';
 import '../../../../config/images/image_assets.dart';
 import '../../../../locator.dart';
@@ -27,7 +26,6 @@ class _Favorite2ScreenState extends State<Favorite2Screen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: appBarPop(context, "Favorite", AppColors.primaryTextColor),
     backgroundColor: Colors.white,
     body: SafeArea(
       child: Column(
@@ -52,6 +50,11 @@ class _Favorite2ScreenState extends State<Favorite2Screen> {
                       state.message.isNotEmpty ? state.message : 'Failed to load favorites',
                       style: TextStyle(color: Colors.red),
                     ),
+                  );
+                }
+                if (state.favorites.isEmpty) {
+                  return Center(
+                    child: Text('No favorites found', style: TextStyle(color: AppColors.grayTextColor, fontSize: 16)),
                   );
                 }
                 return GridView.builder(

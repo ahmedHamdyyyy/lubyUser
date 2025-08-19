@@ -20,6 +20,8 @@ class AppConst {
   static const refreshToken = 'refreshToken';
   static const userId = "_id";
   static const vendorId = 'vendorId';
+  static const vendorName = 'vendorName';
+  static const vendorImageUrl = 'vendorImageUrl';
   static const createdAt = 'createdAt';
   static const updatedAt = 'updatedAt';
   static const address = 'address';

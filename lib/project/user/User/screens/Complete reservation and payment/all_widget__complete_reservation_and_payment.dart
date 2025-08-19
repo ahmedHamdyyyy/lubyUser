@@ -947,7 +947,8 @@ class ReservedItemCardWidget extends StatelessWidget {
   final String title;
   final String location;
   final String dateDetails;
-  final int price, guestNumber, nights, totalPrice;
+  final int guestNumber, nights, totalPrice;
+  final double price;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
 

@@ -8,6 +8,7 @@ import '../../../../../../config/widget/helper.dart';
 import '../../../../../../core/utils/utile.dart';
 import '../../../../../../locator.dart';
 import '../../../../Home/cubit/home_cubit.dart';
+import '../../../../activities/cubit/cubit.dart';
 import '../../../../models/review.dart';
 import 'custom_text_filed.dart';
 
@@ -132,6 +133,12 @@ Future<dynamic> showReviewDialoge(
                         case Status.success:
                           Navigator.pop(context);
                           Navigator.pop(context);
+                          Navigator.pop(context);
+                          if (type == ReviewType.activity) {
+                            getIt<ActivitiesCubit>().setActivityReview(state.reviews.last);
+                          } else {
+                            getIt<HomeCubit>().setPropertyReview(state.reviews.last);
+                          }
                           showToast(text: 'review posted successfully', stute: ToustStute.success);
                           break;
                         default:

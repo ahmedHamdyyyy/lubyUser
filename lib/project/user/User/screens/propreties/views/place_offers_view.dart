@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../../../../config/widget/helper.dart';
 import '../../../../Home/cubit/home_cubit.dart';
 import '../widgets/amenities_widget.dart';
@@ -6,10 +7,7 @@ import 'rental_details_view.dart';
 
 class PlaceOffersView extends StatelessWidget {
   final HomeState state;
-  const PlaceOffersView({
-    super.key,
-    required this.state,
-  });
+  const PlaceOffersView({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -26,23 +24,15 @@ class PlaceOffersView extends StatelessWidget {
                 IconButton(
                   onPressed: () {
                     Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const RentalDetailScreen(id: '', index: 0)));
+                      context,
+                      MaterialPageRoute(builder: (context) => const RentalDetailScreen(id: '')),
+                    );
                   },
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new,
-                    size: 24,
-                  ),
+                  icon: const Icon(Icons.arrow_back_ios_new, size: 24),
                   color: const Color(0xFF757575),
                 ),
                 const SizedBox(width: 8),
-                const TextWidget(
-                  text: 'Studio',
-                  color: Color(0xFF757575),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                ),
+                const TextWidget(text: 'Studio', color: Color(0xFF757575), fontSize: 16, fontWeight: FontWeight.w400),
               ],
             ),
           ),
@@ -60,11 +50,8 @@ class PlaceOffersView extends StatelessWidget {
           Expanded(
             child: ListView(
               scrollDirection: Axis.vertical,
-              padding:  EdgeInsets.symmetric(horizontal: 20),
-              children: List.generate(
-                state.property.tags.length,
-                (index) => TileItemList(state: state),
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              children: List.generate(state.property.tags.length, (index) => TileItemList(state: state)),
             ),
           ),
         ],

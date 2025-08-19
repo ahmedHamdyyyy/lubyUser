@@ -1,31 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:luby2/config/widget/widget.dart';
-import 'package:luby2/project/user/models/property.dart';
 
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/widget/helper.dart';
 import '../../../../../../core/utils/utile.dart';
-import '../../../../models/reversation.dart';
-import '../../Complete reservation and payment/summary_screen.dart';
+import '../../../User/screens/Complete reservation and payment/summary_screen.dart';
+import '../../../models/activity.dart';
+import '../../../models/reversation.dart';
 
-Future<dynamic> showReseverDialoge(
+Future<dynamic> showActivityReserveDialoge(
   BuildContext context,
-  PropertyModel property,
-  TextEditingController checkInController,
-  TextEditingController checkOutController,
+  ActivityModel activity,
+  TextEditingController dateController,
   TextEditingController guestController,
 ) {
   final formKey = GlobalKey<FormState>();
   double? calculateTotalPrice() {
-    final checkInDate = Utils.parseDate(checkInController.text);
-    final checkOutDate = Utils.parseDate(checkOutController.text);
+    final checkInDate = Utils.parseDate(dateController.text);
     final guestCount = int.tryParse(guestController.text) ?? 1;
-
-    if (checkInDate != null && checkOutDate != null) {
-      final duration = checkOutDate.difference(checkInDate).inDays;
-      return duration * property.pricePerNight * guestCount;
-    }
+    if (checkInDate != null) return activity.price * guestCount;
     return null;
   }
 
@@ -48,89 +41,41 @@ Future<dynamic> showReseverDialoge(
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(top: 40.0, left: 0, right: 0),
-                      child: Row(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const TextWidget(
-                                  text: 'Check in',
-                                  color: Color(0xFF414141),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                const SizedBox(height: 4),
-                                SizedBox(
-                                  height: 40,
-                                  width: 144,
-                                  child: TextFormField(
-                                    controller: checkInController,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) return 'Please enter check-in date';
-                                      final date = Utils.parseDate(value);
-                                      if (date == null) return 'Invalid date format';
-                                      final now = DateTime.now();
-                                      if (date.isBefore(now)) return 'check-in date must be in the future';
-                                      return null;
-                                    },
-                                    keyboardType: TextInputType.datetime,
-                                    onChanged: (value) => setState(() {}),
-                                    decoration: InputDecoration(
-                                      enabledBorder: buildOutlineInputBorder(5),
-                                      focusedBorder: buildOutlineInputBorder(5),
-                                      hintText: 'dd/mm/yyyy',
-                                      hintStyle: const TextStyle(
-                                        color: Color(0xFF757575),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                          const TextWidget(
+                            text: 'Date',
+                            color: Color(0xFF414141),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
                           ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const TextWidget(
-                                  text: 'Check out',
-                                  color: Color(0xFF414141),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
+                          const SizedBox(height: 4),
+                          SizedBox(
+                            height: 40,
+                            width: 144,
+                            child: TextFormField(
+                              controller: dateController,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) return 'Please enter date';
+                                final date = Utils.parseDate(value);
+                                if (date == null) return 'Invalid date format';
+                                final now = DateTime.now();
+                                if (date.isBefore(now)) return 'date must be in the future';
+                                return null;
+                              },
+                              keyboardType: TextInputType.datetime,
+                              onChanged: (value) => setState(() {}),
+                              decoration: InputDecoration(
+                                enabledBorder: buildOutlineInputBorder(5),
+                                focusedBorder: buildOutlineInputBorder(5),
+                                hintText: 'dd/mm/yyyy',
+                                hintStyle: const TextStyle(
+                                  color: Color(0xFF757575),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
                                 ),
-                                const SizedBox(height: 4),
-                                SizedBox(
-                                  height: 40,
-                                  width: 144,
-                                  child: TextFormField(
-                                    controller: checkOutController,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) return 'Please enter check-in date';
-                                      final date = Utils.parseDate(value);
-                                      if (date == null) return 'Invalid date format';
-                                      final now = DateTime.now();
-                                      if (date.isBefore(now)) return 'check-in date must be in the future';
-                                      return null;
-                                    },
-                                    keyboardType: TextInputType.datetime,
-                                    onChanged: (value) => setState(() {}),
-                                    decoration: InputDecoration(
-                                      enabledBorder: buildOutlineInputBorder(5),
-                                      focusedBorder: buildOutlineInputBorder(5),
-                                      hintText: '6/4/2024',
-                                      hintStyle: const TextStyle(
-                                        color: Color(0xFF757575),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
                         ],
@@ -181,14 +126,14 @@ Future<dynamic> showReseverDialoge(
                         Row(
                           children: [
                             TextWidget(
-                              text: '${property.pricePerNight} x ${guestController.text.trim()} person',
+                              text: '${activity.price} x ${guestController.text.trim()} person',
                               color: Color(0xFF414141),
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
                             ),
                             Spacer(),
                             TextWidget(
-                              text: '${property.pricePerNight * (int.tryParse(guestController.text.trim()) ?? 1)} SAR',
+                              text: '${activity.price * (int.tryParse(guestController.text.trim()) ?? 1)} SAR',
                               color: Color(0xFF414141),
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
@@ -245,26 +190,19 @@ Future<dynamic> showReseverDialoge(
                               child: ElevatedButton(
                                 onPressed: () {
                                   if (!formKey.currentState!.validate()) return;
-                                  final checkinDate = Utils.parseDate(checkInController.text.trim());
-                                  final checkoutDate = Utils.parseDate(checkOutController.text.trim());
+                                  final date = Utils.parseDate(dateController.text.trim());
                                   final guests = int.parse(guestController.text.trim());
-                                  if (checkinDate!.isAfter(checkoutDate!)) {
-                                    return showToast(
-                                      text: 'check in Date must be before check out date',
-                                      stute: ToustStute.worning,
-                                    );
-                                  }
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) {
                                         return SummaryScreen(
                                           reservation: ReservationModel.initial.copyWith(
-                                            item: property,
+                                            item: activity,
                                             guestNumber: guests,
-                                            type: ReservationType.property,
-                                            checkInDate: checkinDate.toIso8601String(),
-                                            checkOutDate: checkoutDate.toIso8601String(),
+                                            type: ReservationType.activity,
+                                            checkInDate: date!.toIso8601String(),
+                                            checkOutDate: date.toIso8601String(),
                                             totalPrice: (calculateTotalPrice() ?? 0).toDouble(),
                                           ),
                                         );

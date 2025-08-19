@@ -42,6 +42,7 @@ class _ApiInterceptor extends InterceptorsWrapper {
     debugPrint('REQUEST[${options.method}] => PATH: ${options.path}');
     final isMultipart = options.data is FormData;
     final accessToken = _cacheService.storage.getString(AppConst.accessToken);
+    print(accessToken);
     options.headers['Content-Type'] = isMultipart ? 'multipart/form-data' : 'application/json';
     if (isMultipart) options.headers['Accept-Encoding'] = 'gzip, deflate, br';
     if (accessToken != null && accessToken.isNotEmpty) options.headers['Authorization'] = 'Bearer $accessToken';

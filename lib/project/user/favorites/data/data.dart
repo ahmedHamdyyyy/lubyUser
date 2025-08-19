@@ -11,17 +11,20 @@ class FavoritesData {
   Future<List<FavoriteModel>> getFavorites() async {
     final response = await _apiService.dio.get(ApiConstance.getFavorites);
     _checkResponseStatus(response);
-    final properties =
-        ((response.data['data']['data'] as List).first['properties'] as List<dynamic>?)
-            ?.map((e) => FavoriteModel.fromJsonProperty(e))
-            .toList() ??
-        [];
-    final activities =
-        ((response.data['data']['data'] as List).first['activities'] as List<dynamic>?)
-            ?.map((e) => FavoriteModel.fromJsonActivity(e))
-            .toList() ??
-        [];
-    return [...properties, ...activities];
+    if (response.data['data']['data'] == null || (response.data['data']['data'] as List).isEmpty) return [];
+    final favorites = <FavoriteModel>[];
+    final favoriteData = response.data['data']['data'] as List;
+    if (favoriteData.first['properties'] != null || (favoriteData.first['properties'] as List).isNotEmpty) {
+      for (final property in favoriteData.first['properties'] as List) {
+        favorites.add(FavoriteModel.fromJsonProperty(property));
+      }
+    }
+    if (favoriteData.first['activities'] != null || (favoriteData.first['properties'] as List).isNotEmpty) {
+      for (final property in favoriteData.first['properties'] as List) {
+        favorites.add(FavoriteModel.fromJsonProperty(property));
+      }
+    }
+    return favorites;
   }
 
   Future<void> addToFavorites(String id, String type) async {

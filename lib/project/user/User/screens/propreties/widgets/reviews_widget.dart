@@ -11,8 +11,9 @@ import '../../../../models/review.dart';
 import '../views/review_view.dart';
 
 class ReviewsWidget extends StatelessWidget {
-  const ReviewsWidget({super.key, required this.id});
-  final String id;
+  const ReviewsWidget({super.key, required this.id, required this.isProperty, required this.reviewId});
+  final String id, reviewId;
+  final bool isProperty;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -66,8 +67,8 @@ class ReviewsWidget extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  getIt<HomeCubit>().getReviewes(id, ReviewType.property);
-                  final property = getIt<HomeCubit>().state.property;
+                  getIt<HomeCubit>().getReviewes(id, isProperty ? ReviewType.property : ReviewType.activity);
+                  print('reviewId: $reviewId');
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -76,8 +77,8 @@ class ReviewsWidget extends StatelessWidget {
                           comment: '',
                           itemId: id,
                           rate: 5,
-                          type: ReviewType.property,
-                          reviewId: property.reviewId,
+                          type: isProperty ? ReviewType.property : ReviewType.activity,
+                          reviewId: reviewId,
                         );
                       },
                     ),

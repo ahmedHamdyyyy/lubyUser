@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../../../Home/cubit/home_cubit.dart';
-
 class ReadMoreTextWidget extends StatelessWidget {
-  final HomeState state;
-  const ReadMoreTextWidget({
-    super.key,
-    required this.state,
-  });
+  const ReadMoreTextWidget({super.key, required this.details});
+  final String details;
 
   @override
   Widget build(BuildContext context) {
-    return  Padding(
+    return Padding(
       padding: EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,20 +19,12 @@ class ReadMoreTextWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  state.property.details,
+                  details,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Color(0xFF757575),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
+                  style: TextStyle(color: Color(0xFF757575), fontSize: 16, fontWeight: FontWeight.w400),
                 ),
-           
-              
-             
-           
-              
+
                 // Row(children: []),
               ],
             ),

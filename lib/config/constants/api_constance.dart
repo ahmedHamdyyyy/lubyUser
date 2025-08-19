@@ -12,7 +12,7 @@ class ApiConstance {
 
   static const userProfile = "users/me";
   static getProperty(String id) => "properties/$id";
-  static getActivity(String id) => "getActivity/$id";
+  static getActivity(String id) => "activities/$id";
   static updateProperty(String id) => "properties/$id";
   static const createProperty = "properties";
   static const getActivities = "activities";

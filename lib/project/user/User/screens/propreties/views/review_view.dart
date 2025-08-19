@@ -38,7 +38,7 @@ class ReviewsScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const RentalDetailScreen(id: '', index: 0)),
+                      MaterialPageRoute(builder: (context) => const RentalDetailScreen(id: '')),
                     );
                   },
                   icon: const Icon(Icons.arrow_back_ios_new, size: 24),

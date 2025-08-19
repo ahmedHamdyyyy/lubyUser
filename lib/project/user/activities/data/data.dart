@@ -8,10 +8,6 @@ class ActivitiesData {
   const ActivitiesData(this._apiService);
   final ApiService _apiService;
 
-
-
-
-
   Future<List<CustomActivityModel>> getActivities() async {
     final response = await _apiService.dio.get(ApiConstance.getActivities);
     _checkIfSuccess(response);
@@ -21,7 +17,7 @@ class ActivitiesData {
   Future<ActivityModel> getActivity(String id) async {
     final response = await _apiService.dio.get(ApiConstance.getActivity(id));
     _checkIfSuccess(response);
-    return ActivityModel.fromJson(response.data['data']);
+    return ActivityModel.fromJson(response.data['data']['activity']);
   }
 
   void _checkIfSuccess(Response<dynamic> response) {

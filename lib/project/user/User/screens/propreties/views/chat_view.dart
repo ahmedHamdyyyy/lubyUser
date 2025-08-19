@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 import '../../../../../../config/widget/helper.dart';
 import 'rental_details_view.dart';
 
@@ -31,15 +32,9 @@ class _ContactHostScreenState extends State<ContactHostScreen> {
             children: [
               IconButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const RentalDetailScreen(id: '', index: 0)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const RentalDetailScreen(id: '')));
                 },
-                icon: const Icon(
-                  Icons.arrow_back_ios_new,
-                  size: 24,
-                ),
+                icon: const Icon(Icons.arrow_back_ios_new, size: 24),
                 color: const Color(0xFF757575),
               ),
               const TextWidget(
@@ -65,34 +60,23 @@ class _ContactHostScreenState extends State<ContactHostScreen> {
               children: [
                 Material(
                   shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30)),
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
                   ),
                   clipBehavior: Clip.antiAlias,
-                  child: Container(
-                    color: const Color(0xFFF6F7F9),
-                  ),
+                  child: Container(color: const Color(0xFFF6F7F9)),
                 ),
                 Column(
-                
                   children: [
-
                     Spacer(),
                     Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10.0, right: 30, bottom: 24),
+                      padding: const EdgeInsets.only(left: 10.0, right: 30, bottom: 24),
                       child: Container(
                         height: 48,
                         width: 335,
-                    /*     padding: const EdgeInsets.symmetric(
+                        /*     padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 10), */
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFF6F7F9),
-                          
-                        ),
+                        decoration: const BoxDecoration(color: Color(0xFFF6F7F9)),
                         child: Row(
-                      
                           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const SizedBox(width: 10),
@@ -108,7 +92,7 @@ class _ContactHostScreenState extends State<ContactHostScreen> {
                                       filled: true,
                                       fillColor: Colors.white,
                                       enabledBorder: buildOutlineInputBorder(20),
-                                      
+
                                       focusedBorder: buildOutlineInputBorder(20),
                                       hintText: 'message',
                                       hintStyle: const TextStyle(
@@ -118,10 +102,7 @@ class _ContactHostScreenState extends State<ContactHostScreen> {
                                       ),
                                       suffixIcon: IconButton(
                                         onPressed: () {},
-                                        icon: SvgPicture.asset(
-                                          'assets/images/smileys.svg',
-                                          height: 24,
-                                        ),
+                                        icon: SvgPicture.asset('assets/images/smileys.svg', height: 24),
                                       ),
                                     ),
                                   ),
@@ -132,10 +113,7 @@ class _ContactHostScreenState extends State<ContactHostScreen> {
                             Container(
                               width: 48,
                               height: 48,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF262626),
-                                shape: BoxShape.circle,
-                              ),
+                              decoration: const BoxDecoration(color: Color(0xFF262626), shape: BoxShape.circle),
                               child: IconButton(
                                 icon: SvgPicture.asset(
                                   'assets/images/microphone-2.svg',

@@ -1,49 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:luby2/project/user/models/favorite.dart';
 
 import '../../../../../../config/constants/constance.dart';
 import '../../../../../../config/images/assets.dart';
 import '../../../../../../config/widget/helper.dart';
 import '../../../../../../locator.dart';
-import '../../../../Home/cubit/home_cubit.dart';
-import '../../../../Home/ui/hom_screen.dart';
-import '../../../../favorites/view/favourite2.dart';
-import '../widgets/amenities_widget.dart';
-import '../widgets/booking_details_widget.dart';
-import '../widgets/carde_reserve.dart';
-import '../widgets/host_details.dart';
-import '../widgets/image_list.dart';
-import '../widgets/location_widget.dart';
-import '../widgets/read_details_widget.dart';
-import '../widgets/read_more.dart';
-import '../widgets/rental_unit_widget.dart';
-import '../widgets/reviews_widget.dart';
+import '../../../../../config/colors/colors.dart';
+import '../../../User/screens/propreties/widgets/host_details.dart';
+import '../../../User/screens/propreties/widgets/image_list.dart';
+import '../../../User/screens/propreties/widgets/read_details_widget.dart';
+import '../../../User/screens/propreties/widgets/read_more.dart';
+import '../../../User/screens/propreties/widgets/reviews_widget.dart';
+import '../../../favorites/cubit/cubit.dart';
+import '../../cubit/cubit.dart';
+import '../widgets/booking_details.dart';
+import '../widgets/reserve_card.dart';
 
-class RentalDetailScreen extends StatefulWidget {
-  const RentalDetailScreen({super.key, required this.id});
+class ActivityScreen extends StatefulWidget {
+  const ActivityScreen({super.key, required this.id});
   final String id;
   @override
-  State<RentalDetailScreen> createState() => _RentalDetailScreenState();
+  State<ActivityScreen> createState() => _ActivityScreenState();
 }
 
-class _RentalDetailScreenState extends State<RentalDetailScreen> {
+class _ActivityScreenState extends State<ActivityScreen> {
   bool isExpanded = false;
   @override
   void initState() {
-    getIt<HomeCubit>().getProperty(widget.id);
+    getIt<ActivitiesCubit>().getActivity(widget.id);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<HomeCubit, HomeState>(
+      body: BlocBuilder<ActivitiesCubit, ActivitiesState>(
         builder: (context, state) {
-          if (state.propertyStatus == Status.loading) {
+          if (state.getActivityStatus == Status.loading) {
             return const Center(child: CircularProgressIndicator());
           }
-          if (state.propertyStatus == Status.error) {
+          if (state.getActivityStatus == Status.error) {
             return Center(child: Text(state.msg));
           }
           return SingleChildScrollView(
@@ -75,15 +73,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            InkWell(
-                              onTap: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const HomeScreen()),
-                                );
-                              },
-                              child: const Icon(Icons.arrow_back_ios_new, size: 24, color: Colors.white),
-                            ),
+                            BackButton(),
                             Row(
                               children: [
                                 SvgPicture.asset(
@@ -95,7 +85,11 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                                 const SizedBox(width: 8),
                                 InkWell(
                                   onTap: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Favorite2Screen()));
+                                    if (state.activity.isFavorite) {
+                                      getIt<FavoritesCubit>().removeFromFavorites(state.activity.id, FavoriteType.activity);
+                                    } else {
+                                      getIt<FavoritesCubit>().addToFavorites(state.activity.id, FavoriteType.activity);
+                                    }
                                   },
                                   child: SvgPicture.asset(
                                     'assets/images/heart.svg',
@@ -116,7 +110,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                       bottom: 0,
                       left: 23,
                       child: TextWidget(
-                        text: 'Great Studio with a Great View',
+                        text: 'Great Activity',
                         color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -125,25 +119,74 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                     Column(
                       children: [
                         const SizedBox(height: 112),
-                        CardeReserve(property: state.property),
+                        ActivityCardeReserve(activity: state.activity),
                         const SizedBox(height: 10),
-                        BookingDetailsWidget(state: state),
+                        ActivityBookingDetailsWidget(activity: state.activity),
                         const Driver(),
-                        RentalUnitWidget(state: state),
-                        const Driver(),
-                        LocationWidget(state: state),
-                        const Driver(),
-                        ReviewsWidget(id: state.property.id, reviewId: state.property.reviewId, isProperty: true),
-                        HostDetailsWidget(
-                          vendorName: state.property.vendorName,
-                          vendorImageUrl: state.property.vendorImageUrl,
+                        TextWidget(
+                          text: '${state.activity.details},',
+                          color: Color(0xFF414141),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
                         ),
-                        ImageListWidget(images: state.property.medias),
+                        TextWidget(
+                          text: state.activity.address,
+                          color: Color(0xFF414141),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        const SizedBox(height: 10),
+                        const Driver(),
+                        Row(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/images/location.svg',
+                              // ignore: deprecated_member_use
+                              color: const Color(0xFF414141),
+                              height: 24,
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                state.activity.address,
+                                style: TextStyle(color: AppColors.grayTextColor, fontSize: 16, fontWeight: FontWeight.w500),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/images/map.svg',
+                              // ignore: deprecated_member_use
+                              color: AppColors.primaryColor,
+                              height: 24,
+                              width: 24,
+                            ),
+                            const SizedBox(width: 8),
+                            const TextWidget(
+                              text: 'View Location on Map',
+                              color: Color(0xFF262626),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ],
+                        ),
+                        const Driver(),
+                        ReviewsWidget(id: state.activity.id, reviewId: state.activity.reviewId, isProperty: false),
+                        HostDetailsWidget(
+                          vendorName: state.activity.vendorName,
+                          vendorImageUrl: state.activity.vendorImageUrl,
+                        ),
+                        ImageListWidget(images: state.activity.medias),
                         const Driver(),
                         if (isExpanded == true)
-                          ReadMoreTextWidget(details: state.property.details)
+                          ReadMoreTextWidget(details: state.activity.details)
                         else
-                          ReadDetailsWidget(details: state.property.details),
+                          ReadDetailsWidget(details: state.activity.details),
                         Center(
                           child: SizedBox(
                             width: 173,
@@ -170,7 +213,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                         ),
                         const SizedBox(height: 24),
                         const Driver(),
-                        AmenitiesWidget(state: state),
+                        // AmenitiesWidget(state: state),
                         const SizedBox(height: 20),
                       ],
                     ),

@@ -8,10 +8,6 @@ class ActivitiesRespository {
   const ActivitiesRespository(this._data);
   final ActivitiesData _data;
 
-
-
-
-
   Future<List<CustomActivityModel>> getActivities() async {
     try {
       return await _data.getActivities();
@@ -28,8 +24,9 @@ class ActivitiesRespository {
         throw Exception('Server error with status code: ${e.response?.statusCode}');
       }
       throw Exception('Failed to get activities: ${e.message}');
-    } catch (e) {
+    } catch (e, stackTrace) {
       debugPrint('Unexpected error: $e');
+      debugPrint('Stack trace: $stackTrace');
       throw Exception('An unexpected error occurred');
     }
   }
@@ -50,8 +47,9 @@ class ActivitiesRespository {
         throw Exception('Server error with status code: ${e.response?.statusCode}');
       }
       throw Exception('Failed to get activities: ${e.message}');
-    } catch (e) {
+    } catch (e, stackTrace) {
       debugPrint('Unexpected error: $e');
+      debugPrint('Stack trace: $stackTrace');
       throw Exception('An unexpected error occurred');
     }
   }

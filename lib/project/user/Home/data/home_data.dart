@@ -43,8 +43,7 @@ class HomeData {
   Future<PropertyModel> getProperty(String id) async {
     final response = await _apiService.dio.get(ApiConstance.getProperty(id));
     _checkIfSuccess(response);
-    print(response.data['data']);
-    return PropertyModel.fromJson(response.data['data']);
+    return PropertyModel.fromJson(response.data['data']['property']);
   }
 
   void _checkIfSuccess(Response<dynamic> response) {

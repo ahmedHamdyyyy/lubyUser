@@ -1,11 +1,4 @@
-import 'dart:io'; // Added for File
-import 'dart:math';
-
-import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart'; // Added for debugPrint
-// ignore: depend_on_referenced_packages
-import 'package:http_parser/http_parser.dart';
 
 import '../../../../config/constants/api_constance.dart';
 import '../../../config/constants/constance.dart';
@@ -83,11 +76,11 @@ class CustomPropertyModel extends Equatable {
 }
 
 class PropertyModel extends Equatable {
-  final String id, type, address, details, reviewId, comment;
-  final int guestNumber, bedrooms, bathrooms, beds, pricePerNight, maxDays;
+  final String id, vendorId, vendorName, vendorImageUrl, type, address, details, reviewId, comment;
+  final int guestNumber, bedrooms, bathrooms, beds, maxDays;
   final List<String> tags, availableDates, medias, ownershipContract, facilityLicense;
   final bool available, isFavorite;
-  final double rate;
+  final double rate, pricePerNight;
 
   const PropertyModel({
     required this.id,
@@ -110,6 +103,9 @@ class PropertyModel extends Equatable {
     required this.reviewId,
     required this.comment,
     required this.rate,
+    required this.vendorId,
+    required this.vendorName,
+    required this.vendorImageUrl,
   });
 
   static const initial = PropertyModel(
@@ -133,6 +129,9 @@ class PropertyModel extends Equatable {
     reviewId: '',
     comment: '',
     rate: 0,
+    vendorId: '',
+    vendorName: '',
+    vendorImageUrl: '',
   );
 
   factory PropertyModel.fromJson(Map<String, dynamic> json) {
@@ -154,7 +153,7 @@ class PropertyModel extends Equatable {
       address: json[AppConst.address] ?? '',
       details: json[AppConst.details] ?? '',
       tags: parseStringOrList(json[AppConst.tags]),
-      pricePerNight: json[AppConst.pricePerNight] ?? 0,
+      pricePerNight: (json[AppConst.pricePerNight] ?? 0.0).toDouble(),
       availableDates: parseStringOrList(json[AppConst.availableDates]),
       maxDays: json[AppConst.maxDays] ?? 0,
       ownershipContract: parseStringOrList(json[AppConst.ownershipContract]),
@@ -163,104 +162,107 @@ class PropertyModel extends Equatable {
       isFavorite: json[AppConst.isFavorite] ?? false,
       reviewId: json[AppConst.reviewId] ?? '',
       comment: json[AppConst.comment] ?? '',
-      rate: (json['averageRating'] as num?)?.toDouble() ?? 0.0,
+      rate: (json['averageRating'] ?? 0.0).toDouble(),
+      vendorId: json[AppConst.vendorId] ?? '',
+      vendorName: json[AppConst.vendorName] ?? '',
+      vendorImageUrl: json[AppConst.vendorImageUrl] ?? '',
     );
   }
 
-  Future<FormData> create() async {
-    final formData = FormData();
+  // Future<FormData> create() async {
+  //   final formData = FormData();
 
-    // Add basic fields
-    formData.fields.addAll([
-      MapEntry(AppConst.type, type),
-      MapEntry(AppConst.available, available.toString()),
-      MapEntry(AppConst.guestNumber, guestNumber.toString()),
-      MapEntry(AppConst.bedrooms, bedrooms.toString()),
-      MapEntry(AppConst.bathrooms, bathrooms.toString()),
-      MapEntry(AppConst.beds, beds.toString()),
-      MapEntry(AppConst.address, address),
-      MapEntry(AppConst.details, details),
-      MapEntry(AppConst.pricePerNight, pricePerNight.toString()),
-      MapEntry(AppConst.maxDays, maxDays.toString()),
-      MapEntry(AppConst.reviewId, reviewId),
-      MapEntry(AppConst.comment, comment),
-      MapEntry(AppConst.rate, rate.toString()),
-    ]);
+  //   // Add basic fields
+  //   formData.fields.addAll([
+  //     MapEntry(AppConst.type, type),
+  //     MapEntry(AppConst.available, available.toString()),
+  //     MapEntry(AppConst.guestNumber, guestNumber.toString()),
+  //     MapEntry(AppConst.bedrooms, bedrooms.toString()),
+  //     MapEntry(AppConst.bathrooms, bathrooms.toString()),
+  //     MapEntry(AppConst.beds, beds.toString()),
+  //     MapEntry(AppConst.address, address),
+  //     MapEntry(AppConst.details, details),
+  //     MapEntry(AppConst.pricePerNight, pricePerNight.toString()),
+  //     MapEntry(AppConst.maxDays, maxDays.toString()),
+  //     MapEntry(AppConst.reviewId, reviewId),
+  //     MapEntry(AppConst.comment, comment),
+  //     MapEntry(AppConst.rate, rate.toString()),
+  //   ]);
 
-    for (final tag in tags) {
-      formData.fields.add(MapEntry('tags[]', tag));
-    }
-    for (final date in availableDates) {
-      formData.fields.add(MapEntry('availableDates[]', date));
-    }
+  //   for (final tag in tags) {
+  //     formData.fields.add(MapEntry('tags[]', tag));
+  //   }
+  //   for (final date in availableDates) {
+  //     formData.fields.add(MapEntry('availableDates[]', date));
+  //   }
 
-    // Add files with proper content types
-    try {
-      // Add ownership contract files
-      for (final filePath in ownershipContract) {
-        if (filePath.isNotEmpty) {
-          final file = File(filePath);
-          if (await file.exists()) {
-            formData.files.add(
-              MapEntry(
-                AppConst.ownershipContract,
-                await MultipartFile.fromFile(
-                  filePath,
-                  filename: filePath.split('/').last,
-                  contentType: MediaType('application', 'pdf'),
-                ),
-              ),
-            );
-          }
-        }
-      }
+  //   // Add files with proper content types
+  //   try {
+  //     // Add ownership contract files
+  //     for (final filePath in ownershipContract) {
+  //       if (filePath.isNotEmpty) {
+  //         final file = File(filePath);
+  //         if (await file.exists()) {
+  //           formData.files.add(
+  //             MapEntry(
+  //               AppConst.ownershipContract,
+  //               await MultipartFile.fromFile(
+  //                 filePath,
+  //                 filename: filePath.split('/').last,
+  //                 contentType: MediaType('application', 'pdf'),
+  //               ),
+  //             ),
+  //           );
+  //         }
+  //       }
+  //     }
 
-      // Add facility license files
-      for (final filePath in facilityLicense) {
-        if (filePath.isNotEmpty) {
-          final file = File(filePath);
-          if (await file.exists()) {
-            formData.files.add(
-              MapEntry(
-                'facilityLicense',
-                await MultipartFile.fromFile(
-                  filePath,
-                  filename: Random().nextInt(1000).toString(),
-                  contentType: MediaType('application', 'pdf'),
-                ),
-              ),
-            );
-          }
-        }
-      }
+  //     // Add facility license files
+  //     for (final filePath in facilityLicense) {
+  //       if (filePath.isNotEmpty) {
+  //         final file = File(filePath);
+  //         if (await file.exists()) {
+  //           formData.files.add(
+  //             MapEntry(
+  //               'facilityLicense',
+  //               await MultipartFile.fromFile(
+  //                 filePath,
+  //                 filename: Random().nextInt(1000).toString(),
+  //                 contentType: MediaType('application', 'pdf'),
+  //               ),
+  //             ),
+  //           );
+  //         }
+  //       }
+  //     }
 
-      // Add media files
-      for (final filePath in medias) {
-        if (filePath.isNotEmpty) {
-          final file = File(filePath);
-          if (await file.exists()) {
-            final extension = filePath.split('.').last.toLowerCase();
-            final contentType = extension == 'png' ? 'png' : 'jpeg';
-            formData.files.add(
-              MapEntry(
-                AppConst.medias,
-                await MultipartFile.fromFile(
-                  filePath,
-                  filename: filePath.split('/').last,
-                  contentType: MediaType('image', contentType),
-                ),
-              ),
-            );
-          }
-        }
-      }
-    } catch (e) {
-      debugPrint('Error preparing files: $e');
-      rethrow;
-    }
+  //     // Add media files
+  //     for (final filePath in medias) {
+  //       if (filePath.isNotEmpty) {
+  //         final file = File(filePath);
+  //         if (await file.exists()) {
+  //           final extension = filePath.split('.').last.toLowerCase();
+  //           final contentType = extension == 'png' ? 'png' : 'jpeg';
+  //           formData.files.add(
+  //             MapEntry(
+  //               AppConst.medias,
+  //               await MultipartFile.fromFile(
+  //                 filePath,
+  //                 filename: filePath.split('/').last,
+  //                 contentType: MediaType('image', contentType),
+  //               ),
+  //             ),
+  //           );
+  //         }
+  //       }
+  //     }
+  //   } catch (e) {
+  //     debugPrint('Error preparing files: $e');
+  //     rethrow;
+  //   }
 
-    return formData;
-  }
+  //   return formData;
+  // }
 
   PropertyModel copyWith({
     String? id,
@@ -273,7 +275,7 @@ class PropertyModel extends Equatable {
     String? address,
     String? details,
     List<String>? tags,
-    int? pricePerNight,
+    double? pricePerNight,
     List<String>? availableDates,
     int? maxDays,
     List<String>? ownershipContract,
@@ -283,6 +285,9 @@ class PropertyModel extends Equatable {
     String? reviewId,
     String? comment,
     double? rate,
+    String? vendorId,
+    String? vendorName,
+    String? vendorImageUrl,
   }) {
     return PropertyModel(
       id: id ?? this.id,
@@ -305,6 +310,9 @@ class PropertyModel extends Equatable {
       reviewId: reviewId ?? this.reviewId,
       comment: comment ?? this.comment,
       rate: rate ?? this.rate,
+      vendorId: vendorId ?? this.vendorId,
+      vendorName: vendorName ?? this.vendorName,
+      vendorImageUrl: vendorImageUrl ?? this.vendorImageUrl,
     );
   }
 
@@ -330,5 +338,8 @@ class PropertyModel extends Equatable {
     reviewId,
     comment,
     rate,
+    vendorId,
+    vendorName,
+    vendorImageUrl,
   ];
 }
