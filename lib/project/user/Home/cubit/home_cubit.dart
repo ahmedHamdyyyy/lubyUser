@@ -29,26 +29,7 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  /* void getUser() async {
 
-
-    emit(state.copyWith(userStatus: Status.loading));
-    try {
-      final user = repo.getCachedUser();
-   
-      emit(state.copyWith(userStatus: 
-        Status.success, user: user, msg: 'User fetched successfully'));
-      print(state.user.toString());
-    } catch (e) {
-      
-      emit(state.copyWith(userStatus: Status.error, msg: e.toString()));
-    
-    
-    }
-  }
-  void setUser(UserModel user){
-    emit(state.copyWith(user: user, userStatus: Status.initial, msg: ''));
-  } */
 
   void getProperties() async {
     emit(state.copyWith(propertiesStatus: Status.loading));
@@ -66,6 +47,10 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       final userProperty = await repo.getProperty(id);
       emit(state.copyWith(propertyStatus: Status.success, property: userProperty));
+   
+      if (kDebugMode) {
+        print(userProperty.toString());
+      }
     } catch (e) {
       emit(state.copyWith(propertyStatus: Status.error, msg: e.toString()));
       if (kDebugMode) print(e.toString());

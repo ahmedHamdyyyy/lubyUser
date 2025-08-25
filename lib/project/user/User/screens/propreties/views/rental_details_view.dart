@@ -135,9 +135,10 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                         const Driver(),
                         ReviewsWidget(id: state.property.id, reviewId: state.property.reviewId, isProperty: true),
                         HostDetailsWidget(
-                          vendorName: state.property.vendorName,
-                          vendorImageUrl: state.property.vendorImageUrl,
-                        ),
+                          vendorId: state.property.vendorId.id,
+                          vendorName: "${state.property.vendorId.firstName} ${state.property.vendorId.lastName}",
+                          vendorImageUrl: "https://www.facebook.com/photo?fbid=864741994898346&set=a.102393161133237",
+                        ), 
                         ImageListWidget(images: state.property.medias),
                         const Driver(),
                         if (isExpanded == true)

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/images/image_assets.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,15 +8,145 @@ import 'package:google_fonts/google_fonts.dart';
 // ------------------------ Chat Message Model ------------------------
 
 class ChatMessage {
+  final String id;
   final String text;
+  final String senderId;
+  final String receiverId;
   final bool isMe;
+  final DateTime timestamp;
   final String time;
 
   ChatMessage({
+    required this.id,
     required this.text,
+    required this.senderId,
+    required this.receiverId,
     required this.isMe,
+    required this.timestamp,
     required this.time,
   });
+
+  factory ChatMessage.fromFirestore(DocumentSnapshot doc, String currentUserId) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    return ChatMessage(
+      id: doc.id,
+      text: data['text'] ?? '',
+      senderId: data['senderId'] ?? '',
+      receiverId: data['receiverId'] ?? '',
+      isMe: data['senderId'] == currentUserId,
+      timestamp: (data['timestamp'] as Timestamp).toDate(),
+      time: _formatTime((data['timestamp'] as Timestamp).toDate()),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'text': text,
+      'senderId': senderId,
+      'receiverId': receiverId,
+      'timestamp': Timestamp.fromDate(timestamp),
+    };
+  }
+
+  static String _formatTime(DateTime time) {
+    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+  }
+}
+
+// ------------------------ Chat Service ------------------------
+
+class ChatService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // Create or get chat room ID
+  String getChatRoomId(String userId1, String userId2) {
+    // Sort IDs to ensure consistent chat room ID
+    List<String> sortedIds = [userId1, userId2]..sort();
+    return '${sortedIds[0]}_${sortedIds[1]}';
+  }
+
+  // Send message
+  Future<void> sendMessage(String chatRoomId, ChatMessage message) async {
+    try {
+      // First, ensure chat room exists
+      await _firestore.collection('chats').doc(chatRoomId).set({
+        'participants': [message.senderId, message.receiverId],
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+
+      // Then add the message
+      await _firestore
+          .collection('chats')
+          .doc(chatRoomId)
+          .collection('messages')
+          .add(message.toMap());
+      
+      // Update chat room with last message
+      await _firestore.collection('chats').doc(chatRoomId).update({
+        'lastMessage': message.text,
+        'lastMessageTime': message.timestamp,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Error sending message: $e');
+      if (e.toString().contains('permission-denied')) {
+        throw Exception('خطأ في الأذونات: تأكد من تسجيل الدخول');
+      } else if (e.toString().contains('unavailable')) {
+        throw Exception('خطأ في الاتصال: تحقق من اتصال الإنترنت');
+      } else {
+        throw Exception('فشل في إرسال الرسالة: $e');
+      }
+    }
+  }
+
+  // Get messages stream
+  Stream<QuerySnapshot> getMessages(String chatRoomId) {
+    try {
+      return _firestore
+          .collection('chats')
+          .doc(chatRoomId)
+          .collection('messages')
+          .orderBy('timestamp', descending: true)
+          .snapshots()
+          .handleError((error) {
+        print('Error in messages stream: $error');
+        if (error.toString().contains('permission-denied')) {
+          throw Exception('خطأ في الأذونات: تأكد من تسجيل الدخول');
+        }
+        throw error;
+      });
+    } catch (e) {
+      print('Error getting messages: $e');
+      // Return empty stream on error
+      return Stream.empty();
+    }
+  }
+
+  // Check if chat room exists
+  Future<bool> chatRoomExists(String chatRoomId) async {
+    try {
+      final doc = await _firestore.collection('chats').doc(chatRoomId).get();
+      return doc.exists;
+    } catch (e) {
+      print('Error checking chat room: $e');
+      return false;
+    }
+  }
+
+  // Create chat room if it doesn't exist
+  Future<void> ensureChatRoom(String chatRoomId, List<String> participants) async {
+    try {
+      await _firestore.collection('chats').doc(chatRoomId).set({
+        'participants': participants,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+    } catch (e) {
+      print('Error creating chat room: $e');
+      throw Exception('فشل في إنشاء غرفة الدردشة: $e');
+    }
+  }
 }
 
 // ------------------------ Chat Screen Widgets ------------------------
@@ -50,7 +181,9 @@ class UserInfoHeaderWidget extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 30,
-                backgroundImage: AssetImage(userImage),
+                backgroundImage: userImage.startsWith('http') 
+                    ? NetworkImage(userImage) 
+                    : AssetImage(userImage) as ImageProvider,
               ),
               if (isOnline)
                 Positioned(
@@ -126,6 +259,13 @@ class ChatMessageItemWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 color: message.isMe ? Colors.white : AppColors.primaryColor,
                 borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: Text(
                 message.text,
@@ -197,7 +337,7 @@ class MessageInputBoxWidget extends StatelessWidget {
                       color: AppColors.grayTextColor,
                     ),
                   ),
-                  hintText: "message",
+                  hintText: "Type a message...",
                   hintStyle: GoogleFonts.poppins(
                     color: AppColors.grayTextColor,
                     fontSize: 16,
@@ -205,10 +345,16 @@ class MessageInputBoxWidget extends StatelessWidget {
                   ),
                   border: InputBorder.none,
                 ),
+                onFieldSubmitted: (value) {
+                  if (value.trim().isNotEmpty) {
+                    onSendPressed();
+                  }
+                },
+                textInputAction: TextInputAction.send,
               ),
             ),
           ),
-          // Voice message button
+          // Send button
           const SizedBox(width: 10),
           InkWell(
             onTap: onSendPressed,
@@ -219,10 +365,11 @@ class MessageInputBoxWidget extends StatelessWidget {
                 color: AppColors.primaryColor,
                 shape: BoxShape.circle,
               ),
-              child: Center(
-                child: SvgPicture.asset(
-                  ImageAssets.mic,
-                  fit: BoxFit.cover,
+              child: const Center(
+                child: Icon(
+                  Icons.send,
+                  color: Colors.white,
+                  size: 24,
                 ),
               ),
             ),
@@ -294,14 +441,43 @@ class ChatScreenContent extends StatelessWidget {
                 topRight: Radius.circular(30),
               ),
             ),
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              itemCount: messages.length,
-              reverse: false,
-              itemBuilder: (context, index) {
-                return ChatMessageItemWidget(message: messages[index]);
-              },
-            ),
+            child: messages.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.chat_bubble_outline,
+                          size: 64,
+                          color: Colors.grey[400],
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'No messages yet',
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Start the conversation!',
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            color: Colors.grey[500],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    itemCount: messages.length,
+                    reverse: true, // Show newest messages at bottom
+                    itemBuilder: (context, index) {
+                      return ChatMessageItemWidget(message: messages[index]);
+                    },
+                  ),
           ),
         ),
 

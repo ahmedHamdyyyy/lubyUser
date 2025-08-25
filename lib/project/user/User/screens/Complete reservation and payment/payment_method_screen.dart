@@ -27,6 +27,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   bool _isExpirationValid = false;
   bool _isCvvValid = false;
   bool _isCardNameValid = false;
+  String vendorId = '';
 
   @override
   void dispose() {
@@ -252,7 +253,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ConfirmedPaymentScreen(),
+              builder: (context) => ConfirmedPaymentScreen(vendorId: vendorId),
             ),
           );
         },

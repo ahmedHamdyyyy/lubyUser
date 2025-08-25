@@ -63,6 +63,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => ChatScreen(
+              vendorId: conversation['vendorId'],
               userName: conversation['userName'],
               userImage: conversation['userImage'],
               isOnline: conversation['isOnline'],

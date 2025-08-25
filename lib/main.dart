@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 import 'core/services/api_services.dart';
 import 'core/services/cach_services.dart';
@@ -14,6 +16,19 @@ import 'project/user/reservation/cubit/cubit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  try {
+    // Initialize Firebase
+    print('Initializing Firebase...');
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    print('Firebase initialized successfully');
+  } catch (e) {
+    print('Error initializing Firebase: $e');
+    // Continue without Firebase for now
+  }
+  
   setup();
   await getIt<CacheService>().init();
   await getIt<ApiService>().init();

@@ -80,8 +80,11 @@ class _ReservationScreenState extends State<ReservationScreen> {
                         Text('Properties'),
                         SizedBox(height: 8),
                         if (properties.isEmpty)
-                          Center(
-                            child: Padding(padding: const EdgeInsets.all(16), child: const Text('No current reservations')),
+                          _buildEmptyState(
+                            icon: Icons.home_outlined,
+                            title: 'No Property Reservations',
+                            subtitle: 'You don\'t have any current property reservations.',
+                            isCurrent: isCurrentReservations,
                           )
                         else
                           ListView.builder(
@@ -100,8 +103,11 @@ class _ReservationScreenState extends State<ReservationScreen> {
                         Text('Activities'),
                         SizedBox(height: 8),
                         if (activities.isEmpty)
-                          Center(
-                            child: Padding(padding: const EdgeInsets.all(16), child: const Text('No current reservations')),
+                          _buildEmptyState(
+                            icon: Icons.sports_soccer_outlined,
+                            title: 'No Activity Reservations',
+                            subtitle: 'You don\'t have any current activity reservations.',
+                            isCurrent: isCurrentReservations,
                           )
                         else
                           ListView.builder(
@@ -133,6 +139,66 @@ class _ReservationScreenState extends State<ReservationScreen> {
                 );
               },
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildTabButton({
+    required String text,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primaryColor : Colors.grey[200],
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          text,
+          style: GoogleFonts.poppins(
+            color: isSelected ? Colors.white : Colors.grey[600],
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required bool isCurrent,
+  }) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 60, color: AppColors.primaryColor),
+          SizedBox(height: 16),
+          Text(
+            title,
+            style: GoogleFonts.poppins(
+              color: AppColors.primaryColor,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            subtitle,
+            style: GoogleFonts.poppins(
+              color: AppColors.primaryColor.withOpacity(0.7),
+              fontSize: 14,
+            ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),

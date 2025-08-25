@@ -52,7 +52,7 @@ class AuthData {
     final response = await _apiServices.dio.post(
       ApiConstance.verifyEmail,
       data: {AppConst.email: email},
-      options: Options(headers: {'X-Device-ID': 1111}),
+      options: Options(headers: {'X-Device-ID': 886454}),
       // options: Options(headers: {'X-Device-ID': await getDeviceId()}),
     );
     if (response.statusCode != 200) throw _responseException(response);

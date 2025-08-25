@@ -3,14 +3,62 @@ import 'package:equatable/equatable.dart';
 import '../../../../config/constants/api_constance.dart';
 import '../../../config/constants/constance.dart';
 
+class Vendor extends Equatable {
+  final String id;
+  final String firstName;
+  final String lastName;
+  final String email;
+  final String phone;
+  final String role;
+
+  final String vendorRole;
+
+  const Vendor({
+    required this.id,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.phone,
+    required this.role,
+
+    required this.vendorRole,
+  });
+
+  factory Vendor.fromJson(Map<String, dynamic> json) {
+    return Vendor(
+      id: json['_id'] ?? '',
+      firstName: json['firstName'] ?? '',
+      lastName: json['lastName'] ?? '',
+      email: json['email'] ?? '',
+      phone: json['phone'] ?? '',
+      role: json['role'] ?? '',
+ 
+      vendorRole: json['vendorRole'] ?? '',
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    id,
+    firstName,
+    lastName,
+    email,
+    phone,
+    role,
+ 
+  
+    vendorRole,
+  ];
+}
+
 class CustomPropertyModel extends Equatable {
   final String id, type, image;
   final bool available, isFavorite;
-  final String vendorId;
+  
 
   const CustomPropertyModel({
     required this.id,
-    required this.vendorId,
+   
     required this.isFavorite,
     required this.type,
     required this.image,
@@ -27,7 +75,7 @@ class CustomPropertyModel extends Equatable {
   }) => CustomPropertyModel(
     id: id ?? this.id,
     type: type ?? this.type,
-    vendorId: vendorId ?? this.vendorId,
+    
     image: image ?? this.image,
     available: available ?? this.available,
     isFavorite: isFavorite ?? this.isFavorite,
@@ -49,7 +97,7 @@ class CustomPropertyModel extends Equatable {
 
     return CustomPropertyModel(
       id: json[AppConst.id] ?? '',
-      vendorId: json[AppConst.vendorId] ?? '',
+     
       type: json[AppConst.type] ?? '',
       image: getFirstMedia(json[AppConst.medias]),
       available: json[AppConst.available] ?? false,
@@ -67,7 +115,7 @@ class CustomPropertyModel extends Equatable {
                 : ApiConstance.baseUrl + property.medias.first)
             : '',
     available: property.available,
-    vendorId: property.id,
+   
     isFavorite: false, // Default to false, can be updated later
   );
 
@@ -76,11 +124,12 @@ class CustomPropertyModel extends Equatable {
 }
 
 class PropertyModel extends Equatable {
-  final String id, vendorId, vendorName, vendorImageUrl, type, address, details, reviewId, comment;
+  final String id, type, address, details, reviewId, comment;
   final int guestNumber, bedrooms, bathrooms, beds, maxDays;
-  final List<String> tags, availableDates, medias, ownershipContract, facilityLicense;
+  final List<String> tags,  medias, ownershipContract, facilityLicense;
   final bool available, isFavorite;
   final double rate, pricePerNight;
+  final Vendor vendorId;
 
   const PropertyModel({
     required this.id,
@@ -94,7 +143,7 @@ class PropertyModel extends Equatable {
     required this.details,
     required this.tags,
     required this.pricePerNight,
-    required this.availableDates,
+  
     required this.maxDays,
     required this.ownershipContract,
     required this.medias,
@@ -104,8 +153,6 @@ class PropertyModel extends Equatable {
     required this.comment,
     required this.rate,
     required this.vendorId,
-    required this.vendorName,
-    required this.vendorImageUrl,
   });
 
   static const initial = PropertyModel(
@@ -120,7 +167,7 @@ class PropertyModel extends Equatable {
     details: '',
     tags: [],
     pricePerNight: 0,
-    availableDates: [],
+   
     maxDays: 0,
     ownershipContract: [],
     facilityLicense: [],
@@ -129,9 +176,17 @@ class PropertyModel extends Equatable {
     reviewId: '',
     comment: '',
     rate: 0,
-    vendorId: '',
-    vendorName: '',
-    vendorImageUrl: '',
+    vendorId: Vendor(
+      id: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      role: '',
+     
+ 
+      vendorRole: '',
+    ),
   );
 
   factory PropertyModel.fromJson(Map<String, dynamic> json) {
@@ -154,7 +209,7 @@ class PropertyModel extends Equatable {
       details: json[AppConst.details] ?? '',
       tags: parseStringOrList(json[AppConst.tags]),
       pricePerNight: (json[AppConst.pricePerNight] ?? 0.0).toDouble(),
-      availableDates: parseStringOrList(json[AppConst.availableDates]),
+      //availabeDates: parseStringOrList(json[AppConst.availableDates]),
       maxDays: json[AppConst.maxDays] ?? 0,
       ownershipContract: parseStringOrList(json[AppConst.ownershipContract]),
       facilityLicense: parseStringOrList(json[AppConst.facilityLicense]),
@@ -163,9 +218,31 @@ class PropertyModel extends Equatable {
       reviewId: json[AppConst.reviewId] ?? '',
       comment: json[AppConst.comment] ?? '',
       rate: (json['averageRating'] ?? 0.0).toDouble(),
-      vendorId: json[AppConst.vendorId] ?? '',
-      vendorName: json[AppConst.vendorName] ?? '',
-      vendorImageUrl: json[AppConst.vendorImageUrl] ?? '',
+      vendorId: json[AppConst.vendorId] != null 
+          ? (json[AppConst.vendorId] is Map<String, dynamic> 
+              ? Vendor.fromJson(json[AppConst.vendorId]) 
+              : Vendor(
+                  id: json[AppConst.vendorId].toString(),
+                  firstName: '',
+                  lastName: '',
+                  email: '',
+                  phone: '',
+                  role: '',
+              
+                 
+                  vendorRole: '',
+                ))
+          : Vendor(
+              id: '',
+              firstName: '',
+              lastName: '',
+              email: '',
+              phone: '',
+              role: '',
+       
+             
+              vendorRole: '',
+            ),
     );
   }
 
@@ -276,7 +353,7 @@ class PropertyModel extends Equatable {
     String? details,
     List<String>? tags,
     double? pricePerNight,
-    List<String>? availableDates,
+    //List<String>? availableDates,
     int? maxDays,
     List<String>? ownershipContract,
     List<String>? facilityLicense,
@@ -285,9 +362,7 @@ class PropertyModel extends Equatable {
     String? reviewId,
     String? comment,
     double? rate,
-    String? vendorId,
-    String? vendorName,
-    String? vendorImageUrl,
+    Vendor? vendorId,
   }) {
     return PropertyModel(
       id: id ?? this.id,
@@ -302,7 +377,7 @@ class PropertyModel extends Equatable {
       details: details ?? this.details,
       tags: tags ?? this.tags,
       pricePerNight: pricePerNight ?? this.pricePerNight,
-      availableDates: availableDates ?? this.availableDates,
+      //availableDates: availableDates ?? this.availableDates,
       maxDays: maxDays ?? this.maxDays,
       ownershipContract: ownershipContract ?? this.ownershipContract,
       medias: medias ?? this.medias,
@@ -311,8 +386,6 @@ class PropertyModel extends Equatable {
       comment: comment ?? this.comment,
       rate: rate ?? this.rate,
       vendorId: vendorId ?? this.vendorId,
-      vendorName: vendorName ?? this.vendorName,
-      vendorImageUrl: vendorImageUrl ?? this.vendorImageUrl,
     );
   }
 
@@ -329,7 +402,7 @@ class PropertyModel extends Equatable {
     details,
     tags,
     pricePerNight,
-    availableDates,
+    //availableDates,
     maxDays,
     ownershipContract,
     medias,
@@ -339,7 +412,5 @@ class PropertyModel extends Equatable {
     comment,
     rate,
     vendorId,
-    vendorName,
-    vendorImageUrl,
   ];
 }

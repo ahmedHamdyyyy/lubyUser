@@ -6,8 +6,8 @@ import '../../../../../../config/widget/helper.dart';
 import '../../Conversations/chat_screen.dart';
 
 class HostDetailsWidget extends StatelessWidget {
-  const HostDetailsWidget({super.key, required this.vendorName, required this.vendorImageUrl});
-  final String vendorName, vendorImageUrl;
+  const HostDetailsWidget({super.key, required this.vendorName, required this.vendorImageUrl, required this.vendorId});
+  final String vendorName, vendorImageUrl, vendorId;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -16,7 +16,9 @@ class HostDetailsWidget extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 24,
-            backgroundImage: vendorImageUrl.isNotEmpty ? NetworkImage(vendorImageUrl) : AssetImage(AssetsData.host),
+            backgroundImage: vendorImageUrl.isNotEmpty 
+                ? NetworkImage(vendorImageUrl)
+                : const AssetImage(AssetsData.host) as ImageProvider,
           ),
           const SizedBox(width: 12),
           Column(
@@ -31,7 +33,7 @@ class HostDetailsWidget extends StatelessWidget {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => ChatScreen(userName: vendorName, userImage: AssetsData.host)),
+                MaterialPageRoute(builder: (context) => ChatScreen(userName: vendorName, userImage: AssetsData.host, vendorId: vendorId)),
               );
             },
             child: SvgPicture.asset(

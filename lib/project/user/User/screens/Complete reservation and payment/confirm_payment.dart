@@ -8,7 +8,8 @@ import 'thank_you_screen.dart';
 import '../Conversations/chat_screen.dart';
 
 class ConfirmedPaymentScreen extends StatelessWidget {
-  const ConfirmedPaymentScreen({super.key});
+  final String vendorId;
+  const ConfirmedPaymentScreen({super.key, required this.vendorId});
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +54,7 @@ class ConfirmedPaymentScreen extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => ChatScreen(
+                vendorId: vendorId,
                 userName: hostName,
                 userImage: imagePath,
               ),

@@ -183,7 +183,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
             ),
-            if (state.signupStatus == Status.loading)
+            if (state.verifyEmailStatus == Status.loading)
               Container(color: Colors.black26, child: const Center(child: CircularProgressIndicator())),
           ],
         ),

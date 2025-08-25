@@ -178,6 +178,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                         const Driver(),
                         ReviewsWidget(id: state.activity.id, reviewId: state.activity.reviewId, isProperty: false),
                         HostDetailsWidget(
+                          vendorId: state.activity.vendorId,
                           vendorName: state.activity.vendorName,
                           vendorImageUrl: state.activity.vendorImageUrl,
                         ),
