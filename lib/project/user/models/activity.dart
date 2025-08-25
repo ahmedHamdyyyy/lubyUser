@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class CustomActivityModel extends Equatable {
   final String id, name, image, address, vendorId;
-  final double price;
+  final double price, rate;
   final bool isFavorite;
 
   const CustomActivityModel({
@@ -12,6 +12,7 @@ class CustomActivityModel extends Equatable {
     required this.price,
     required this.address,
     required this.vendorId,
+    required this.rate,
     this.isFavorite = false,
   });
 
@@ -23,6 +24,7 @@ class CustomActivityModel extends Equatable {
     String? address,
     String? vendorId,
     bool? isFavorite,
+    double? rate,
   }) => CustomActivityModel(
     id: id ?? this.id,
     vendorId: vendorId ?? this.vendorId,
@@ -30,6 +32,7 @@ class CustomActivityModel extends Equatable {
     image: image ?? this.image,
     price: price ?? this.price,
     address: address ?? this.address,
+    rate: rate ?? this.rate,
     isFavorite: isFavorite ?? this.isFavorite,
   );
 
@@ -41,6 +44,7 @@ class CustomActivityModel extends Equatable {
     vendorId: json['vendorId'] ?? '',
     image: (json['medias'] ?? []).isNotEmpty ? json['medias'][0] : '',
     isFavorite: json['isFavorite'] ?? false,
+    rate: (json['averageRating'] ?? 0.0).toDouble(),
   );
 
   factory CustomActivityModel.fromProperty(ActivityModel property) => CustomActivityModel(
@@ -51,10 +55,11 @@ class CustomActivityModel extends Equatable {
     price: property.price,
     image: property.medias.isNotEmpty ? property.medias.first : '',
     isFavorite: false, // Default to false, can be updated later
+    rate: property.rate,
   );
 
   @override
-  List<Object> get props => [id, name, image, isFavorite];
+  List<Object> get props => [id, name, image, isFavorite, rate];
 }
 
 class ActivityModel extends Equatable {
@@ -108,7 +113,7 @@ class ActivityModel extends Equatable {
 
   factory ActivityModel.fromJson(Map<String, dynamic> json) => ActivityModel(
     id: json['_id'] ?? '',
-    vendorId: json['vendorId'] ?? '',
+    vendorId: json['vendorId']['_id'] ?? '',
     address: json['address'] ?? '',
     details: json['details'] ?? '',
     tags: List<String>.from(json['tags'] ?? []),
@@ -120,11 +125,11 @@ class ActivityModel extends Equatable {
     verified: bool.fromEnvironment(json['verified'] ?? 'false'),
     medias: List<String>.from(json['medias'] ?? []),
     isFavorite: json['isFavorite'] ?? false,
-    vendorName: json['vendorName'] ?? '',
-    vendorImageUrl: json['vendorImageUrl'] ?? '',
+    vendorName: '${json['vendorId']['firstName'] ?? ''} ${json['vendorId']['lastName'] ?? ''}',
+    vendorImageUrl: json['vendorId']['imageUrl'] ?? '',
     reviewId: json['reviewId'] ?? '',
     comment: json['comment'] ?? '',
-    rate: (json['rate'] as num?)?.toDouble() ?? 0.0,
+    rate: (json['averageRating'] ?? 0.0).toDouble(),
   );
 
   // Future<FormData> create() async => FormData.fromMap({

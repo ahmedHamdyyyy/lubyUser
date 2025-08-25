@@ -6,6 +6,7 @@ import '../../../config/constants/constance.dart';
 class Vendor extends Equatable {
   final String id;
   final String firstName;
+  final String imageUrl;
   final String lastName;
   final String email;
   final String phone;
@@ -16,6 +17,7 @@ class Vendor extends Equatable {
   const Vendor({
     required this.id,
     required this.firstName,
+    required this.imageUrl,
     required this.lastName,
     required this.email,
     required this.phone,
@@ -29,36 +31,25 @@ class Vendor extends Equatable {
       id: json['_id'] ?? '',
       firstName: json['firstName'] ?? '',
       lastName: json['lastName'] ?? '',
+      imageUrl: json['imageUrl'] ?? '',
       email: json['email'] ?? '',
       phone: json['phone'] ?? '',
       role: json['role'] ?? '',
- 
       vendorRole: json['vendorRole'] ?? '',
     );
   }
 
   @override
-  List<Object?> get props => [
-    id,
-    firstName,
-    lastName,
-    email,
-    phone,
-    role,
- 
-  
-    vendorRole,
-  ];
+  List<Object?> get props => [id, firstName, lastName, email, phone, role, imageUrl, vendorRole];
 }
 
 class CustomPropertyModel extends Equatable {
   final String id, type, image;
   final bool available, isFavorite;
-  
 
   const CustomPropertyModel({
     required this.id,
-   
+
     required this.isFavorite,
     required this.type,
     required this.image,
@@ -75,7 +66,7 @@ class CustomPropertyModel extends Equatable {
   }) => CustomPropertyModel(
     id: id ?? this.id,
     type: type ?? this.type,
-    
+
     image: image ?? this.image,
     available: available ?? this.available,
     isFavorite: isFavorite ?? this.isFavorite,
@@ -97,7 +88,7 @@ class CustomPropertyModel extends Equatable {
 
     return CustomPropertyModel(
       id: json[AppConst.id] ?? '',
-     
+
       type: json[AppConst.type] ?? '',
       image: getFirstMedia(json[AppConst.medias]),
       available: json[AppConst.available] ?? false,
@@ -115,7 +106,7 @@ class CustomPropertyModel extends Equatable {
                 : ApiConstance.baseUrl + property.medias.first)
             : '',
     available: property.available,
-   
+
     isFavorite: false, // Default to false, can be updated later
   );
 
@@ -126,7 +117,7 @@ class CustomPropertyModel extends Equatable {
 class PropertyModel extends Equatable {
   final String id, type, address, details, reviewId, comment;
   final int guestNumber, bedrooms, bathrooms, beds, maxDays;
-  final List<String> tags,  medias, ownershipContract, facilityLicense;
+  final List<String> tags, medias, ownershipContract, facilityLicense;
   final bool available, isFavorite;
   final double rate, pricePerNight;
   final Vendor vendorId;
@@ -143,7 +134,7 @@ class PropertyModel extends Equatable {
     required this.details,
     required this.tags,
     required this.pricePerNight,
-  
+
     required this.maxDays,
     required this.ownershipContract,
     required this.medias,
@@ -167,7 +158,7 @@ class PropertyModel extends Equatable {
     details: '',
     tags: [],
     pricePerNight: 0,
-   
+
     maxDays: 0,
     ownershipContract: [],
     facilityLicense: [],
@@ -176,17 +167,7 @@ class PropertyModel extends Equatable {
     reviewId: '',
     comment: '',
     rate: 0,
-    vendorId: Vendor(
-      id: '',
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      role: '',
-     
- 
-      vendorRole: '',
-    ),
+    vendorId: Vendor(id: '', firstName: '', lastName: '', email: '', phone: '', role: '', imageUrl: '', vendorRole: ''),
   );
 
   factory PropertyModel.fromJson(Map<String, dynamic> json) {
@@ -218,31 +199,21 @@ class PropertyModel extends Equatable {
       reviewId: json[AppConst.reviewId] ?? '',
       comment: json[AppConst.comment] ?? '',
       rate: (json['averageRating'] ?? 0.0).toDouble(),
-      vendorId: json[AppConst.vendorId] != null 
-          ? (json[AppConst.vendorId] is Map<String, dynamic> 
-              ? Vendor.fromJson(json[AppConst.vendorId]) 
-              : Vendor(
-                  id: json[AppConst.vendorId].toString(),
-                  firstName: '',
-                  lastName: '',
-                  email: '',
-                  phone: '',
-                  role: '',
-              
-                 
-                  vendorRole: '',
-                ))
-          : Vendor(
-              id: '',
-              firstName: '',
-              lastName: '',
-              email: '',
-              phone: '',
-              role: '',
-       
-             
-              vendorRole: '',
-            ),
+      vendorId:
+          json[AppConst.vendorId] != null
+              ? (json[AppConst.vendorId] is Map<String, dynamic>
+                  ? Vendor.fromJson(json[AppConst.vendorId])
+                  : Vendor(
+                    id: json[AppConst.vendorId].toString(),
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    phone: '',
+                    role: '',
+                    imageUrl: '',
+                    vendorRole: '',
+                  ))
+              : Vendor(id: '', firstName: '', lastName: '', email: '', phone: '', role: '', imageUrl: '', vendorRole: ''),
     );
   }
 

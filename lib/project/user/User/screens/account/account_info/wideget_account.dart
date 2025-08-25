@@ -1,9 +1,13 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:luby2/locator.dart';
+
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/constants/constance.dart';
 import '../../../../../../config/images/image_assets.dart';
@@ -18,11 +22,7 @@ class AccountInfoAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isEditing;
   final VoidCallback onEditPressed;
 
-  const AccountInfoAppBar({
-    super.key,
-    required this.isEditing,
-    required this.onEditPressed,
-  });
+  const AccountInfoAppBar({super.key, required this.isEditing, required this.onEditPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -35,21 +35,10 @@ class AccountInfoAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       title: const Text(
         "Account info",
-        style: TextStyle(
-          color: AppColors.grayTextColor,
-          fontSize: 16,
-          fontFamily: 'Poppins',
-          fontWeight: FontWeight.w400,
-        ),
+        style: TextStyle(color: AppColors.grayTextColor, fontSize: 16, fontFamily: 'Poppins', fontWeight: FontWeight.w400),
       ),
       centerTitle: false,
-      actions: [
-        if (!isEditing)
-          IconButton(
-            icon: SvgPicture.asset(ImageAssets.editIcon),
-            onPressed: onEditPressed,
-          ),
-      ],
+      actions: [if (!isEditing) IconButton(icon: SvgPicture.asset(ImageAssets.editIcon), onPressed: onEditPressed)],
     );
   }
 
@@ -62,21 +51,36 @@ class ProfileHeaderWidget extends StatelessWidget {
   final String firstName;
   final String lastName;
   final String email;
+  final String imageUrl;
 
   const ProfileHeaderWidget({
     super.key,
     required this.firstName,
     required this.lastName,
     required this.email,
+    required this.imageUrl,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CircleAvatar(
-          radius: 50,
-          backgroundImage: AssetImage(ImageAssets.profileImage),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(100),
+          child: FadeInImage.assetNetwork(
+            placeholder: ImageAssets.profileImage,
+            image: imageUrl,
+            width: 100,
+            height: 100,
+            fit: BoxFit.cover,
+            imageErrorBuilder: (context, error, stackTrace) {
+              return const CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.grey,
+                backgroundImage: AssetImage(ImageAssets.profileImage),
+              );
+            },
+          ),
         ),
         const SizedBox(height: 10),
         Text(
@@ -88,14 +92,7 @@ class ProfileHeaderWidget extends StatelessWidget {
             fontFamily: 'Poppins',
           ),
         ),
-        Text(
-          email,
-          style: const TextStyle(
-            fontSize: 14,
-            color: Colors.grey,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
+        Text(email, style: const TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.w400)),
         const SizedBox(height: 20),
       ],
     );
@@ -108,12 +105,7 @@ class CustomTextField extends StatelessWidget {
   final bool isEnabled;
   final bool isPassword;
 
-  const CustomTextField({
-    super.key,
-    required this.controller,
-    required this.isEnabled,
-    this.isPassword = false,
-  });
+  const CustomTextField({super.key, required this.controller, required this.isEnabled, this.isPassword = false});
 
   @override
   Widget build(BuildContext context) {
@@ -141,9 +133,7 @@ class CustomTextField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(
-                color: AppColors.grayColorIcon,
-              ),
+              borderSide: BorderSide(color: AppColors.grayColorIcon),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -165,11 +155,7 @@ class ActionButton extends StatelessWidget {
   final bool isEditing;
   final VoidCallback onPressed;
 
-  const ActionButton({
-    super.key, 
-    required this.isEditing, 
-    required this.onPressed,
-  });
+  const ActionButton({super.key, required this.isEditing, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -179,19 +165,11 @@ class ActionButton extends StatelessWidget {
         height: 48,
         width: double.infinity,
         margin: const EdgeInsets.symmetric(horizontal: 0),
-        decoration: BoxDecoration(
-          color: AppColors.primaryColor,
-          borderRadius: BorderRadius.circular(10),
-        ),
+        decoration: BoxDecoration(color: AppColors.primaryColor, borderRadius: BorderRadius.circular(10)),
         child: Center(
           child: Text(
             isEditing ? "Save" : "Delete Account",
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
-              fontFamily: 'Poppins',
-            ),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white, fontFamily: 'Poppins'),
           ),
         ),
       ),
@@ -249,9 +227,7 @@ class DeleteAccountDialog extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
                     child: const Text(
                       "Yes",
@@ -270,9 +246,7 @@ class DeleteAccountDialog extends StatelessWidget {
                     onPressed: () => Navigator.of(context).pop(),
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: AppColors.primaryColor),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
                     child: const Text(
                       "Cancel",
@@ -296,10 +270,7 @@ class DeleteAccountDialog extends StatelessWidget {
 
 // Function to show delete account dialog
 void showDeleteAccountDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (context) => const DeleteAccountDialog(),
-  );
+  showDialog(context: context, builder: (context) => const DeleteAccountDialog());
 }
 
 // Account Form Fields Widget
@@ -307,8 +278,6 @@ class AccountFormFields extends StatelessWidget {
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;
   final TextEditingController phoneController;
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
   final bool isEditing;
 
   const AccountFormFields({
@@ -316,8 +285,6 @@ class AccountFormFields extends StatelessWidget {
     required this.firstNameController,
     required this.lastNameController,
     required this.phoneController,
-    required this.emailController,
-    required this.passwordController,
     required this.isEditing,
   });
 
@@ -328,8 +295,6 @@ class AccountFormFields extends StatelessWidget {
         CustomTextField(controller: firstNameController, isEnabled: isEditing),
         CustomTextField(controller: lastNameController, isEnabled: isEditing),
         CustomTextField(controller: phoneController, isEnabled: isEditing),
-        CustomTextField(controller: emailController, isEnabled: isEditing),
-        CustomTextField(controller: passwordController, isEnabled: isEditing, isPassword: true),
         const SizedBox(height: 20),
       ],
     );
@@ -350,7 +315,6 @@ class AccountHeaderWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-     
             Padding(
               padding: const EdgeInsets.only(left: 20),
               child: Text(
@@ -362,30 +326,28 @@ class AccountHeaderWidget extends StatelessWidget {
                   fontFamily: 'Poppins',
                 ),
               ),
-            )
-          ,
-          
-          BlocConsumer<AuthCubit, AuthState>(
-            listener: (context, state) {
-              if(state.signoutStatus == Status.success) {
-                showToast(text: state.msg, 
-                 stute: ToustStute.success, );
-                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: 
-                    (context) => const SignInScreen()), (route) => false);
-              }
-            },
-            builder: (context, state) {
-              return IconButton(
-                onPressed: () {
-                  getIt<AuthCubit>().signout();
-               
-                },
-                icon:state.signoutStatus == Status.loading ? 
-                const CircularProgressIndicator() : const Icon(Icons.logout),
-              );
-            },
-            
-          )
+            ),
+
+            BlocConsumer<AuthCubit, AuthState>(
+              listener: (context, state) {
+                if (state.signoutStatus == Status.success) {
+                  showToast(text: state.msg, stute: ToustStute.success);
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SignInScreen()),
+                    (route) => false,
+                  );
+                }
+              },
+              builder: (context, state) {
+                return IconButton(
+                  onPressed: () {
+                    getIt<AuthCubit>().signout();
+                  },
+                  icon: state.signoutStatus == Status.loading ? const CircularProgressIndicator() : const Icon(Icons.logout),
+                );
+              },
+            ),
           ],
         ),
       ],
@@ -396,7 +358,7 @@ class AccountHeaderWidget extends StatelessWidget {
 // Account Profile Card Widget
 class AccountProfileCardWidget extends StatelessWidget {
   const AccountProfileCardWidget({super.key, required this.state});
-final HomeState  state;
+  final HomeState state;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -405,7 +367,7 @@ final HomeState  state;
         ClipRRect(
           borderRadius: BorderRadius.circular(50),
           child: Image.network(
-           state.user.profilePicture ,
+            state.user.profilePicture,
             width: 100,
             height: 100,
             fit: BoxFit.cover,
@@ -419,7 +381,7 @@ final HomeState  state;
           ),
         ),
         const SizedBox(height: 10),
-         Text(
+        Text(
           "${state.user.firstName} ${state.user.lastName}",
           style: TextStyle(
             fontSize: 16,
@@ -428,14 +390,7 @@ final HomeState  state;
             fontFamily: 'Poppins',
           ),
         ),
-         Text(
-          state.user.email ,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey,
-            fontFamily: 'Poppins',
-          ),
-        ),
+        Text(state.user.email, style: TextStyle(fontSize: 14, color: Colors.grey, fontFamily: 'Poppins')),
         const SizedBox(height: 20),
       ],
     );
@@ -449,22 +404,12 @@ class MenuItemWidget extends StatelessWidget {
   final Widget? screen;
   final bool showArrow;
 
-  const MenuItemWidget({
-    super.key,
-    required this.icon,
-    required this.title,
-    required this.screen,
-    this.showArrow = true,
-  });
+  const MenuItemWidget({super.key, required this.icon, required this.title, required this.screen, this.showArrow = true});
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: SvgPicture.asset(
-        icon,
-        width: 24,
-        height: 24,
-      ),
+      leading: SvgPicture.asset(icon, width: 24, height: 24),
       title: Text(
         title,
         style: TextStyle(
@@ -474,19 +419,10 @@ class MenuItemWidget extends StatelessWidget {
           fontFamily: 'Poppins',
         ),
       ),
-      trailing: showArrow
-          ? SvgPicture.asset(
-              ImageAssets.arrowDown,
-              height: 24,
-              width: 24,
-            )
-          : null,
+      trailing: showArrow ? SvgPicture.asset(ImageAssets.arrowDown, height: 24, width: 24) : null,
       onTap: () {
         if (screen != null) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => screen!),
-          );
+          Navigator.push(context, MaterialPageRoute(builder: (context) => screen!));
         }
       },
     );
@@ -498,11 +434,7 @@ class AccountCardWidget extends StatelessWidget {
   final List<Widget> menuItems;
   final HomeState state;
 
-  const AccountCardWidget({
-    super.key,
-    required this.menuItems,
-    required this.state,
-  });
+  const AccountCardWidget({super.key, required this.menuItems, required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -512,21 +444,9 @@ class AccountCardWidget extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
         border: Border.all(color: Colors.grey.shade200, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade100,
-            blurRadius: 5,
-            spreadRadius: 1,
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.grey.shade100, blurRadius: 5, spreadRadius: 1)],
       ),
-      child: Column(
-        children: [
-          AccountProfileCardWidget(state: state),
-          ...menuItems,
-          const SizedBox(height: 20),
-        ],
-      ),
+      child: Column(children: [AccountProfileCardWidget(state: state), ...menuItems, const SizedBox(height: 20)]),
     );
   }
 }
@@ -542,14 +462,7 @@ class PlaceholderScreenWidget extends StatelessWidget {
     return Scaffold(
       appBar: appBarPop(context, title, AppColors.grayTextColor),
       body: const Center(
-        child: Text(
-          "Coming Soon...",
-          style: TextStyle(
-            fontSize: 20,
-            color: Colors.grey,
-            fontFamily: 'Poppins',
-          ),
-        ),
+        child: Text("Coming Soon...", style: TextStyle(fontSize: 20, color: Colors.grey, fontFamily: 'Poppins')),
       ),
     );
   }
@@ -588,10 +501,7 @@ class AccountInfoHeader extends StatelessWidget {
         const SizedBox(height: 22),
         Row(
           children: [
-            InkWell(
-              onTap: () => Navigator.pop(context),
-              child: Icon(Icons.arrow_back_ios, color: AppColors.grayColorIcon),
-            ),
+            InkWell(onTap: () => Navigator.pop(context), child: Icon(Icons.arrow_back_ios, color: AppColors.grayColorIcon)),
             const SizedBox(width: 8),
             Text(
               "Account info",
@@ -601,18 +511,13 @@ class AccountInfoHeader extends StatelessWidget {
                 fontWeight: FontWeight.w500,
                 fontSize: 14,
               ),
-            )
+            ),
           ],
         ),
         const SizedBox(height: 10),
         const Text(
           "Please complete the following\ninformation",
-          style: TextStyle(
-            fontFamily: 'Poppins',
-            color: AppColors.primaryColor,
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-          ),
+          style: TextStyle(fontFamily: 'Poppins', color: AppColors.primaryColor, fontSize: 16, fontWeight: FontWeight.w400),
         ),
       ],
     );
@@ -620,40 +525,72 @@ class AccountInfoHeader extends StatelessWidget {
 }
 
 // Editable Profile Image
-class EditableProfileImage extends StatelessWidget {
-  const EditableProfileImage({super.key, required this.image});
+class EditableProfileImage extends StatefulWidget {
+  const EditableProfileImage({super.key, required this.image, required this.onImageChanged});
   final String image;
+  final ValueChanged<String> onImageChanged;
+  @override
+  State<EditableProfileImage> createState() => _EditableProfileImageState();
+}
+
+class _EditableProfileImageState extends State<EditableProfileImage> {
+  String imagePath = '';
+  @override
+  void initState() {
+    imagePath = widget.image;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         ClipRRect(
-          borderRadius: BorderRadius.circular(50),
-          child:image.isNotEmpty ? Image.network(
-            image,
-            width: 100,
-            height: 100,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return const CircleAvatar(
-                radius: 50,
-                backgroundColor: Colors.grey,
-                child: Icon(Icons.person, size: 50, color: Colors.white),
-              );
-            },
-          ): const CircleAvatar(
-                radius: 50,
-                backgroundColor: Colors.grey,
-                child: Icon(Icons.person, size: 50, color: Colors.white),
-              ),
+          borderRadius: BorderRadius.circular(100),
+          child:
+              imagePath.startsWith('http')
+                  ? FadeInImage.assetNetwork(
+                    placeholder: ImageAssets.profileImage,
+                    image: imagePath,
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.cover,
+                    imageErrorBuilder: (context, error, stackTrace) {
+                      return const CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Colors.grey,
+                        backgroundImage: AssetImage(ImageAssets.profileImage),
+                      );
+                    },
+                  )
+                  : imagePath.isEmpty
+                  ? Image.asset(ImageAssets.profileImage, width: 100, height: 100, fit: BoxFit.cover)
+                  : Image.file(File(imagePath), width: 100, height: 100, fit: BoxFit.cover),
         ),
+        if (imagePath.isNotEmpty)
+          Positioned(
+            top: 0,
+            right: 0,
+            child: InkWell(
+              onTap: () {
+                setState(() => imagePath = '');
+                widget.onImageChanged(imagePath);
+              },
+              child: Icon(Icons.remove_circle, color: Colors.red),
+            ),
+          ),
         Positioned(
           bottom: 5,
           right: 5,
-          child: SvgPicture.asset(
-            'assets/svg/edit.svg',
-            width: 24,
-            height: 24,
+          child: InkWell(
+            onTap: () async {
+              final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+              if (pickedFile != null) {
+                setState(() => imagePath = pickedFile.path);
+                widget.onImageChanged(imagePath);
+              }
+            },
+            child: SvgPicture.asset('assets/svg/edit.svg', width: 24, height: 24),
           ),
         ),
       ],
@@ -672,7 +609,7 @@ class ProfileInfoText extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 10),
-         Text(
+        Text(
           "$firstName $lastName",
           style: TextStyle(
             fontFamily: 'Poppins',
@@ -681,15 +618,7 @@ class ProfileInfoText extends StatelessWidget {
             color: AppColors.accountTextColor,
           ),
         ),
-         Text(
-          email,
-          style: TextStyle(
-            fontFamily: 'Poppins',
-            fontSize: 14,
-            color: Colors.grey,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
+        Text(email, style: TextStyle(fontFamily: 'Poppins', fontSize: 14, color: Colors.grey, fontWeight: FontWeight.w400)),
         const SizedBox(height: 20),
       ],
     );
@@ -728,10 +657,7 @@ class _RegistrationTextFieldState extends State<RegistrationTextField> {
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        border: Border.all(
-          color: widget.isError ? AppColors.primaryColor : Colors.grey.shade400,
-          width: 1.5,
-        ),
+        border: Border.all(color: widget.isError ? AppColors.primaryColor : Colors.grey.shade400, width: 1.5),
         borderRadius: BorderRadius.circular(10),
       ),
       child: TextField(
@@ -741,27 +667,20 @@ class _RegistrationTextFieldState extends State<RegistrationTextField> {
         keyboardType: widget.isNumber ? TextInputType.number : TextInputType.text,
         decoration: InputDecoration(
           hintText: widget.hintText,
-          hintStyle: TextStyle(
-            fontFamily: 'Poppins',
-            fontSize: 14,
-            color: Colors.grey,
-            fontWeight: FontWeight.w400,
-          ),
+          hintStyle: TextStyle(fontFamily: 'Poppins', fontSize: 14, color: Colors.grey, fontWeight: FontWeight.w400),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-          suffixIcon: widget.isPassword
-              ? IconButton(
-                  icon: Icon(
-                    isVisible ? Icons.visibility : Icons.visibility_off,
-                    color: Colors.grey,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      isVisible = !isVisible;
-                    });
-                  },
-                )
-              : null,
+          suffixIcon:
+              widget.isPassword
+                  ? IconButton(
+                    icon: Icon(isVisible ? Icons.visibility : Icons.visibility_off, color: Colors.grey),
+                    onPressed: () {
+                      setState(() {
+                        isVisible = !isVisible;
+                      });
+                    },
+                  )
+                  : null,
         ),
       ),
     );
@@ -773,11 +692,7 @@ class TermsCheckbox extends StatelessWidget {
   final bool value;
   final ValueChanged<bool> onChanged;
 
-  const TermsCheckbox({
-    super.key,
-    required this.value,
-    required this.onChanged,
-  });
+  const TermsCheckbox({super.key, required this.value, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -785,17 +700,10 @@ class TermsCheckbox extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () => onChanged(!value),
-          child: value
-              ? SvgPicture.asset(
-                  ImageAssets.cracalBlack,
-                  width: 20,
-                  height: 20,
-                )
-              : SvgPicture.asset(
-                  ImageAssets.cracalWhite,
-                  width: 20,
-                  height: 20,
-                ),
+          child:
+              value
+                  ? SvgPicture.asset(ImageAssets.cracalBlack, width: 20, height: 20)
+                  : SvgPicture.asset(ImageAssets.cracalWhite, width: 20, height: 20),
         ),
         const SizedBox(width: 10),
         const Text(
@@ -816,10 +724,7 @@ class TermsCheckbox extends StatelessWidget {
 class SaveButton extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const SaveButton({
-    super.key,
-    required this.onPressed,
-  });
+  const SaveButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -829,22 +734,14 @@ class SaveButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primaryColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onPressed: onPressed,
         child: const Text(
           "Save",
-          style: TextStyle(
-            fontFamily: 'Poppins',
-            fontSize: 16,
-            color: Colors.white,
-            fontWeight: FontWeight.w400,
-          ),
+          style: TextStyle(fontFamily: 'Poppins', fontSize: 16, color: Colors.white, fontWeight: FontWeight.w400),
         ),
       ),
     );
   }
 }
-

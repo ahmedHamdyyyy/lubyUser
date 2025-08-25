@@ -77,4 +77,29 @@ class HomeData {
     final response = await _apiService.dio.delete(ApiConstance.deleteReview(id));
     _checkIfSuccess(response);
   }
+
+  Future<UserModel> updateUser({
+    required String id,
+    required String firstName,
+    required String lastName,
+    required String phone,
+    required String imagePath,
+  }) async {
+    final response = await _apiService.dio.put(
+      'users/$id/',
+      data: FormData.fromMap(<String, dynamic>{
+        AppConst.firstName: firstName,
+        AppConst.lastName: lastName,
+        AppConst.phone: phone,
+        if (imagePath.isNotEmpty && !imagePath.startsWith('http'))
+          AppConst.profilePicture: await MultipartFile.fromFile(
+            imagePath,
+            filename: imagePath.split('/').last.split('.').first,
+            contentType: DioMediaType('image', imagePath.split('.').last),
+          ),
+      }),
+    );
+    _checkIfSuccess(response);
+    return UserModel.fromJson(response.data['data']);
+  }
 }

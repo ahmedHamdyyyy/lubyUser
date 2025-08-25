@@ -7,7 +7,6 @@ import 'package:luby2/project/user/Home/Widget/widget_home.dart' show buildBotto
 import '../../../../locator.dart';
 import '../../User/screens/Conversations/conversations_screen.dart';
 import '../../User/screens/account/account_info/account.dart';
-import '../../activities/cubit/cubit.dart';
 import '../../favorites/view/favourite2.dart';
 import '../../reservation/view/screens/reservation_screen.dart';
 import '../cubit/home_cubit.dart';
@@ -21,14 +20,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final screen = [HomeScreenMain(), Favorite2Screen(), ReservationScreen(), ConversationScreen(), AccountScreen()];
+  final screen = [HomeScreenMain(), Favorite2Screen(), ReservationScreen(), ConversationScreen(), ProfileFeaturesScreen()];
 
   @override
   void initState() {
     getIt<HomeCubit>().fetchUser();
-
     getIt<HomeCubit>().getProperties();
-    getIt<ActivitiesCubit>().getActivities();
     super.initState();
   }
 

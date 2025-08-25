@@ -15,21 +15,19 @@ class HomeCubit extends Cubit<HomeState> {
   final HomeRespository repo;
 
   void fetchUser() async {
-    emit(state.copyWith(userStatus: Status.loading));
+    emit(state.copyWith(getUserStatus: Status.loading));
 
     try {
       final user = await repo.fetchUser();
 
-      emit(state.copyWith(userStatus: Status.success, user: user, msg: 'User fetched successfully'));
+      emit(state.copyWith(getUserStatus: Status.success, user: user, msg: 'User fetched successfully'));
       if (kDebugMode) {
         print(state.user.toString());
       }
     } catch (e) {
-      emit(state.copyWith(userStatus: Status.error, msg: e.toString()));
+      emit(state.copyWith(getUserStatus: Status.error, msg: e.toString()));
     }
   }
-
-
 
   void getProperties() async {
     emit(state.copyWith(propertiesStatus: Status.loading));
@@ -47,7 +45,7 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       final userProperty = await repo.getProperty(id);
       emit(state.copyWith(propertyStatus: Status.success, property: userProperty));
-   
+
       if (kDebugMode) {
         print(userProperty.toString());
       }
@@ -124,4 +122,25 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   void initReviewStatus() => emit(state.copyWith(reviewStatus: Status.initial));
+
+  void updateUser({
+    required String firstName,
+    required String lastName,
+    required String phone,
+    required String imagePath,
+  }) async {
+    emit(state.copyWith(updateUserStatus: Status.loading));
+    try {
+      final user = await repo.updateUser(
+        firstName: firstName,
+        lastName: lastName,
+        phone: phone,
+        imagePath: imagePath,
+        id: state.user.id,
+      );
+      emit(state.copyWith(updateUserStatus: Status.success, user: user));
+    } catch (e) {
+      emit(state.copyWith(updateUserStatus: Status.error, msg: e.toString()));
+    }
+  }
 }

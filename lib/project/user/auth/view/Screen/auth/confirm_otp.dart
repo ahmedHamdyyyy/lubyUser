@@ -8,7 +8,6 @@ import '../../../../Home/cubit/home_cubit.dart';
 import '../../../../Home/ui/hom_screen.dart';
 import '../../../../models/user.dart';
 import '../../../cubit/auth_cubit.dart';
-import '../splash/splash_screens.dart';
 import 'reset_password.dart';
 
 class ConfirmOtpScreen extends StatefulWidget {
@@ -33,38 +32,23 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-    _fadeController = AnimationController(
-      duration: const Duration(milliseconds: 1200),
-      vsync: this,
-    );
+    _animationController = AnimationController(duration: const Duration(milliseconds: 800), vsync: this);
+    _fadeController = AnimationController(duration: const Duration(milliseconds: 1200), vsync: this);
     _scaleAnimation = Tween<double>(
       begin: 0.8,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.elasticOut,
-    ));
-    
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.elasticOut));
+
     _slideAnimation = Tween<double>(
       begin: 50.0,
       end: 0.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOutCubic,
-    ));
-    
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic));
+
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _fadeController,
-      curve: Curves.easeInOut,
-    ));
-    
+    ).animate(CurvedAnimation(parent: _fadeController, curve: Curves.easeInOut));
+
     _animationController.forward();
     _fadeController.forward();
   }
@@ -112,8 +96,7 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
           showToast(text: state.msg, stute: ToustStute.error);
           break;
         case Status.success:
-        
-        getIt.get<HomeCubit>().updateCurrentScreenIndex(0);
+          getIt.get<HomeCubit>().updateCurrentScreenIndex(0);
           Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
 
           break;
@@ -136,7 +119,7 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
               child: Column(
                 children: [
                   const SizedBox(height: 40),
-                  
+
                   // Header Section with Animation
                   AnimatedBuilder(
                     animation: _fadeAnimation,
@@ -162,17 +145,13 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                                 ),
                                 child: IconButton(
                                   onPressed: () => Navigator.pop(context),
-                                  icon: const Icon(
-                                    Icons.arrow_back_ios_new,
-                                    color: Color(0xFF64748B),
-                                    size: 20,
-                                  ),
+                                  icon: const Icon(Icons.arrow_back_ios_new, color: Color(0xFF64748B), size: 20),
                                 ),
                               ),
                             ),
-                            
+
                             const SizedBox(height: 32),
-                            
+
                             // Modern OTP Icon
                             AnimatedBuilder(
                               animation: _scaleAnimation,
@@ -197,18 +176,14 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                                         ),
                                       ],
                                     ),
-                                    child: const Icon(
-                                      Icons.lock_outline,
-                                      size: 60,
-                                      color: Colors.white,
-                                    ),
+                                    child: const Icon(Icons.lock_outline, size: 60, color: Colors.white),
                                   ),
                                 );
                               },
                             ),
-                            
+
                             const SizedBox(height: 32),
-                            
+
                             // Title
                             const Text(
                               'Enter 6-Character Code',
@@ -219,26 +194,19 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                                 letterSpacing: -0.5,
                               ),
                             ),
-                            
+
                             const SizedBox(height: 16),
-                            
+
                             // Subtitle with email
                             RichText(
                               textAlign: TextAlign.center,
                               text: TextSpan(
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Color(0xFF64748B),
-                                  height: 1.5,
-                                ),
+                                style: const TextStyle(fontSize: 16, color: Color(0xFF64748B), height: 1.5),
                                 children: [
                                   const TextSpan(text: 'We\'ve sent a 6-character code to\n'),
                                   TextSpan(
                                     text: widget.email,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: Color(0xFF1E293B),
-                                    ),
+                                    style: const TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF1E293B)),
                                   ),
                                 ],
                               ),
@@ -248,9 +216,9 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                       );
                     },
                   ),
-                  
+
                   const SizedBox(height: 48),
-                  
+
                   // Form Section with Animation
                   AnimatedBuilder(
                     animation: _slideAnimation,
@@ -286,23 +254,12 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                                 ),
                                 decoration: InputDecoration(
                                   labelText: 'Enter 6-character code',
-                                  labelStyle: const TextStyle(
-                                    color: Color(0xFF94A3B8),
-                                    fontSize: 16,
-                                  ),
+                                  labelStyle: const TextStyle(color: Color(0xFF94A3B8), fontSize: 16),
                                   hintText: 'ABC123',
-                                  hintStyle: const TextStyle(
-                                    color: Color(0xFFCBD5E1),
-                                    fontSize: 24,
-                                    letterSpacing: 8,
-                                  ),
+                                  hintStyle: const TextStyle(color: Color(0xFFCBD5E1), fontSize: 24, letterSpacing: 8),
                                   prefixIcon: Container(
                                     margin: const EdgeInsets.all(12),
-                                    child: Icon(
-                                      Icons.security,
-                                      color: const Color(0xFF64748B),
-                                      size: 24,
-                                    ),
+                                    child: Icon(Icons.security, color: const Color(0xFF64748B), size: 24),
                                   ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16),
@@ -310,22 +267,16 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                                   ),
                                   filled: true,
                                   fillColor: Colors.white,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                    vertical: 20,
-                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                                   counterText: '',
                                   errorText: _errorText,
-                                  errorStyle: const TextStyle(
-                                    color: Color(0xFFEF4444),
-                                    fontSize: 14,
-                                  ),
+                                  errorStyle: const TextStyle(color: Color(0xFFEF4444), fontSize: 14),
                                 ),
                               ),
                             ),
-                            
+
                             const SizedBox(height: 32),
-                            
+
                             // Submit Button
                             SizedBox(
                               width: double.infinity,
@@ -337,85 +288,60 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                                   foregroundColor: Colors.white,
                                   elevation: 0,
                                   shadowColor: const Color(0xFF10B981).withOpacity(0.3),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                                 ),
-                                child: _isLoading
-                                    ? const SizedBox(
-                                        width: 24,
-                                        height: 24,
-                                        child: CircularProgressIndicator(
-                                          color: Colors.white,
-                                          strokeWidth: 2,
+                                child:
+                                    _isLoading
+                                        ? const SizedBox(
+                                          width: 24,
+                                          height: 24,
+                                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                                        )
+                                        : const Text(
+                                          'Verify Code',
+                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, letterSpacing: 0.5),
                                         ),
-                                      )
-                                    : const Text(
-                                        'Verify Code',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600,
-                                          letterSpacing: 0.5,
-                                        ),
-                                      ),
                               ),
                             ),
-                            
+
                             const SizedBox(height: 24),
-                            
+
                             // Additional Info
                             Container(
                               padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFF1F5F9),
                                 borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: const Color(0xFFE2E8F0),
-                                  width: 1,
-                                ),
+                                border: Border.all(color: const Color(0xFFE2E8F0), width: 1),
                               ),
                               child: Row(
                                 children: [
-                                  Icon(
-                                    Icons.info_outline,
-                                    color: const Color(0xFF64748B),
-                                    size: 20,
-                                  ),
+                                  Icon(Icons.info_outline, color: const Color(0xFF64748B), size: 20),
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: Text(
                                       'The code will expire in 2 minutes. Check your spam folder if you don\'t receive it.',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: const Color(0xFF64748B),
-                                        height: 1.4,
-                                      ),
+                                      style: TextStyle(fontSize: 14, color: const Color(0xFF64748B), height: 1.4),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            
+
                             const SizedBox(height: 24),
-                            
+
                             // Resend Code Option
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
                                   'Didn\'t receive the code? ',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: const Color(0xFF64748B),
-                                  ),
+                                  style: TextStyle(fontSize: 14, color: const Color(0xFF64748B)),
                                 ),
                                 GestureDetector(
                                   onTap: () {
                                     // Add resend logic here
-                                    showToast(
-                                      text: 'Resend functionality coming soon',
-                                      stute: ToustStute.success,
-                                    );
+                                    showToast(text: 'Resend functionality coming soon', stute: ToustStute.success);
                                   },
                                   child: Text(
                                     'Resend',
@@ -433,7 +359,7 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                       );
                     },
                   ),
-                  
+
                   const SizedBox(height: 40),
                 ],
               ),
