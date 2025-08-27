@@ -7,25 +7,19 @@ import 'core/services/api_services.dart';
 import 'core/services/cach_services.dart';
 import 'firebase_options.dart';
 import 'locator.dart';
-import 'project/user/Home/cubit/home_cubit.dart';
-import 'project/user/activities/cubit/cubit.dart';
-import 'project/user/auth/cubit/auth_cubit.dart';
-import 'project/user/auth/view/Screen/splash/luby_screen_splash.dart';
-import 'project/user/favorites/cubit/cubit.dart';
-import 'project/user/reservation/cubit/cubit.dart';
+import 'project/Home/cubit/home_cubit.dart';
+import 'project/activities/cubit/cubit.dart';
+import 'project/auth/cubit/auth_cubit.dart';
+import 'project/auth/view/Screen/splash/luby_screen_splash.dart';
+import 'project/favorites/cubit/cubit.dart';
+import 'project/reservation/cubit/cubit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-    // Initialize Firebase
-    print('Initializing Firebase...');
     await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-    print('Firebase initialized successfully');
-  } catch (e) {
-    print('Error initializing Firebase: $e');
-    // Continue without Firebase for now
-  }
+  } catch (_) {}
 
   setup();
   await getIt<CacheService>().init();
