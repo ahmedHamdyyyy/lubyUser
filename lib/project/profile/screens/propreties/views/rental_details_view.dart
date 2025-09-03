@@ -8,7 +8,8 @@ import '../../../../../../config/widget/helper.dart';
 import '../../../../../../locator.dart';
 import '../../../../Home/cubit/home_cubit.dart';
 import '../../../../Home/ui/hom_screen.dart';
-import '../../../../favorites/view/favourite2.dart';
+import '../../../../favorites/cubit/cubit.dart';
+import '../../../../models/favorite.dart';
 import '../widgets/amenities_widget.dart';
 import '../widgets/booking_details_widget.dart';
 import '../widgets/carde_reserve.dart';
@@ -28,7 +29,7 @@ class RentalDetailScreen extends StatefulWidget {
 }
 
 class _RentalDetailScreenState extends State<RentalDetailScreen> {
-  bool isExpanded = false;
+  bool isExpanded = false, waitingForFavorite = false;
   @override
   void initState() {
     getIt<HomeCubit>().getProperty(widget.id);
@@ -93,15 +94,30 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                                   height: 24,
                                 ),
                                 const SizedBox(width: 8),
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Favorite2Screen()));
+                                BlocListener<FavoritesCubit, FavoritesState>(
+                                  listener: (context, favoritesState) {
+                                    if (waitingForFavorite && favoritesState.addToFavoritesStatus == Status.success) {
+                                      context.read<HomeCubit>().setPropertyFavorite(!state.property.isFavorite);
+                                      waitingForFavorite = false;
+                                    }
                                   },
-                                  child: SvgPicture.asset(
-                                    'assets/images/heart.svg',
-                                    // ignore: deprecated_member_use
-                                    color: Colors.white, // Changes SVG color
-                                    height: 24,
+                                  child: InkWell(
+                                    onTap: () {
+                                      if (state.property.isFavorite) {
+                                        getIt<FavoritesCubit>().removeFromFavorites(
+                                          state.property.id,
+                                          FavoriteType.property,
+                                        );
+                                      } else {
+                                        getIt<FavoritesCubit>().addToFavorites(state.property.id, FavoriteType.property);
+                                      }
+                                      waitingForFavorite = true;
+                                    },
+                                    child: Icon(
+                                      state.property.isFavorite ? Icons.favorite : Icons.favorite_border,
+                                      size: 24,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -138,7 +154,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                           vendorId: state.property.vendorId.id,
                           vendorName: "${state.property.vendorId.firstName} ${state.property.vendorId.lastName}",
                           vendorImageUrl: "https://www.facebook.com/photo?fbid=864741994898346&set=a.102393161133237",
-                        ), 
+                        ),
                         ImageListWidget(images: state.property.medias),
                         const Driver(),
                         if (isExpanded == true)

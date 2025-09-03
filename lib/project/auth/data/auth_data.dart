@@ -35,7 +35,7 @@ class AuthData {
   }
 
   Future<UserModel> signin({required String email, required String password}) async {
-    final loginData = {AppConst.email: email, AppConst.password: password};
+    final loginData = {AppConst.email: email, AppConst.password: password, 'app-type': 'user'};
     final response = await _apiServices.dio.post(ApiConstance.signin, data: loginData);
     final data = response.data['data'];
     if (data == null || data['user'] == null) throw _responseException(response);

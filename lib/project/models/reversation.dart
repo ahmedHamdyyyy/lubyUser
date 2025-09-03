@@ -78,7 +78,7 @@ class ReservationModel extends Equatable {
     return ReservationModel(
       id: map['_id'] ?? '',
       type: type,
-      checkInDate: map['checkInDate'] ?? '',
+      checkInDate: type == ReservationType.property ? map['checkInDate'] ?? '' : map['activityId']['date'] ?? '',
       checkOutDate: map['checkOutDate'] ?? '',
       status:
           map['status'] == 'pending'

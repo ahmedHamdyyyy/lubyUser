@@ -25,7 +25,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     getIt<HomeCubit>().fetchUser();
-    getIt<HomeCubit>().getProperties();
     super.initState();
   }
 

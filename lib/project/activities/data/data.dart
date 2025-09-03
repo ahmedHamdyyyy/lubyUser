@@ -5,14 +5,27 @@ import '../../../../core/services/api_services.dart';
 import '../../models/activity.dart';
 
 class ActivitiesData {
-  const ActivitiesData(this._apiService);
+  ActivitiesData(this._apiService);
   final ApiService _apiService;
+  int _currentPage = 1;
 
-  Future<List<CustomActivityModel>> getActivities() async {
-    final response = await _apiService.dio.get(ApiConstance.getActivities);
+  Future<({List<CustomActivityModel> activities, bool hasNextPage})> getActivities(
+    bool fetchNext,
+    Map<String, dynamic>? filters,
+  ) async {
+    _setPage(fetchNext);
+    final response = await _apiService.dio.get(
+      ApiConstance.getActivities,
+      queryParameters: {'page': _currentPage, ...?filters},
+    );
     _checkIfSuccess(response);
-    return (response.data['data']['data'] as List).map((e) => CustomActivityModel.fromJson(e)).toList();
+    final activities = (response.data['data']['data'] as List).map((e) => CustomActivityModel.fromJson(e)).toList();
+    final hasNextPage = (response.data['data']['pagination']['hasNextPage'] as bool?) ?? false;
+    _currentPage = response.data['data']['pagination']['currentPage'] ?? _currentPage;
+    return (activities: activities, hasNextPage: hasNextPage);
   }
+
+  void _setPage(bool fetchNext) => _currentPage = fetchNext ? _currentPage + 1 : 1;
 
   Future<ActivityModel> getActivity(String id) async {
     final response = await _apiService.dio.get(ApiConstance.getActivity(id));

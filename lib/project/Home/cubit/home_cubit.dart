@@ -13,6 +13,7 @@ part 'home_state.dart';
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit(this.repo) : super(const HomeState());
   final HomeRespository repo;
+  bool _hasNextPage = false;
 
   void fetchUser() async {
     emit(state.copyWith(getUserStatus: Status.loading));
@@ -29,12 +30,13 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  void getProperties() async {
+  void getProperties({bool fetchNext = false, Map<String, dynamic>? filters}) async {
+    if (fetchNext && !_hasNextPage) return;
     emit(state.copyWith(propertiesStatus: Status.loading));
     try {
-      final properties = await repo.getProperties();
-      print(properties.length);
-      emit(state.copyWith(propertiesStatus: Status.success, properties: properties));
+      final propertiesData = await repo.getProperties(fetchNext, filters);
+      _hasNextPage = propertiesData.hasNextPage;
+      emit(state.copyWith(propertiesStatus: Status.success, properties: propertiesData.properties));
     } catch (e) {
       emit(state.copyWith(propertiesStatus: Status.error, msg: e.toString()));
     }
@@ -53,6 +55,10 @@ class HomeCubit extends Cubit<HomeState> {
       emit(state.copyWith(propertyStatus: Status.error, msg: e.toString()));
       if (kDebugMode) print(e.toString());
     }
+  }
+
+  void setPropertyFavorite(bool isFavorite) {
+    emit(state.copyWith(property: state.property.copyWith(isFavorite: isFavorite)));
   }
 
   void updateCurrentScreenIndex(int index) {

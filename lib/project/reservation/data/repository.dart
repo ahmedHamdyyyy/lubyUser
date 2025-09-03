@@ -20,7 +20,8 @@ class ReservationsRepository {
         }
       }
       throw Exception('An unknown error occurred');
-    } catch (e) {
+    } catch (e, s) {
+      print('Error stack trace: $s');
       throw Exception('An unexpected error occurred: $e');
     }
   }

@@ -136,11 +136,7 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(12),
                                   boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.05),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 4),
-                                    ),
+                                    BoxShadow(color: Colors.black.withAlpha(13), blurRadius: 10, offset: const Offset(0, 4)),
                                   ],
                                 ),
                                 child: IconButton(
@@ -170,7 +166,7 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                                       borderRadius: BorderRadius.circular(30),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: const Color(0xFF10B981).withOpacity(0.3),
+                                          color: const Color(0xFF10B981).withAlpha(75),
                                           blurRadius: 20,
                                           offset: const Offset(0, 10),
                                         ),

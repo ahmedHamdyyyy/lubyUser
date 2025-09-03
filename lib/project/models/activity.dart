@@ -43,7 +43,7 @@ class CustomActivityModel extends Equatable {
     address: json['address'] ?? '',
     vendorId: json['vendorId'] ?? '',
     image: (json['medias'] ?? []).isNotEmpty ? json['medias'][0] : '',
-    isFavorite: json['isFavorite'] ?? false,
+    isFavorite: json['isFavourite'] ?? false,
     rate: (json['averageRating'] ?? 0.0).toDouble(),
   );
 
@@ -113,7 +113,7 @@ class ActivityModel extends Equatable {
 
   factory ActivityModel.fromJson(Map<String, dynamic> json) => ActivityModel(
     id: json['_id'] ?? '',
-    vendorId: json['vendorId']['_id'] ?? '',
+    vendorId: '', //json['vendorId']?['_id'] ?? '',
     address: json['address'] ?? '',
     details: json['details'] ?? '',
     tags: List<String>.from(json['tags'] ?? []),
@@ -125,8 +125,8 @@ class ActivityModel extends Equatable {
     verified: bool.fromEnvironment(json['verified'] ?? 'false'),
     medias: List<String>.from(json['medias'] ?? []),
     isFavorite: json['isFavorite'] ?? false,
-    vendorName: '${json['vendorId']['firstName'] ?? ''} ${json['vendorId']['lastName'] ?? ''}',
-    vendorImageUrl: json['vendorId']['imageUrl'] ?? '',
+    vendorName: '', //'${json['vendorId']?['firstName'] ?? ''} ${json['vendorId']?['lastName'] ?? ''}',
+    vendorImageUrl: '', //json['vendorId']?['imageUrl'] ?? '',
     reviewId: json['reviewId'] ?? '',
     comment: json['comment'] ?? '',
     rate: (json['averageRating'] ?? 0.0).toDouble(),

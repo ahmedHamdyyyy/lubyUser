@@ -32,9 +32,12 @@ class HomeRespository {
     }
   }
 
-  Future<List<PropertyModel>> getProperties() async {
+  Future<({List<PropertyModel> properties, bool hasNextPage})> getProperties(
+    bool fetchNext,
+    Map<String, dynamic>? filters,
+  ) async {
     try {
-      return await _homeData.getProperties();
+      return await _homeData.getProperties(fetchNext, filters);
     } on DioException catch (e) {
       debugPrint('DioException: ${e.response?.data}');
       throw Exception(e.response?.data['error'].toString());

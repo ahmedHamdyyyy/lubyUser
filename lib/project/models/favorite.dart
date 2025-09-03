@@ -3,13 +3,14 @@ import 'package:equatable/equatable.dart';
 enum FavoriteType { activity, property }
 
 class FavoriteModel extends Equatable {
-  final String id, title, address, imageUrl;
+  final String id, itemId, title, address, imageUrl;
   final double price, rate;
-  final int guests;
   final FavoriteType type;
+  final int guests;
 
   const FavoriteModel({
     required this.id,
+    required this.itemId,
     required this.title,
     required this.address,
     required this.imageUrl,
@@ -20,29 +21,31 @@ class FavoriteModel extends Equatable {
   });
 
   factory FavoriteModel.fromJsonProperty(Map<String, dynamic> json) {
-    final medias = json['medias'] as List<dynamic>? ?? [];
+    final medias = json['propertyId']['medias'] as List<dynamic>? ?? [];
     return FavoriteModel(
       id: json['_id'] ?? '',
-      title: json['type'] ?? '',
-      address: json['address'] ?? '',
+      itemId: json['propertyId']['_id'] ?? '',
+      title: json['propertyId']['type'] ?? '',
+      address: json['propertyId']['address'] ?? '',
       imageUrl: (medias.isNotEmpty ? medias.first : '') ?? '',
-      price: (json['pricePerNight'] ?? 0).toDouble(),
-      rate: (json['rate'] ?? 0).toDouble(),
-      guests: (json['guestNumber'] ?? 0).toInt(),
+      price: (json['propertyId']['pricePerNight'] ?? 0).toDouble(),
+      rate: (json['propertyId']['rate'] ?? 0).toDouble(),
+      guests: (json['propertyId']['guestNumber'] ?? 0).toInt(),
       type: FavoriteType.property,
     );
   }
 
   factory FavoriteModel.fromJsonActivity(Map<String, dynamic> json) {
-    final medias = json['medias'] as List<dynamic>? ?? [];
+    final medias = json['activityId']['medias'] as List<dynamic>? ?? [];
     return FavoriteModel(
       id: json['_id'] ?? '',
-      title: json['title'] ?? '',
-      address: json['details'] ?? '',
+      itemId: json['activityId']['_id'] ?? '',
+      title: json['activityId']['title'] ?? '',
+      address: json['activityId']['details'] ?? '',
       imageUrl: (medias.isNotEmpty ? medias.first : '') ?? '',
-      price: (json['price'] ?? 0).toDouble(),
-      rate: (json['rate'] ?? 0).toDouble(),
-      guests: (json['guestNumber'] ?? 0).toInt(),
+      price: (json['activityId']['price'] ?? 0).toDouble(),
+      rate: (json['activityId']['rate'] ?? 0).toDouble(),
+      guests: (json['activityId']['guestNumber'] ?? 0).toInt(),
       type: FavoriteType.activity,
     );
   }

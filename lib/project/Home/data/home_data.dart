@@ -9,8 +9,9 @@ import '../../models/review.dart';
 import '../../models/user.dart';
 
 class HomeData {
-  const HomeData(this._apiService);
+  HomeData(this._apiService);
   final ApiService _apiService;
+  int _currentPage = 1;
 
   Future<UserModel> fetchUser() async {
     final response = await _apiService.dio.get(ApiConstance.userProfile);
@@ -23,12 +24,24 @@ class HomeData {
     return userResponse;
   }
 
-  Future<List<PropertyModel>> getProperties() async {
-    final response = await _apiService.dio.get(ApiConstance.createProperty);
+  Future<({List<PropertyModel> properties, bool hasNextPage})> getProperties(
+    bool fetchNext,
+    Map<String, dynamic>? filters,
+  ) async {
+    _setPage(fetchNext);
+    print(_currentPage);
+    print(filters);
+    final response = await _apiService.dio.get(
+      ApiConstance.createProperty,
+      queryParameters: {'page': _currentPage, ...?filters},
+    );
     _checkIfSuccess(response);
     final properties = (response.data['data']['data'] as List).map((e) => PropertyModel.fromJson(e)).toList();
-    return properties;
+    final hasNextPage = (response.data['data']['hasNextPage'] as bool?) ?? false;
+    return (properties: properties, hasNextPage: hasNextPage);
   }
+
+  void _setPage(bool fetchNext) => _currentPage = fetchNext ? _currentPage + 1 : 1;
 
   Future<PropertyModel> getProperty(String id) async {
     final response = await _apiService.dio.get(ApiConstance.getProperty(id));

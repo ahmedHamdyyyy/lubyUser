@@ -11,12 +11,15 @@ part 'state.dart';
 class ActivitiesCubit extends Cubit<ActivitiesState> {
   ActivitiesCubit(this._repo) : super(const ActivitiesState());
   final ActivitiesRespository _repo;
+  bool _hasNextPage = false;
 
-  void getActivities() async {
+  void getActivities({bool fetchNext = false, Map<String, dynamic>? filters}) async {
+    if (fetchNext && !_hasNextPage) return;
     emit(state.copyWith(getAllActivitiesStatus: Status.loading));
     try {
-      final activities = await _repo.getActivities();
-      emit(state.copyWith(getAllActivitiesStatus: Status.success, activities: activities));
+      final activitiesData = await _repo.getActivities(fetchNext, filters);
+      _hasNextPage = activitiesData.hasNextPage;
+      emit(state.copyWith(getAllActivitiesStatus: Status.success, activities: activitiesData.activities));
     } catch (e) {
       emit(state.copyWith(getAllActivitiesStatus: Status.error, msg: e.toString()));
     }

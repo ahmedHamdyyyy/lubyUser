@@ -171,7 +171,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
         break;
       case Status.success:
         Navigator.pop(context);
-        Navigator.popUntil(context, (route) => route.isFirst);
+        Navigator.pop(context);
         getIt<HomeCubit>().updateCurrentScreenIndex(2);
         break;
       case Status.error:

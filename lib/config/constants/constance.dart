@@ -35,7 +35,7 @@ class AppConst {
   static const bedrooms = 'bedrooms';
   static const bathrooms = 'bathrooms';
   static const beds = 'beds';
-  static const isFavorite = 'isFavorite';
+  static const isFavorite = 'isFavourite';
   static const details = 'details';
   static const tags = 'tags';
   static const pricePerNight = 'pricePerNight';

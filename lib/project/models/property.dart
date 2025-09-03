@@ -3,6 +3,9 @@ import 'package:equatable/equatable.dart';
 import '../../../../config/constants/api_constance.dart';
 import '../../../config/constants/constance.dart';
 
+// ignore: constant_identifier_names
+enum PropertyType { apartment, house, cabin, guest_house, studio, yacht, cruise }
+
 class Vendor extends Equatable {
   final String id;
   final String firstName;
@@ -11,7 +14,6 @@ class Vendor extends Equatable {
   final String email;
   final String phone;
   final String role;
-
   final String vendorRole;
 
   const Vendor({

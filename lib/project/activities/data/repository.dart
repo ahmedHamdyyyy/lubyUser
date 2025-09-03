@@ -8,9 +8,12 @@ class ActivitiesRespository {
   const ActivitiesRespository(this._data);
   final ActivitiesData _data;
 
-  Future<List<CustomActivityModel>> getActivities() async {
+  Future<({List<CustomActivityModel> activities, bool hasNextPage})> getActivities(
+    bool fetchNext,
+    Map<String, dynamic>? filters,
+  ) async {
     try {
-      return await _data.getActivities();
+      return await _data.getActivities(fetchNext, filters);
     } on DioException catch (e) {
       debugPrint('DioException: ${e.response?.data}');
       if (e.response?.data['error'] != null) {

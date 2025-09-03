@@ -346,13 +346,7 @@ Widget buildPropertyList({
   required HomeState state,
   String? selectedPropertyCategory,
 }) {
-  final screenWidth = MediaQuery.of(context).size.width;
-  final cardWidth = (screenWidth - 48) / 2; // Calculate card width (subtracting padding and spacing)
-  final cardHeight = cardWidth * 1.2; // Reduce aspect ratio from 1.3 to 1.2 to save vertical space
-
-  String? selectedPropertyType;
-  String? selectedPriceRange;
-  String? selectedRatingRange;
+  String? selectedPropertyType, selectedPriceRange, selectedRatingRange;
 
   // قائمة أنواع العقارات
   final List<String> propertyTypes = ['Apartment - Studios', 'Camps', 'Villas'];
@@ -362,15 +356,6 @@ Widget buildPropertyList({
 
   // قائمة نطاقات التقييم
   final List<String> ratingRanges = ['From high to low rated', 'default'];
-
-  // Filter properties based on selected category
-  List<PropertyModel> filteredProperties = state.properties;
-  if (selectedPropertyCategory != null && selectedPropertyCategory != "Properties") {
-    filteredProperties =
-        state.properties.where((property) {
-          return property.type.toLowerCase() == selectedPropertyCategory.toLowerCase();
-        }).toList();
-  }
 
   return Container(
     margin: const EdgeInsets.only(bottom: 4),
@@ -413,40 +398,36 @@ Widget buildPropertyList({
           ),
         ),
 
-        SizedBox(
-          height: cardHeight * 2.2 + 90, // Increased height for taller cards
-          child:
-              filteredProperties.isEmpty
-                  ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.search_off, size: 64, color: Colors.grey[400]),
-                        SizedBox(height: 16),
-                        Text(
-                          "No ${selectedPropertyCategory ?? 'properties'} found",
-                          style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[600], fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                  )
-                  : GridView.builder(
-                    itemCount: filteredProperties.length,
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 1 / 1.7, // Increased aspect ratio for taller cards
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                    ),
-                    itemBuilder: (context, index) {
-                      return buildPropertyCard(context, state, filteredProperties, index);
-                    },
+        state.properties.isEmpty
+            ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.search_off, size: 64, color: Colors.grey[400]),
+                  SizedBox(height: 16),
+                  Text(
+                    "No ${selectedPropertyCategory ?? 'properties'} found",
+                    style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[600], fontWeight: FontWeight.w500),
                   ),
-        ),
+                ],
+              ),
+            )
+            : GridView.builder(
+              itemCount: state.properties.length,
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 1 / 1.7, // Increased aspect ratio for taller cards
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+              ),
+              itemBuilder: (context, index) {
+                return buildPropertyCard(context, state, state.properties, index);
+              },
+            ),
       ],
     ),
   );
@@ -800,173 +781,170 @@ void showFilterOptions(
   );
 }
 
-class HomeSearchSection extends StatelessWidget {
-  final String? selectedCity;
-  final String selectedDistrict;
-  final DateTime? checkInDate;
-  final DateTime? checkOutDate;
-  final int guestsCount;
-  final VoidCallback onCitySelect;
-  final VoidCallback onDistrictSelect;
-  final Function(DateTime) onCheckInSelect;
-  final Function(DateTime) onCheckOutSelect;
-  final VoidCallback onGuestsIncrement;
-  final VoidCallback onGuestsDecrement;
-  final VoidCallback onSearch;
+class HomeSearchSection extends StatefulWidget {
+  const HomeSearchSection({super.key, required this.onSearch});
+  final ValueChanged<Map<String, dynamic>> onSearch;
+  @override
+  State<HomeSearchSection> createState() => _HomeSearchSectionState();
+}
 
-  final List<String> cities = ['Riyadh', 'Jeddah', 'Dammam', 'Alula', 'Makkah', 'Jazan', 'Tabuk', 'Abha'];
+class _HomeSearchSectionState extends State<HomeSearchSection> {
+  String? selectedCity, selectedDistrict;
+  DateTime? checkInDate, checkOutDate;
+  int guestsCount = 0;
 
-  final List<String> district = ['East Riyadh', 'West Riyadh', 'North Riyadh', 'South Riyadh', 'Central Riyadh', 'Other'];
-
-  HomeSearchSection({
-    super.key,
-    required this.selectedCity,
-    required this.selectedDistrict,
-    this.checkInDate,
-    this.checkOutDate,
-    required this.guestsCount,
-    required this.onCitySelect,
-    required this.onDistrictSelect,
-    required this.onCheckInSelect,
-    required this.onCheckOutSelect,
-    required this.onGuestsIncrement,
-    required this.onGuestsDecrement,
-    required this.onSearch,
-  });
+  final cities = ['Riyadh', 'Jeddah', 'Dammam', 'Alula', 'Makkah', 'Jazan', 'Tabuk', 'Abha'];
+  final district = ['East Riyadh', 'West Riyadh', 'North Riyadh', 'South Riyadh', 'Central Riyadh', 'Other'];
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16),
-      margin: EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, spreadRadius: 2)],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CityDropdown(title: 'City', hint: 'City', list: cities),
-          SizedBox(height: 12),
-          CityDropdown(title: 'District (optional)', hint: 'District', list: district),
-
-          SizedBox(height: 12),
-
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Check in",
-                      style: GoogleFonts.poppins(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.secondTextColor,
-                      ),
-                    ),
-                    SizedBox(height: 6),
-                    HomeInputBox(
-                      text:
-                          checkInDate != null
-                              ? "${checkInDate!.day}/${checkInDate!.month}/${checkInDate!.year}"
-                              : "Add dates",
-                      onPressed: () => _selectDate(context, checkInDate, onCheckInSelect),
-                    ),
-                  ],
+  Widget build(BuildContext context) => Container(
+    padding: EdgeInsets.all(16),
+    margin: EdgeInsets.symmetric(horizontal: 8),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(15),
+      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, spreadRadius: 2)],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CityDropdown(
+          title: 'City',
+          hint: 'City',
+          list: cities,
+          selectedCity: selectedCity,
+          onChanged: (value) => selectedCity = value,
+        ),
+        SizedBox(height: 12),
+        CityDropdown(
+          title: 'District (optional)',
+          hint: 'District',
+          list: district,
+          selectedCity: selectedDistrict,
+          onChanged: (value) => selectedDistrict = value,
+        ),
+        SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Check in",
+                    style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.secondTextColor),
+                  ),
+                  SizedBox(height: 6),
+                  HomeInputBox(
+                    text:
+                        checkInDate != null
+                            ? "${checkInDate!.day}/${checkInDate!.month}/${checkInDate!.year}"
+                            : "Select date",
+                    onPressed: () => _selectDate(context, checkInDate, (date) => setState(() => checkInDate = date)),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Check out",
+                    style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.secondTextColor),
+                  ),
+                  SizedBox(height: 6),
+                  HomeInputBox(
+                    text:
+                        checkOutDate != null
+                            ? "${checkOutDate!.day}/${checkOutDate!.month}/${checkOutDate!.year}"
+                            : "Select date",
+                    onPressed: () {
+                      _selectDate(
+                        context,
+                        checkOutDate,
+                        (date) => setState(() => checkOutDate = date),
+                        checkInDate: checkInDate,
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 12),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Guests No.",
+              style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.secondTextColor),
+            ),
+            SizedBox(height: 6),
+            HomeGuestsSelector(guestsCount: guestsCount, onChanged: (guests) => guestsCount = guests),
+          ],
+        ),
+        SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  backgroundColor: AppColors.primaryColor,
+                  padding: EdgeInsets.symmetric(vertical: 14),
+                ),
+                onPressed: () {
+                  widget.onSearch({
+                    if (selectedCity != null) 'filter[city]': selectedCity,
+                    if (selectedDistrict != null) 'filter[district]': selectedDistrict,
+                    if (checkInDate != null) 'filter[startDate]': checkInDate,
+                    if (checkOutDate != null) 'filter[endDate]': checkOutDate,
+                    if (guestsCount > 0) 'filter[guestNumber]': guestsCount,
+                  });
+                },
+                child: Text(
+                  "Search",
+                  style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white),
                 ),
               ),
-              SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Check out",
-                      style: GoogleFonts.poppins(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.secondTextColor,
-                      ),
-                    ),
-                    SizedBox(height: 6),
-                    HomeInputBox(
-                      text:
-                          checkOutDate != null
-                              ? "${checkOutDate!.day}/${checkOutDate!.month}/${checkOutDate!.year}"
-                              : "Add dates",
-                      onPressed:
-                          () => _selectDate(
-                            context,
-                            checkOutDate,
-                            onCheckOutSelect,
-                            isCheckIn: false,
-                            checkInDate: checkInDate,
-                          ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-
-          SizedBox(height: 12),
-
-          // Guests No.
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Guests No.",
-                style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.secondTextColor),
-              ),
-              SizedBox(height: 6),
-              HomeGuestsSelector(guestsCount: guestsCount, onIncrement: onGuestsIncrement, onDecrement: onGuestsDecrement),
-            ],
-          ),
-
-          SizedBox(height: 16),
-
-          // Search button
-          SizedBox(
-            height: 48,
-            width: double.infinity,
-            child: ElevatedButton(
+            ),
+            SizedBox(width: 8),
+            ElevatedButton(
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 backgroundColor: AppColors.primaryColor,
                 padding: EdgeInsets.symmetric(vertical: 14),
               ),
-              onPressed: onSearch,
-              child: Text(
-                "Search",
-                style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white),
-              ),
+              onPressed: () {
+                selectedCity = null;
+                selectedDistrict = null;
+                checkInDate = null;
+                checkOutDate = null;
+                guestsCount = 0;
+                setState(() {});
+                widget.onSearch({});
+              },
+              child: Icon(Icons.filter_list_off, color: Colors.white),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      ],
+    ),
+  );
 
   Future<void> _selectDate(
     BuildContext context,
     DateTime? initialDate,
     Function(DateTime) onDateSelect, {
-    bool isCheckIn = true,
     DateTime? checkInDate,
   }) async {
-    DateTime firstDate =
-        isCheckIn
-            ? DateTime.now()
-            : (checkInDate != null ? checkInDate.add(Duration(days: 1)) : DateTime.now().add(Duration(days: 1)));
-
     DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: initialDate ?? firstDate,
-      firstDate: firstDate,
+      initialDate: initialDate ?? DateTime.now(),
+      firstDate: DateTime(2020),
       lastDate: DateTime(2100),
     );
 
@@ -1004,43 +982,58 @@ class HomeInputBox extends StatelessWidget {
   }
 }
 
-class HomeGuestsSelector extends StatelessWidget {
+class HomeGuestsSelector extends StatefulWidget {
+  const HomeGuestsSelector({super.key, required this.guestsCount, required this.onChanged});
   final int guestsCount;
-  final VoidCallback onIncrement;
-  final VoidCallback onDecrement;
+  final ValueChanged<int> onChanged;
+  @override
+  State<HomeGuestsSelector> createState() => _HomeGuestsSelectorState();
+}
 
-  const HomeGuestsSelector({super.key, required this.guestsCount, required this.onIncrement, required this.onDecrement});
+class _HomeGuestsSelectorState extends State<HomeGuestsSelector> {
+  late int guestsCount;
+  @override
+  void initState() {
+    guestsCount = widget.guestsCount;
+    super.initState();
+  }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 40,
-      padding: EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(border: Border.all(color: AppColors.lightGray), borderRadius: BorderRadius.circular(5)),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              "$guestsCount Guests",
-              style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.grayTextColor),
-            ),
+  Widget build(BuildContext context) => Container(
+    height: 40,
+    padding: EdgeInsets.symmetric(horizontal: 12),
+    decoration: BoxDecoration(border: Border.all(color: AppColors.lightGray), borderRadius: BorderRadius.circular(5)),
+    child: Row(
+      children: [
+        Expanded(
+          child: Text(
+            "$guestsCount Guests",
+            style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.grayTextColor),
           ),
-          IconButton(
-            onPressed: guestsCount > 0 ? onDecrement : null,
-            icon: SvgPicture.asset('assets/svg/message-minus.svg', width: 20, height: 20, color: AppColors.primaryColor),
-          ),
-          Text(
-            "$guestsCount",
-            style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400, color: AppColors.grayTextColor),
-          ),
-          IconButton(
-            onPressed: onIncrement,
-            icon: SvgPicture.asset('assets/svg/message-add.svg', width: 20, height: 20, color: AppColors.primaryColor),
-          ),
-        ],
-      ),
-    );
-  }
+        ),
+        IconButton(
+          onPressed: () {
+            if (guestsCount <= 0) return;
+            setState(() => guestsCount--);
+            widget.onChanged(guestsCount);
+          },
+          icon: SvgPicture.asset('assets/svg/message-minus.svg', width: 20, height: 20, color: AppColors.primaryColor),
+        ),
+        Text(
+          "$guestsCount",
+          style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400, color: AppColors.grayTextColor),
+        ),
+        IconButton(
+          onPressed: () {
+            if (guestsCount >= 100) return;
+            setState(() => guestsCount++);
+            widget.onChanged(guestsCount);
+          },
+          icon: SvgPicture.asset('assets/svg/message-add.svg', width: 20, height: 20, color: AppColors.primaryColor),
+        ),
+      ],
+    ),
+  );
 }
 
 class HomeCategoryButtons extends StatelessWidget {
@@ -1129,15 +1122,7 @@ class HomeCategoryButtons extends StatelessWidget {
   }
 }
 
-Widget buildActivitiesList({
-  required String title,
-  required BuildContext context,
-  required ActivitiesState activitiesState,
-}) {
-  final screenWidth = MediaQuery.of(context).size.width;
-  final cardWidth = (screenWidth - 48) / 2;
-  final cardHeight = cardWidth * 1.2;
-
+Widget buildActivitiesList({required String title, required BuildContext context, required ActivitiesState state}) {
   return Container(
     margin: const EdgeInsets.only(bottom: 4),
     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -1158,39 +1143,35 @@ Widget buildActivitiesList({
           ),
         ),
 
-        SizedBox(
-          height: cardHeight * 2.2 + 90,
-          child:
-              activitiesState.activities.isEmpty
-                  ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.search_off, size: 64, color: Colors.grey[400]),
-                        SizedBox(height: 16),
-                        Text(
-                          "No activities found",
-                          style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[600], fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                  )
-                  : GridView.builder(
-                    itemCount: activitiesState.activities.length,
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 1 / 1.7,
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                    ),
-                    itemBuilder: (context, index) {
-                      return buildActivityCard(context, activitiesState.activities, index);
-                    },
+        state.activities.isEmpty
+            ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.search_off, size: 64, color: Colors.grey[400]),
+                  SizedBox(height: 16),
+                  Text(
+                    "No activities found",
+                    style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[600], fontWeight: FontWeight.w500),
                   ),
-        ),
+                ],
+              ),
+            )
+            : GridView.builder(
+              itemCount: state.activities.length,
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 1 / 1.7,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+              ),
+              itemBuilder: (context, index) {
+                return buildActivityCard(context, state.activities, index);
+              },
+            ),
       ],
     ),
   );
