@@ -83,7 +83,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
                     return ReservedItemCardWidget(
                       imagePath: item.medias.first,
                       title: item.type,
-                      location: item.address,
+                      location: item.address.formattedAddress,
                       dateDetails: item.details,
                       price: item.pricePerNight,
                       totalPrice: widget.reservation.totalPrice.toInt(),

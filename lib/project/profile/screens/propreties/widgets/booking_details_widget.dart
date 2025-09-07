@@ -21,19 +21,23 @@ class BookingDetailsWidget extends StatelessWidget {
            Row(
             children: [
               TextWidget(
-                text: '${state.property.pricePerNight.toString()} SAR',
+                text: '${state.property.guestNumber * state.property.pricePerNight} SAR',
                 color: AppColors.primaryColor,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
-              TextWidget(
-                text: '${state.property.guestNumber.toString()} Night',
-                color: AppColors.secondTextColor,
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
+              const SizedBox(width: 8),
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+                child: TextWidget(
+                  text: '${ state.property.guestNumber.toString()} Night',
+                  color: AppColors.secondTextColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
               TextWidget(
-                text: ' - 649 Per Night',
+                text: '${state.property.pricePerNight.toString()} Per Night',
                 color: AppColors.grayTextColor,
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
@@ -54,7 +58,7 @@ class BookingDetailsWidget extends StatelessWidget {
               const SizedBox(width: 8),
               Flexible(
                 child: Text(
-                  'Free cancellation before 27 October',
+                  'Free cancellation before ${state.property.startDate.split('T')[0]}',
                   style: GoogleFonts.poppins(
                     color: AppColors.secondTextColor,
                     fontSize: 16,

@@ -21,6 +21,8 @@ class AppConst {
   static const userId = "_id";
   static const vendorId = 'vendorId';
   static const vendorName = 'vendorName';
+  static const endDate = 'endDate';
+  static const startDate = 'startDate';
   static const vendorImageUrl = 'vendorImageUrl';
   static const createdAt = 'createdAt';
   static const updatedAt = 'updatedAt';

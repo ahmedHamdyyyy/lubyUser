@@ -25,7 +25,7 @@ class RentalUnitWidget extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
           TextWidget(
-            text: state.property.address,
+            text: state.property.address.formattedAddress,
             color: Color(0xFF414141),
             fontSize: 16,
             fontWeight: FontWeight.w600,

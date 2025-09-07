@@ -113,7 +113,7 @@ Widget buildHotelReservationCardCurrentReservation({required BuildContext contex
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text(item.address, style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor)),
+                  Text(item.address.formattedAddress, style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor)),
                   const SizedBox(height: 4),
                   RichText(
                     text: TextSpan(
@@ -794,7 +794,7 @@ class CurrentReservationDetailsContent extends StatelessWidget {
             imagePath: item.medias.first,
             reservation: reservation,
             title: '${item.type}$nights nights',
-            location: item.address,
+            location: item.address.formattedAddress,
             dateDetails:
                 "Check-in  ${reservation.checkInDate.substring(0, 10)}\nCheck-out  ${reservation.checkOutDate.substring(0, 10)}",
             price: item.pricePerNight.toString(),

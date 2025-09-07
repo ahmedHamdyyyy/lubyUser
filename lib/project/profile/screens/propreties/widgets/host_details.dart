@@ -20,9 +20,9 @@ class HostDetailsWidget extends StatelessWidget {
           CircleAvatar(
             radius: 24,
             backgroundImage:
-                vendorImageUrl.isNotEmpty
-                    ? NetworkImage(vendorImageUrl)
-                    : const AssetImage(AssetsData.host) as ImageProvider,
+               /*  vendorImageUrl.isNotEmpty
+                    ? */ NetworkImage(vendorImageUrl)
+                    /* : const AssetImage(AssetsData.host) as ImageProvider, */
           ),
           const SizedBox(width: 12),
           Column(

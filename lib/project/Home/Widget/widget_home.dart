@@ -513,7 +513,7 @@ Widget buildPropertyCard(BuildContext context, HomeState state, List<PropertyMod
 
                 // Location with tiny font
                 Text(
-                  properties[index].address,
+                  properties[index].address.formattedAddress,
                   style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor, fontWeight: FontWeight.w400),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

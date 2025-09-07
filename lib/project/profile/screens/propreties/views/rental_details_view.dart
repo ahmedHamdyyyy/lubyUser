@@ -153,11 +153,11 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                         HostDetailsWidget(
                           vendorId: state.property.vendorId.id,
                           vendorName: "${state.property.vendorId.firstName} ${state.property.vendorId.lastName}",
-                          vendorImageUrl: "https://www.facebook.com/photo?fbid=864741994898346&set=a.102393161133237",
+                          vendorImageUrl: state.property.vendorId.profilePicture,
                         ),
                         ImageListWidget(images: state.property.medias),
                         const Driver(),
-                        if (isExpanded == true)
+                        if (isExpanded != true)
                           ReadMoreTextWidget(details: state.property.details)
                         else
                           ReadDetailsWidget(details: state.property.details),

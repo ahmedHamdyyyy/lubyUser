@@ -8,6 +8,7 @@ import '../../models/property.dart';
 import '../../models/review.dart';
 import '../../models/user.dart';
 
+
 class HomeData {
   HomeData(this._apiService);
   final ApiService _apiService;

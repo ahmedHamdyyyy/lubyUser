@@ -6,10 +6,49 @@ import '../../../config/constants/constance.dart';
 // ignore: constant_identifier_names
 enum PropertyType { apartment, house, cabin, guest_house, studio, yacht, cruise }
 
+class Address extends Equatable {
+  final double longitude;
+  final double latitude;
+  final String formattedAddress;
+  final String city;
+  final String state;
+
+  const Address({
+    required this.longitude,
+    required this.latitude,
+    required this.formattedAddress,
+    required this.city,
+    required this.state,
+  });
+
+  factory Address.fromJson(Map<String, dynamic> json) {
+    return Address(
+      longitude: (json['longitude'] ?? 0.0).toDouble(),
+      latitude: (json['latitude'] ?? 0.0).toDouble(),
+      formattedAddress: json['formattedAddress'] ?? '',
+      city: json['city'] ?? '',
+      state: json['state'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'longitude': longitude,
+      'latitude': latitude,
+      'formattedAddress': formattedAddress,
+      'city': city,
+      'state': state,
+    };
+  }
+
+  @override
+  List<Object?> get props => [longitude, latitude, formattedAddress, city, state];
+}
+
 class Vendor extends Equatable {
   final String id;
   final String firstName;
-  final String imageUrl;
+  final String profilePicture;
   final String lastName;
   final String email;
   final String phone;
@@ -19,7 +58,7 @@ class Vendor extends Equatable {
   const Vendor({
     required this.id,
     required this.firstName,
-    required this.imageUrl,
+    required this.profilePicture,
     required this.lastName,
     required this.email,
     required this.phone,
@@ -33,7 +72,7 @@ class Vendor extends Equatable {
       id: json['_id'] ?? '',
       firstName: json['firstName'] ?? '',
       lastName: json['lastName'] ?? '',
-      imageUrl: json['imageUrl'] ?? '',
+      profilePicture: json['profilePicture'] ?? '',
       email: json['email'] ?? '',
       phone: json['phone'] ?? '',
       role: json['role'] ?? '',
@@ -42,7 +81,7 @@ class Vendor extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, firstName, lastName, email, phone, role, imageUrl, vendorRole];
+  List<Object?> get props => [id, firstName, lastName, email, phone, role, profilePicture, vendorRole];
 }
 
 class CustomPropertyModel extends Equatable {
@@ -117,15 +156,18 @@ class CustomPropertyModel extends Equatable {
 }
 
 class PropertyModel extends Equatable {
-  final String id, type, address, details, reviewId, comment;
+  final String id, type, details, reviewId, comment, endDate, startDate;
   final int guestNumber, bedrooms, bathrooms, beds, maxDays;
   final List<String> tags, medias, ownershipContract, facilityLicense;
   final bool available, isFavorite;
   final double rate, pricePerNight;
   final Vendor vendorId;
+  final Address address;
 
   const PropertyModel({
     required this.id,
+    required this.endDate,
+    required this.startDate,
     required this.type,
     required this.available,
     required this.guestNumber,
@@ -154,9 +196,11 @@ class PropertyModel extends Equatable {
     available: true,
     guestNumber: 0,
     bedrooms: 0,
+    endDate: '',
+    startDate: '',
     bathrooms: 0,
     beds: 0,
-    address: '',
+    address: Address(longitude: 0.0, latitude: 0.0, formattedAddress: '', city: '', state: ''),
     details: '',
     tags: [],
     pricePerNight: 0,
@@ -169,7 +213,7 @@ class PropertyModel extends Equatable {
     reviewId: '',
     comment: '',
     rate: 0,
-    vendorId: Vendor(id: '', firstName: '', lastName: '', email: '', phone: '', role: '', imageUrl: '', vendorRole: ''),
+    vendorId: Vendor(id: '', firstName: '', lastName: '', email: '', phone: '', role: '', profilePicture: '', vendorRole: ''),
   );
 
   factory PropertyModel.fromJson(Map<String, dynamic> json) {
@@ -182,13 +226,17 @@ class PropertyModel extends Equatable {
 
     return PropertyModel(
       id: json[AppConst.id] ?? '',
+      endDate: json[AppConst.endDate] ?? '',
+      startDate: json[AppConst.startDate] ?? '',
       type: json[AppConst.type] ?? '',
       available: json[AppConst.available] ?? false,
       guestNumber: json[AppConst.guestNumber] ?? 0,
       bedrooms: json[AppConst.bedrooms] ?? 0,
       bathrooms: json[AppConst.bathrooms] ?? 0,
       beds: json[AppConst.beds] ?? 0,
-      address: json[AppConst.address] ?? '',
+      address: json[AppConst.address] != null 
+          ? Address.fromJson(json[AppConst.address])
+          : const Address(longitude: 0.0, latitude: 0.0, formattedAddress: '', city: '', state: ''),
       details: json[AppConst.details] ?? '',
       tags: parseStringOrList(json[AppConst.tags]),
       pricePerNight: (json[AppConst.pricePerNight] ?? 0.0).toDouble(),
@@ -212,10 +260,10 @@ class PropertyModel extends Equatable {
                     email: '',
                     phone: '',
                     role: '',
-                    imageUrl: '',
+                    profilePicture: '',
                     vendorRole: '',
                   ))
-              : Vendor(id: '', firstName: '', lastName: '', email: '', phone: '', role: '', imageUrl: '', vendorRole: ''),
+              : Vendor(id: '', firstName: '', lastName: '', email: '', phone: '', role: '', profilePicture: '', vendorRole: ''),
     );
   }
 
@@ -322,7 +370,7 @@ class PropertyModel extends Equatable {
     int? bedrooms,
     int? bathrooms,
     int? beds,
-    String? address,
+    Address? address,
     String? details,
     List<String>? tags,
     double? pricePerNight,
@@ -334,11 +382,15 @@ class PropertyModel extends Equatable {
     bool? isFavorite,
     String? reviewId,
     String? comment,
+    String? endDate,
+    String? startDate,
     double? rate,
     Vendor? vendorId,
   }) {
     return PropertyModel(
       id: id ?? this.id,
+      endDate: endDate ?? this.endDate,
+      startDate: startDate ?? this.startDate,
       type: type ?? this.type,
       facilityLicense: facilityLicense ?? this.facilityLicense,
       available: available ?? this.available,
@@ -369,6 +421,8 @@ class PropertyModel extends Equatable {
     available,
     guestNumber,
     bedrooms,
+    endDate,
+    startDate,
     bathrooms,
     beds,
     address,

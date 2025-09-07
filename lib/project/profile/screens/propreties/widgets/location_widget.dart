@@ -28,7 +28,7 @@ class LocationWidget extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  state.property.address,
+                  state.property.address.formattedAddress ?? '',
                   style: TextStyle(
                     color: AppColors.grayTextColor,
                     fontSize: 16,

@@ -123,23 +123,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     const SizedBox(height: 15),
                     EditableProfileImage(onImageSelected: _handleImageSelected),
                     const SizedBox(height: 30),
-                    RegistrationTextField(hintText: "الاسم الأول", controller: firstNameController, isError: false),
-                    RegistrationTextField(hintText: "اسم العائلة", controller: lastNameController),
+                    RegistrationTextField(hintText: "First Name", controller: firstNameController, isError: false),
+                    RegistrationTextField(hintText: "Last Name", controller: lastNameController),
                     RegistrationTextField(
                       //validator: (value) => InputValidation.phoneValidation(value),
                       keyboardType: TextInputType.phone,
-                      hintText: "رقم الهاتف",
+                      hintText: "Phone Number",
                       controller: phoneController,
                       isNumber: true,
                     ),
                     RegistrationTextField(
                       keyboardType: TextInputType.emailAddress,
-                      hintText: "البريد الإلكتروني",
+                      hintText: "Email",
                       controller: emailController,
                     ),
-                    RegistrationTextField(hintText: "كلمة المرور", controller: passwordController, isPassword: true),
+                    RegistrationTextField(hintText: "Password", controller: passwordController, isPassword: true),
                     RegistrationTextField(
-                      hintText: "تأكيد كلمة المرور",
+                      hintText: "Confirm Password",
                       controller: confirmPasswordController,
                       isPassword: true,
                     ),
@@ -152,7 +152,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "لديك حساب بالفعل؟",
+                          "Already have an account?",
                           style: GoogleFonts.poppins(
                             color: AppColors.grayTextColor,
                             fontSize: 14,
@@ -172,7 +172,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
                           child: Text(
-                            "تسجيل الدخول",
+                            "Login",
                             style: GoogleFonts.poppins(color: AppColors.primary, fontSize: 14, fontWeight: FontWeight.w600),
                           ),
                         ),
