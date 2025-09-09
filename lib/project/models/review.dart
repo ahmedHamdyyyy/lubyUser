@@ -54,9 +54,9 @@ class ReviewModel extends Equatable {
   factory ReviewModel.fromJson(Map<String, dynamic> json, ReviewType type) => ReviewModel(
     id: json['_id'] ?? '',
     itemId: json[type == ReviewType.activity ? 'activityId' : 'propertyId'] ?? '',
-    userId: json['userId']['_id'] ?? '',
-    userFirstName: json['userId']['firstName'] ?? '',
-    userLastName: json['userId']['lastName'] ?? '',
+    userId: json['userId']?['_id'] ?? '',
+    userFirstName: json['userId']?['firstName'] ?? '',
+    userLastName: json['userId']?['lastName'] ?? '',
     comment: json['comment'] ?? '',
     type: type,
     rating: (json['rating'] as num?)?.toInt() ?? 0,

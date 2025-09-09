@@ -36,7 +36,7 @@ class ReservationModel extends Equatable {
     guestNumber: 1,
     registrationNumber: 0,
     totalPrice: 0.0,
-    item: PropertyModel.initial,
+    item: '',
   );
 
   ReservationModel copyWith({
@@ -73,7 +73,7 @@ class ReservationModel extends Equatable {
     },
   };
 
-  factory ReservationModel.fromMap(Map<String, dynamic> map) {
+  factory ReservationModel.fromMap(Map<String, dynamic> map, {Object? item}) {
     final type = map['type'] == 'activity' ? ReservationType.activity : ReservationType.property;
     return ReservationModel(
       id: map['_id'] ?? '',
@@ -88,9 +88,10 @@ class ReservationModel extends Equatable {
       registrationNumber: map['registrationNumber'] ?? 0,
       totalPrice: (map['totalPrice'] as num?)?.toDouble() ?? 0.0,
       item:
-          type == ReservationType.property
+          item ??
+          (type == ReservationType.property
               ? PropertyModel.fromJson(map['propertyId'] ?? {})
-              : ActivityModel.fromJson(map['activityId'] ?? {}),
+              : ActivityModel.fromJson(map['activityId'] ?? {})),
     );
   }
 

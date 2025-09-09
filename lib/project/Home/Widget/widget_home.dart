@@ -505,7 +505,7 @@ Widget buildPropertyCard(BuildContext context, HomeState state, List<PropertyMod
                     Icon(Icons.star, color: AppColors.primaryColor, size: 14),
                     SizedBox(width: 1),
                     Text(
-                      properties[index].rate.toString(),
+                      properties[index].totalRate.toString(),
                       style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 14, color: AppColors.primaryColor),
                     ),
                   ],

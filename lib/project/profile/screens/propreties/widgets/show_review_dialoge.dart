@@ -15,13 +15,12 @@ import 'custom_text_filed.dart';
 Future<dynamic> showReviewDialoge(
   BuildContext context, {
   required ReviewType type,
-  String id = '',
-  required String itemId,
-  int rate = 5,
-  String comment = '',
+  required String entityId,
+  required ReviewModel review,
 }) {
   getIt<HomeCubit>().initReviewStatus();
-  final commentController = TextEditingController(text: comment);
+  final commentController = TextEditingController(text: review.comment);
+  int rate = review.rating;
   final formKey = GlobalKey<FormState>();
   return showDialog(
     context: context,
@@ -55,7 +54,12 @@ Future<dynamic> showReviewDialoge(
                       ),
                     ],
                   ),
-                  const TextWidget(text: 'Add Review', color: Color(0xFF262626), fontSize: 16, fontWeight: FontWeight.w600),
+                  TextWidget(
+                    text: review.id.isEmpty ? 'Add Review' : 'Edit Review',
+                    color: Color(0xFF262626),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                   const SizedBox(height: 16),
                   const Padding(padding: EdgeInsets.symmetric(horizontal: 80.0), child: Driver()),
                   const SizedBox(height: 24),
@@ -133,7 +137,6 @@ Future<dynamic> showReviewDialoge(
                         case Status.success:
                           Navigator.pop(context);
                           Navigator.pop(context);
-                          Navigator.pop(context);
                           if (type == ReviewType.activity) {
                             getIt<ActivitiesCubit>().setActivityReview(state.reviews.last);
                           } else {
@@ -148,17 +151,17 @@ Future<dynamic> showReviewDialoge(
                     child: ElevatedButton(
                       onPressed: () {
                         if (!formKey.currentState!.validate()) return;
-                        if (id.isNotEmpty) {
-                          getIt<HomeCubit>().updateReview(id, commentController.text.trim(), rate);
+                        if (review.id.isNotEmpty) {
+                          getIt<HomeCubit>().updateReview(review.id, commentController.text.trim(), rate);
                         } else {
-                          final review = ReviewModel.initial.copyWith(
-                            id: id,
-                            itemId: itemId,
-                            comment: commentController.text.trim(),
-                            type: type,
-                            rating: rate,
+                          getIt<HomeCubit>().addReview(
+                            ReviewModel.initial.copyWith(
+                              itemId: entityId,
+                              comment: commentController.text.trim(),
+                              type: type,
+                              rating: rate,
+                            ),
                           );
-                          getIt<HomeCubit>().addReview(review);
                         }
                       },
                       style: ElevatedButton.styleFrom(

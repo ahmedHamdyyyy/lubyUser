@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../../../../config/images/assets.dart';
 import '../../../../../../config/widget/helper.dart';
+import '../../../../../config/images/assets.dart';
 import '../../../../../locator.dart';
 import '../../../../Home/cubit/home_cubit.dart';
 import '../../../../models/chat.dart';
+import '../../../../models/vendor.dart';
 import '../../Conversations/chat_screen.dart';
 
 class HostDetailsWidget extends StatelessWidget {
-  const HostDetailsWidget({super.key, required this.vendorName, required this.vendorImageUrl, required this.vendorId});
-  final String vendorName, vendorImageUrl, vendorId;
+  const HostDetailsWidget({super.key, required this.vendor});
+  final Vendor vendor;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -20,16 +21,21 @@ class HostDetailsWidget extends StatelessWidget {
           CircleAvatar(
             radius: 24,
             backgroundImage:
-               /*  vendorImageUrl.isNotEmpty
-                    ? */ NetworkImage(vendorImageUrl)
-                    /* : const AssetImage(AssetsData.host) as ImageProvider, */
+                vendor.profilePicture.isNotEmpty
+                    ? NetworkImage(vendor.profilePicture)
+                    : const AssetImage(AssetsData.host) as ImageProvider,
           ),
           const SizedBox(width: 12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextWidget(text: 'Hosted by', color: Color(0xFF414141), fontSize: 16, fontWeight: FontWeight.w600),
-              TextWidget(text: vendorName, color: Color(0xFF757575), fontSize: 14, fontWeight: FontWeight.w400),
+              TextWidget(
+                text: '${vendor.firstName} ${vendor.lastName}',
+                color: Color(0xFF757575),
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+              ),
             ],
           ),
           const Spacer(),
@@ -42,10 +48,10 @@ class HostDetailsWidget extends StatelessWidget {
                   builder: (context) {
                     return ChatScreen(
                       chat: ChatModel(
-                        id: '${vendorId}_${user.id}',
-                        vendorId: vendorId,
-                        vendorName: vendorName,
-                        vendorImageUrl: vendorImageUrl,
+                        id: '${vendor.id}_${user.id}',
+                        vendorId: vendor.id,
+                        vendorName: '${vendor.firstName} ${vendor.lastName}',
+                        vendorImageUrl: vendor.profilePicture,
                         lastMessage: '',
                         lastTimestamp: DateTime.now(),
                         userId: user.id,

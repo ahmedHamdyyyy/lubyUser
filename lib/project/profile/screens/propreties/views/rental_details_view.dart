@@ -149,12 +149,14 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                         const Driver(),
                         LocationWidget(state: state),
                         const Driver(),
-                        ReviewsWidget(id: state.property.id, reviewId: state.property.reviewId, isProperty: true),
-                        HostDetailsWidget(
-                          vendorId: state.property.vendorId.id,
-                          vendorName: "${state.property.vendorId.firstName} ${state.property.vendorId.lastName}",
-                          vendorImageUrl: state.property.vendorId.profilePicture,
+                        ReviewsWidget(
+                          entityId: state.property.id,
+                          isProperty: true,
+                          review: state.property.review,
+                          commentsCount: state.property.reviewsCount,
+                          totalRate: state.property.totalRate,
                         ),
+                        HostDetailsWidget(vendor: state.property.vendor),
                         ImageListWidget(images: state.property.medias),
                         const Driver(),
                         if (isExpanded != true)

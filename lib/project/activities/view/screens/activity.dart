@@ -130,7 +130,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                           fontWeight: FontWeight.w600,
                         ),
                         TextWidget(
-                          text: state.activity.address,
+                          text: state.activity.address.formattedAddress,
                           color: Color(0xFF414141),
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -148,7 +148,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                state.activity.address,
+                                state.activity.address.formattedAddress,
                                 style: TextStyle(color: AppColors.grayTextColor, fontSize: 16, fontWeight: FontWeight.w500),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -176,12 +176,14 @@ class _ActivityScreenState extends State<ActivityScreen> {
                           ],
                         ),
                         const Driver(),
-                        ReviewsWidget(id: state.activity.id, reviewId: state.activity.reviewId, isProperty: false),
-                        HostDetailsWidget(
-                          vendorId: state.activity.vendorId,
-                          vendorName: state.activity.vendorName,
-                          vendorImageUrl: state.activity.vendorImageUrl,
+                        ReviewsWidget(
+                          entityId: state.activity.id,
+                          review: state.activity.review,
+                          isProperty: false,
+                          commentsCount: state.activity.reviewCount,
+                          totalRate: state.activity.rate,
                         ),
+                        HostDetailsWidget(vendor: state.activity.vendor),
                         ImageListWidget(images: state.activity.medias),
                         const Driver(),
                         if (isExpanded == true)

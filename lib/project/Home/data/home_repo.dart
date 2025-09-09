@@ -41,8 +41,9 @@ class HomeRespository {
     } on DioException catch (e) {
       debugPrint('DioException: ${e.response?.data}');
       throw Exception(e.response?.data['error'].toString());
-    } catch (e) {
+    } catch (e, s) {
       debugPrint('Unexpected error: $e');
+      debugPrintStack(stackTrace: s);
       throw Exception('حدث خطأ غير متوقع');
     }
   }
@@ -53,6 +54,10 @@ class HomeRespository {
     } on DioException catch (e) {
       debugPrint('DioException: ${e.response?.data}');
       throw Exception(e.response?.data['error'].toString());
+    } catch (e, s) {
+      debugPrint('Unexpected error: $e');
+      debugPrintStack(stackTrace: s);
+      throw Exception('حدث خطأ غير متوقع');
     }
   }
 

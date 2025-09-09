@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/widget/helper.dart';
 import '../../../../Home/cubit/home_cubit.dart';
 
 class LocationWidget extends StatelessWidget {
   final HomeState state;
-  const LocationWidget({
-    super.key,
-    required this.state,
-  });
+  const LocationWidget({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -28,21 +26,15 @@ class LocationWidget extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  state.property.address.formattedAddress ?? '',
-                  style: TextStyle(
-                    color: AppColors.grayTextColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  state.property.address.formattedAddress,
+                  style: TextStyle(color: AppColors.grayTextColor, fontSize: 16, fontWeight: FontWeight.w500),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-              )
+              ),
             ],
           ),
-          const SizedBox(
-            height: 16,
-          ),
+          const SizedBox(height: 16),
           Row(
             children: [
               SvgPicture.asset(

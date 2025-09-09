@@ -36,6 +36,6 @@ class ActivitiesCubit extends Cubit<ActivitiesState> {
   }
 
   void setActivityReview(ReviewModel review) {
-    emit(state.copyWith(activity: state.activity.copyWith(reviewId: review.id, comment: review.comment)));
+    emit(state.copyWith(activity: state.activity.copyWith(review: review)));
   }
 }

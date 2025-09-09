@@ -10,6 +10,7 @@ class AppConst {
   static const password = 'password';
   static const passwordConfirmation = 'password_confirmation';
   static const theme = 'theme';
+  static const reviewsCount = 'reviewsCount';
   static const lang = 'lang';
   static const firstName = 'firstName';
   static const lastName = 'lastName';

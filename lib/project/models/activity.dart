@@ -1,7 +1,13 @@
 import 'package:equatable/equatable.dart';
 
+import '../../config/constants/constance.dart';
+import 'address.dart';
+import 'reversation.dart';
+import 'review.dart';
+import 'vendor.dart';
+
 class CustomActivityModel extends Equatable {
-  final String id, name, image, address, vendorId;
+  final String id, name, image, address;
   final double price, rate;
   final bool isFavorite;
 
@@ -11,9 +17,8 @@ class CustomActivityModel extends Equatable {
     required this.image,
     required this.price,
     required this.address,
-    required this.vendorId,
     required this.rate,
-    this.isFavorite = false,
+    required this.isFavorite,
   });
 
   CustomActivityModel copyWith({
@@ -22,12 +27,10 @@ class CustomActivityModel extends Equatable {
     String? image,
     double? price,
     String? address,
-    String? vendorId,
     bool? isFavorite,
     double? rate,
   }) => CustomActivityModel(
     id: id ?? this.id,
-    vendorId: vendorId ?? this.vendorId,
     name: name ?? this.name,
     image: image ?? this.image,
     price: price ?? this.price,
@@ -40,8 +43,7 @@ class CustomActivityModel extends Equatable {
     id: json['_id'] ?? '',
     price: (json['price'] as num?)?.toDouble() ?? 0.0,
     name: json['name'] ?? '',
-    address: json['address'] ?? '',
-    vendorId: json['vendorId'] ?? '',
+    address: json['address']?['formattedAddress'] ?? '',
     image: (json['medias'] ?? []).isNotEmpty ? json['medias'][0] : '',
     isFavorite: json['isFavourite'] ?? false,
     rate: (json['averageRating'] ?? 0.0).toDouble(),
@@ -49,71 +51,71 @@ class CustomActivityModel extends Equatable {
 
   factory CustomActivityModel.fromProperty(ActivityModel property) => CustomActivityModel(
     id: property.id,
-    vendorId: property.vendorId,
     name: property.name,
-    address: property.address,
+    address: property.address.formattedAddress,
     price: property.price,
     image: property.medias.isNotEmpty ? property.medias.first : '',
-    isFavorite: false, // Default to false, can be updated later
+    isFavorite: property.isFavorite,
     rate: property.rate,
   );
 
   @override
-  List<Object> get props => [id, name, image, isFavorite, rate];
+  List<Object> get props => [id, name, address, price, image, isFavorite, rate];
 }
 
 class ActivityModel extends Equatable {
-  final String id, vendorId, vendorName, vendorImageUrl, name, address, details, date, time, activityTime, reviewId, comment;
-  final double price;
-  final double rate;
+  final String id, name, details, date, time, activityTime;
+  final double price, rate;
+  final int reviewCount;
   final List<String> tags, medias;
   final bool verified, isFavorite;
+  final Vendor vendor;
+  final Address address;
+  final ReviewModel review;
+  final ReservationModel reservation;
 
   const ActivityModel({
     required this.id,
-    required this.vendorId,
     required this.date,
     required this.time,
     required this.activityTime,
     required this.name,
-    required this.address,
     required this.details,
     required this.tags,
     required this.price,
     required this.medias,
     required this.verified,
     required this.isFavorite,
-    required this.vendorName,
-    required this.vendorImageUrl,
-    required this.reviewId,
-    required this.comment,
     required this.rate,
+    required this.vendor,
+    required this.address,
+    required this.review,
+    required this.reservation,
+    required this.reviewCount,
   });
 
   static const non = ActivityModel(
     id: '',
-    vendorId: '',
     date: '',
     time: '',
     activityTime: '',
     name: '',
-    address: '',
     details: '',
     tags: [],
     price: 0,
     medias: [],
     verified: false,
     isFavorite: false,
-    vendorName: '',
-    vendorImageUrl: '',
-    reviewId: '',
-    comment: '',
     rate: 0,
+    address: Address.initial,
+    vendor: Vendor.initial,
+    review: ReviewModel.initial,
+    reservation: ReservationModel.initial,
+    reviewCount: 0,
   );
 
   factory ActivityModel.fromJson(Map<String, dynamic> json) => ActivityModel(
     id: json['_id'] ?? '',
-    vendorId: '', //json['vendorId']?['_id'] ?? '',
     address: json['address'] ?? '',
     details: json['details'] ?? '',
     tags: List<String>.from(json['tags'] ?? []),
@@ -125,31 +127,18 @@ class ActivityModel extends Equatable {
     verified: bool.fromEnvironment(json['verified'] ?? 'false'),
     medias: List<String>.from(json['medias'] ?? []),
     isFavorite: json['isFavorite'] ?? false,
-    vendorName: '', //'${json['vendorId']?['firstName'] ?? ''} ${json['vendorId']?['lastName'] ?? ''}',
-    vendorImageUrl: '', //json['vendorId']?['imageUrl'] ?? '',
-    reviewId: json['reviewId'] ?? '',
-    comment: json['comment'] ?? '',
     rate: (json['averageRating'] ?? 0.0).toDouble(),
+    reviewCount: json[AppConst.reviewsCount] ?? 0,
+    vendor: json[AppConst.vendorId] is String ? Vendor.initial : Vendor.fromJson(json[AppConst.vendorId] ?? {}),
+    review: ReviewModel.fromJson(json['review'] ?? {}, ReviewType.property),
+    reservation:
+        json[AppConst.vendorId] is String
+            ? ReservationModel.initial
+            : ReservationModel.fromMap(json['registration'] ?? {}, item: ''),
   );
-
-  // Future<FormData> create() async => FormData.fromMap({
-  //   'address': address,
-  //   'details': details,
-  //   'price': price,
-  //   'medias': medias,
-  //   'name': name,
-  //   'date': date,
-  //   'time': time,
-  //   'vendorId': vendorId,
-  //   'activityTime': activityTime,
-  //   for (final tag in tags) 'tags': tag,
-  //   for (final media in medias)
-  //     if (media.isNotEmpty) 'medias': await MultipartFile.fromFile(media, filename: media.split('/').last),
-  // });
 
   ActivityModel copyWith({
     String? id,
-    String? address,
     String? details,
     List<String>? tags,
     double? price,
@@ -158,14 +147,14 @@ class ActivityModel extends Equatable {
     String? date,
     String? time,
     String? activityTime,
-    String? vendorId,
     bool? verified,
     bool? isFavorite,
-    String? vendorName,
-    String? vendorImageUrl,
-    String? reviewId,
-    String? comment,
     double? rate,
+    int? commentsCount,
+    Vendor? vendor,
+    Address? address,
+    ReviewModel? review,
+    ReservationModel? reservation,
   }) {
     return ActivityModel(
       id: id ?? this.id,
@@ -178,36 +167,34 @@ class ActivityModel extends Equatable {
       date: date ?? this.date,
       time: time ?? this.time,
       activityTime: activityTime ?? this.activityTime,
-      vendorId: vendorId ?? this.vendorId,
       verified: verified ?? this.verified,
       isFavorite: isFavorite ?? this.isFavorite,
-      vendorName: vendorName ?? this.vendorName,
-      vendorImageUrl: vendorImageUrl ?? this.vendorImageUrl,
-      reviewId: reviewId ?? this.reviewId,
-      comment: comment ?? this.comment,
       rate: rate ?? this.rate,
+      reviewCount: commentsCount ?? this.reviewCount,
+      reservation: reservation ?? this.reservation,
+      review: review ?? this.review,
+      vendor: vendor ?? this.vendor,
     );
   }
 
   @override
   List<Object?> get props => [
     id,
-    address,
+    date,
+    time,
+    activityTime,
+    name,
     details,
     tags,
     price,
     medias,
-    name,
-    date,
-    time,
-    activityTime,
-    vendorId,
     verified,
     isFavorite,
-    vendorName,
-    vendorImageUrl,
-    reviewId,
-    comment,
     rate,
+    vendor,
+    address,
+    review,
+    reservation,
+    reviewCount,
   ];
 }

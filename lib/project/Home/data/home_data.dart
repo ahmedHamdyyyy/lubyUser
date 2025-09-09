@@ -8,7 +8,6 @@ import '../../models/property.dart';
 import '../../models/review.dart';
 import '../../models/user.dart';
 
-
 class HomeData {
   HomeData(this._apiService);
   final ApiService _apiService;
@@ -36,6 +35,7 @@ class HomeData {
       ApiConstance.createProperty,
       queryParameters: {'page': _currentPage, ...?filters},
     );
+    print(response.data);
     _checkIfSuccess(response);
     final properties = (response.data['data']['data'] as List).map((e) => PropertyModel.fromJson(e)).toList();
     final hasNextPage = (response.data['data']['hasNextPage'] as bool?) ?? false;

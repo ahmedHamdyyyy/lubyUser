@@ -122,7 +122,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                                 persons: reservation.guestNumber,
                                 title: reservationActivity.name,
                                 date: reservation.checkInDate,
-                                location: reservationActivity.address,
+                                location: reservationActivity.address.formattedAddress,
                                 imageUrl: reservationActivity.medias.first,
                                 onViewDetails: () {
                                   // Navigator.push(
@@ -145,11 +145,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
     );
   }
 
-  Widget buildTabButton({
-    required String text,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
+  Widget buildTabButton({required String text, required bool isSelected, required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -183,21 +179,11 @@ class _ReservationScreenState extends State<ReservationScreen> {
         children: [
           Icon(icon, size: 60, color: AppColors.primaryColor),
           SizedBox(height: 16),
-          Text(
-            title,
-            style: GoogleFonts.poppins(
-              color: AppColors.primaryColor,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+          Text(title, style: GoogleFonts.poppins(color: AppColors.primaryColor, fontSize: 18, fontWeight: FontWeight.w600)),
           SizedBox(height: 8),
           Text(
             subtitle,
-            style: GoogleFonts.poppins(
-              color: AppColors.primaryColor.withOpacity(0.7),
-              fontSize: 14,
-            ),
+            style: GoogleFonts.poppins(color: AppColors.primaryColor.withAlpha(180), fontSize: 14),
             textAlign: TextAlign.center,
           ),
         ],
