@@ -7,9 +7,12 @@ class ReservationsRepository {
   ReservationsRepository(this._data);
   final ReservationsData _data;
 
-  Future<List<ReservationModel>> getReservations(ReservationStatus status) async {
+  Future<({List<ReservationModel> reservations, bool hasNextPage})> getReservations(
+    bool fetchNext,
+    ReservationStatus status,
+  ) async {
     try {
-      return await _data.getReservations(status);
+      return await _data.getReservations(fetchNext, status);
     } on DioException catch (e) {
       if (e.response?.data != null && e.response?.data['message'] != null) {
         final errorMessage = e.response!.data['message'];

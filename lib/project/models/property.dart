@@ -9,16 +9,48 @@ import 'vendor.dart';
 // ignore: constant_identifier_names
 enum PropertyType { apartment, house, cabin, guest_house, studio, yacht, cruise }
 
+class CustomPropertyModel extends Equatable {
+  final String id, type, imageUrl, address;
+  final int guestNumber;
+  final bool isFavorite;
+  final double rate, pricePerNight;
+
+  const CustomPropertyModel({
+    required this.id,
+    required this.type,
+    required this.imageUrl,
+    required this.address,
+    required this.guestNumber,
+    required this.isFavorite,
+    required this.rate,
+    required this.pricePerNight,
+  });
+
+  factory CustomPropertyModel.fromJson(Map<String, dynamic> json) => CustomPropertyModel(
+    id: json[AppConst.id] ?? '',
+    type: json[AppConst.type] ?? '',
+    imageUrl: json[AppConst.medias]?.first ?? '',
+    address: json[AppConst.address]?['formattedAddress'] ?? '',
+    guestNumber: json[AppConst.guestNumber] ?? 0,
+    isFavorite: json[AppConst.isFavorite] ?? false,
+    rate: (json['averageRating'] ?? 0.0).toDouble(),
+    pricePerNight: (json[AppConst.pricePerNight] ?? 0.0).toDouble(),
+  );
+
+  @override
+  List<Object?> get props => [id, type, imageUrl, address, guestNumber, isFavorite, rate, pricePerNight];
+}
+
 class PropertyModel extends Equatable {
-  final String id, type, details, endDate, startDate;
-  final int guestNumber, bedrooms, bathrooms, beds, reviewsCount;
+  final String id, type, details, endDate, startDate, reservationId, reservationCheckInDate;
+  final int guestNumber, bedrooms, bathrooms, beds, reviewsCount, reservationGuestNumber, reservationNumber;
   final List<String> tags, medias, ownershipContract, facilityLicense;
   final bool available, isFavorite;
-  final double totalRate, pricePerNight;
+  final double totalRate, pricePerNight, reservationTotalPrice;
   final Vendor vendor;
   final Address address;
   final ReviewModel review;
-  final ReservationModel reservation;
+  final ReservationStatus reservationStatus;
 
   const PropertyModel({
     required this.id,
@@ -42,7 +74,12 @@ class PropertyModel extends Equatable {
     required this.totalRate,
     required this.vendor,
     required this.review,
-    required this.reservation,
+    required this.reservationId,
+    required this.reservationCheckInDate,
+    required this.reservationStatus,
+    required this.reservationGuestNumber,
+    required this.reservationNumber,
+    required this.reservationTotalPrice,
   });
 
   static const initial = PropertyModel(
@@ -65,7 +102,12 @@ class PropertyModel extends Equatable {
     medias: [],
     isFavorite: false,
     review: ReviewModel.initial,
-    reservation: ReservationModel.initial,
+    reservationId: '',
+    reservationCheckInDate: '',
+    reservationStatus: ReservationStatus.pending,
+    reservationGuestNumber: 1,
+    reservationNumber: 0,
+    reservationTotalPrice: 0.0,
     totalRate: 0,
     vendor: Vendor.initial,
   );
@@ -100,10 +142,15 @@ class PropertyModel extends Equatable {
       totalRate: (json['averageRating'] ?? 0.0).toDouble(),
       vendor: json[AppConst.vendorId] is String ? Vendor.initial : Vendor.fromJson(json[AppConst.vendorId] ?? {}),
       review: ReviewModel.fromJson(json['review'] ?? {}, ReviewType.property),
-      reservation:
-          json[AppConst.vendorId] is String
-              ? ReservationModel.initial
-              : ReservationModel.fromMap(json['registration'] ?? {}, item: ''),
+      reservationId: json['registration']?['_id'] ?? '',
+      reservationCheckInDate: json['registration']?['checkInDate'] ?? '',
+      reservationStatus: ReservationStatus.values.firstWhere(
+        (status) => json['registration']?['status'] == status,
+        orElse: () => ReservationStatus.pending,
+      ),
+      reservationGuestNumber: json['registration']?['guestNumber'] ?? 1,
+      reservationNumber: json['registration']?['registrationNumber'] ?? 0,
+      reservationTotalPrice: (json['registration']?['totalPrice'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
@@ -149,7 +196,12 @@ class PropertyModel extends Equatable {
     review: review ?? this.review,
     totalRate: totalRate ?? this.totalRate,
     vendor: vendor,
-    reservation: reservation,
+    reservationCheckInDate: reservationCheckInDate,
+    reservationGuestNumber: reservationGuestNumber,
+    reservationId: reservationId,
+    reservationNumber: reservationNumber,
+    reservationStatus: reservationStatus,
+    reservationTotalPrice: reservationTotalPrice,
   );
 
   @override
@@ -174,5 +226,11 @@ class PropertyModel extends Equatable {
     isFavorite,
     totalRate,
     vendor,
+    reservationCheckInDate,
+    reservationGuestNumber,
+    reservationId,
+    reservationNumber,
+    reservationStatus,
+    reservationTotalPrice,
   ];
 }

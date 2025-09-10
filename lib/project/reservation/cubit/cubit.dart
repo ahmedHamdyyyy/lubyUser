@@ -10,12 +10,21 @@ part 'state.dart';
 class ReservationsCubit extends Cubit<ReservationsState> {
   ReservationsCubit(this._repository) : super(const ReservationsState());
   final ReservationsRepository _repository;
+  bool _hasNextPage = false;
 
-  void getReservations(ReservationStatus status) async {
+  void getReservations(ReservationStatus status, {bool fetchNext = false}) async {
+    if (fetchNext && !_hasNextPage) return;
     emit(state.copyWith(getReservationsStatus: Status.loading));
     try {
-      final reservations = await _repository.getReservations(status);
-      emit(state.copyWith(getReservationsStatus: Status.success, reservations: reservations));
+      final reservationsData = await _repository.getReservations(fetchNext, status);
+      _hasNextPage = reservationsData.hasNextPage;
+      emit(
+        state.copyWith(
+          getReservationsStatus: Status.success,
+          reservations:
+              fetchNext ? [...state.reservations, ...reservationsData.reservations] : reservationsData.reservations,
+        ),
+      );
     } catch (e) {
       emit(state.copyWith(getReservationsStatus: Status.error, message: e.toString()));
     }

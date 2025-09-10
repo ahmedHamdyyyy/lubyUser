@@ -4,15 +4,11 @@ class HomeState extends Equatable {
   final int currentScreenIndex;
   final Status getUserStatus, updateUserStatus;
   final UserModel user;
-  final Status propertyStatus;
+  final Status propertyStatus, propertiesStatus, signoutStatus, reviewStatus, reviewesStatus;
   final PropertyModel property;
-  final List<PropertyModel> properties;
-  final Status propertiesStatus;
-  final Status signoutStatus;
+  final List<CustomPropertyModel> properties;
   final String msg;
   final List<ReviewModel> reviews;
-  final Status reviewStatus;
-  final Status reviewesStatus;
 
   const HomeState({
     this.currentScreenIndex = 0,
@@ -39,7 +35,7 @@ class HomeState extends Equatable {
     PropertyModel? property,
     Status? signoutStatus,
     String? msg,
-    List<PropertyModel>? properties,
+    List<CustomPropertyModel>? properties,
     List<ReviewModel>? reviews,
     Status? reviewesStatus,
     Status? reviewStatus,

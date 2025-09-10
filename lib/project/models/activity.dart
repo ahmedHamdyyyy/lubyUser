@@ -64,15 +64,15 @@ class CustomActivityModel extends Equatable {
 }
 
 class ActivityModel extends Equatable {
-  final String id, name, details, date, time, activityTime;
-  final double price, rate;
-  final int reviewCount;
+  final String id, name, details, date, time, activityTime, reservationId, reservationCheckInDate;
+  final double price, rate, reservationTotalPrice;
+  final int reviewCount, reservationGuestNumber, reservationNumber;
   final List<String> tags, medias;
   final bool verified, isFavorite;
   final Vendor vendor;
   final Address address;
   final ReviewModel review;
-  final ReservationModel reservation;
+  final ReservationStatus reservationStatus;
 
   const ActivityModel({
     required this.id,
@@ -90,8 +90,13 @@ class ActivityModel extends Equatable {
     required this.vendor,
     required this.address,
     required this.review,
-    required this.reservation,
     required this.reviewCount,
+    required this.reservationId,
+    required this.reservationCheckInDate,
+    required this.reservationStatus,
+    required this.reservationGuestNumber,
+    required this.reservationNumber,
+    required this.reservationTotalPrice,
   });
 
   static const non = ActivityModel(
@@ -110,7 +115,12 @@ class ActivityModel extends Equatable {
     address: Address.initial,
     vendor: Vendor.initial,
     review: ReviewModel.initial,
-    reservation: ReservationModel.initial,
+    reservationId: '',
+    reservationCheckInDate: '',
+    reservationStatus: ReservationStatus.pending,
+    reservationGuestNumber: 1,
+    reservationNumber: 0,
+    reservationTotalPrice: 0.0,
     reviewCount: 0,
   );
 
@@ -131,10 +141,15 @@ class ActivityModel extends Equatable {
     reviewCount: json[AppConst.reviewsCount] ?? 0,
     vendor: json[AppConst.vendorId] is String ? Vendor.initial : Vendor.fromJson(json[AppConst.vendorId] ?? {}),
     review: ReviewModel.fromJson(json['review'] ?? {}, ReviewType.property),
-    reservation:
-        json[AppConst.vendorId] is String
-            ? ReservationModel.initial
-            : ReservationModel.fromMap(json['registration'] ?? {}, item: ''),
+    reservationId: json['registration']?['_id'] ?? '',
+    reservationCheckInDate: json['registration']?['checkInDate'] ?? '',
+    reservationStatus: ReservationStatus.values.firstWhere(
+      (status) => json['registration']?['status'] == status,
+      orElse: () => ReservationStatus.pending,
+    ),
+    reservationGuestNumber: json['registration']?['guestNumber'] ?? 1,
+    reservationNumber: json['registration']?['registrationNumber'] ?? 0,
+    reservationTotalPrice: (json['registration']?['totalPrice'] as num?)?.toDouble() ?? 0.0,
   );
 
   ActivityModel copyWith({
@@ -150,7 +165,7 @@ class ActivityModel extends Equatable {
     bool? verified,
     bool? isFavorite,
     double? rate,
-    int? commentsCount,
+    int? reviewCount,
     Vendor? vendor,
     Address? address,
     ReviewModel? review,
@@ -170,8 +185,13 @@ class ActivityModel extends Equatable {
       verified: verified ?? this.verified,
       isFavorite: isFavorite ?? this.isFavorite,
       rate: rate ?? this.rate,
-      reviewCount: commentsCount ?? this.reviewCount,
-      reservation: reservation ?? this.reservation,
+      reviewCount: reviewCount ?? this.reviewCount,
+      reservationCheckInDate: reservationCheckInDate,
+      reservationGuestNumber: reservationGuestNumber,
+      reservationId: reservationId,
+      reservationNumber: reservationNumber,
+      reservationStatus: reservationStatus,
+      reservationTotalPrice: reservationTotalPrice,
       review: review ?? this.review,
       vendor: vendor ?? this.vendor,
     );
@@ -194,7 +214,12 @@ class ActivityModel extends Equatable {
     vendor,
     address,
     review,
-    reservation,
     reviewCount,
+    reservationCheckInDate,
+    reservationGuestNumber,
+    reservationId,
+    reservationNumber,
+    reservationStatus,
+    reservationTotalPrice,
   ];
 }

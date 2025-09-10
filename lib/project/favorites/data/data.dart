@@ -25,7 +25,7 @@ class FavoritesData {
         favorites.add(FavoriteModel.fromJsonActivity(item));
       }
     }
-    final hasNextPage = (response.data['data']['hasNextPage'] as bool?) ?? false;
+    final hasNextPage = (response.data['data']?['pagination']?['hasNextPage'] as bool?) ?? false;
     return (favorites: favorites, hasNextPage: hasNextPage);
   }
 

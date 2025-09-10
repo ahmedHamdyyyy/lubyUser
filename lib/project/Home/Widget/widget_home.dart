@@ -374,16 +374,17 @@ Widget buildPropertyList({
                 style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.secondTextColor),
               ),
               InkWell(
-                onTap:
-                    () => showFilterOptions(
-                      context,
-                      propertyTypes,
-                      priceRanges,
-                      ratingRanges,
-                      selectedPropertyType ?? '',
-                      selectedPriceRange ?? '',
-                      selectedRatingRange ?? '',
-                    ),
+                onTap: () {
+                  showFilterOptions(
+                    context,
+                    propertyTypes,
+                    priceRanges,
+                    ratingRanges,
+                    selectedPropertyType ?? '',
+                    selectedPriceRange ?? '',
+                    selectedRatingRange ?? '',
+                  );
+                },
                 child: Container(
                   margin: EdgeInsets.only(left: 10),
                   decoration: BoxDecoration(
@@ -417,27 +418,24 @@ Widget buildPropertyList({
               padding: EdgeInsets.zero,
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 1 / 1.7, // Increased aspect ratio for taller cards
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
               ),
-              itemBuilder: (context, index) {
-                return buildPropertyCard(context, state, state.properties, index);
-              },
+              itemBuilder: (context, index) => buildPropertyCard(context, state.properties[index]),
             ),
       ],
     ),
   );
 }
 
-Widget buildPropertyCard(BuildContext context, HomeState state, List<PropertyModel> properties, int index) {
-  bool isFavorite = properties[index].isFavorite;
+Widget buildPropertyCard(BuildContext context, CustomPropertyModel property) {
+  bool isFavorite = property.isFavorite;
   return InkWell(
     onTap: () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => RentalDetailScreen(id: properties[index].id)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => RentalDetailScreen(id: property.id)));
     },
     child: Card(
       color: Colors.white,
@@ -452,7 +450,7 @@ Widget buildPropertyCard(BuildContext context, HomeState state, List<PropertyMod
           // Image with fixed aspect ratio and heart icon
           Stack(
             children: [
-              Image.network(height: 155, width: 155, properties[index].medias.first, fit: BoxFit.cover),
+              Image.network(height: 155, width: 155, property.imageUrl, fit: BoxFit.cover),
               Positioned(
                 top: 10,
                 right: 10,
@@ -463,9 +461,9 @@ Widget buildPropertyCard(BuildContext context, HomeState state, List<PropertyMod
                       child: GestureDetector(
                         onTap: () {
                           if (isFavorite) {
-                            getIt<FavoritesCubit>().removeFromFavorites(properties[index].id, FavoriteType.property);
+                            getIt<FavoritesCubit>().removeFromFavorites(property.id, FavoriteType.property);
                           } else {
-                            getIt<FavoritesCubit>().addToFavorites(properties[index].id, FavoriteType.property);
+                            getIt<FavoritesCubit>().addToFavorites(property.id, FavoriteType.property);
                           }
                           setState(() => isFavorite = !isFavorite);
                         },
@@ -492,7 +490,7 @@ Widget buildPropertyCard(BuildContext context, HomeState state, List<PropertyMod
                   children: [
                     Expanded(
                       child: Text(
-                        properties[index].type,
+                        property.type,
                         style: GoogleFonts.poppins(
                           fontSize: 14,
                           color: AppColors.secondTextColor,
@@ -505,7 +503,7 @@ Widget buildPropertyCard(BuildContext context, HomeState state, List<PropertyMod
                     Icon(Icons.star, color: AppColors.primaryColor, size: 14),
                     SizedBox(width: 1),
                     Text(
-                      properties[index].totalRate.toString(),
+                      property.rate.toString(),
                       style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 14, color: AppColors.primaryColor),
                     ),
                   ],
@@ -513,7 +511,7 @@ Widget buildPropertyCard(BuildContext context, HomeState state, List<PropertyMod
 
                 // Location with tiny font
                 Text(
-                  properties[index].address.formattedAddress,
+                  property.address,
                   style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor, fontWeight: FontWeight.w400),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -525,14 +523,14 @@ Widget buildPropertyCard(BuildContext context, HomeState state, List<PropertyMod
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "${properties[index].guestNumber} Guests",
+                      "${property.guestNumber} Guests",
                       style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor, fontWeight: FontWeight.w400),
                     ),
                     Row(
                       children: [
                         Flexible(
                           child: Text(
-                            "${properties[index].pricePerNight} SAR",
+                            "${property.pricePerNight} SAR",
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,

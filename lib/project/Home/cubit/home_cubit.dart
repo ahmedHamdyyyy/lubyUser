@@ -36,7 +36,12 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       final propertiesData = await repo.getProperties(fetchNext, filters);
       _hasNextPage = propertiesData.hasNextPage;
-      emit(state.copyWith(propertiesStatus: Status.success, properties: propertiesData.properties));
+      emit(
+        state.copyWith(
+          propertiesStatus: Status.success,
+          properties: fetchNext ? [...state.properties, ...propertiesData.properties] : propertiesData.properties,
+        ),
+      );
     } catch (e) {
       emit(state.copyWith(propertiesStatus: Status.error, msg: e.toString()));
     }

@@ -18,7 +18,12 @@ class FavoritesCubit extends Cubit<FavoritesState> {
     try {
       final favoritesData = await _favoritesRepository.getFavorites(fetchNext);
       _hasNextPage = favoritesData.hasNextPage;
-      emit(state.copyWith(getFavoritesStatus: Status.success, favorites: favoritesData.favorites));
+      emit(
+        state.copyWith(
+          getFavoritesStatus: Status.success,
+          favorites: fetchNext ? [...state.favorites, ...favoritesData.favorites] : favoritesData.favorites,
+        ),
+      );
     } catch (e) {
       emit(state.copyWith(getFavoritesStatus: Status.error, message: e.toString()));
     }

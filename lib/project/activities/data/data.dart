@@ -20,8 +20,7 @@ class ActivitiesData {
     );
     _checkIfSuccess(response);
     final activities = (response.data['data']['data'] as List).map((e) => CustomActivityModel.fromJson(e)).toList();
-    final hasNextPage = (response.data['data']['pagination']['hasNextPage'] as bool?) ?? false;
-    _currentPage = response.data['data']['pagination']['currentPage'] ?? _currentPage;
+    final hasNextPage = (response.data['data']?['pagination']?['hasNextPage'] as bool?) ?? false;
     return (activities: activities, hasNextPage: hasNextPage);
   }
 

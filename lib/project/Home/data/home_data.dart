@@ -24,21 +24,17 @@ class HomeData {
     return userResponse;
   }
 
-  Future<({List<PropertyModel> properties, bool hasNextPage})> getProperties(
+  Future<({List<CustomPropertyModel> properties, bool hasNextPage})> getProperties(
     bool fetchNext,
     Map<String, dynamic>? filters,
   ) async {
     _setPage(fetchNext);
-    print(_currentPage);
-    print(filters);
     final response = await _apiService.dio.get(
       ApiConstance.createProperty,
       queryParameters: {'page': _currentPage, ...?filters},
     );
-    print(response.data);
-    _checkIfSuccess(response);
-    final properties = (response.data['data']['data'] as List).map((e) => PropertyModel.fromJson(e)).toList();
-    final hasNextPage = (response.data['data']['hasNextPage'] as bool?) ?? false;
+    final properties = (response.data['data']['data'] as List).map((e) => CustomPropertyModel.fromJson(e)).toList();
+    final hasNextPage = (response.data['data']?['pagination']?['hasNextPage'] as bool?) ?? false;
     return (properties: properties, hasNextPage: hasNextPage);
   }
 

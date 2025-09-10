@@ -19,7 +19,12 @@ class ActivitiesCubit extends Cubit<ActivitiesState> {
     try {
       final activitiesData = await _repo.getActivities(fetchNext, filters);
       _hasNextPage = activitiesData.hasNextPage;
-      emit(state.copyWith(getAllActivitiesStatus: Status.success, activities: activitiesData.activities));
+      emit(
+        state.copyWith(
+          getAllActivitiesStatus: Status.success,
+          activities: fetchNext ? [...state.activities, ...activitiesData.activities] : activitiesData.activities,
+        ),
+      );
     } catch (e) {
       emit(state.copyWith(getAllActivitiesStatus: Status.error, msg: e.toString()));
     }

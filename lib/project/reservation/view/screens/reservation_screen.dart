@@ -18,12 +18,27 @@ class ReservationScreen extends StatefulWidget {
 
 class _ReservationScreenState extends State<ReservationScreen> {
   bool isCurrentReservations = true;
+  final _scrollController = ScrollController();
+  bool _isLoadingMore = false;
   @override
   void initState() {
     getIt<ReservationsCubit>().getReservations(
       isCurrentReservations ? ReservationStatus.pending : ReservationStatus.approved,
     );
+
+    _handleFetchModeItems();
     super.initState();
+  }
+
+  void _handleFetchModeItems() {
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+        getIt<ReservationsCubit>().getReservations(
+          isCurrentReservations ? ReservationStatus.pending : ReservationStatus.approved,
+          fetchNext: true,
+        );
+      }
+    });
   }
 
   @override
@@ -73,6 +88,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                 return Padding(
                   padding: const EdgeInsets.all(16),
                   child: SingleChildScrollView(
+                    controller: _scrollController,
                     padding: const EdgeInsets.only(bottom: 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,6 +149,8 @@ class _ReservationScreenState extends State<ReservationScreen> {
                               );
                             },
                           ),
+                        if (_isLoadingMore)
+                          const Padding(padding: EdgeInsets.symmetric(vertical: 16), child: CircularProgressIndicator()),
                       ],
                     ),
                   ),

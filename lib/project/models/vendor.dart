@@ -27,10 +27,6 @@ class Vendor extends Equatable {
       email: json['email'] ?? '',
     );
   }
-
-  @override
-  List<Object?> get props => [id, firstName, lastName, email, profilePicture];
-
   Vendor copyWith({String? id, String? firstName, String? profilePicture, String? lastName, String? email}) {
     return Vendor(
       id: id ?? this.id,
@@ -40,4 +36,7 @@ class Vendor extends Equatable {
       email: email ?? this.email,
     );
   }
+
+  @override
+  List<Object?> get props => [id, firstName, lastName, email, profilePicture];
 }

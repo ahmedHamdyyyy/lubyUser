@@ -32,7 +32,7 @@ class HomeRespository {
     }
   }
 
-  Future<({List<PropertyModel> properties, bool hasNextPage})> getProperties(
+  Future<({List<CustomPropertyModel> properties, bool hasNextPage})> getProperties(
     bool fetchNext,
     Map<String, dynamic>? filters,
   ) async {
