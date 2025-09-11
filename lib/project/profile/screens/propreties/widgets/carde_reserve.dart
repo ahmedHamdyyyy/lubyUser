@@ -56,8 +56,10 @@ class _CardeReserveState extends State<CardeReserve> {
                       height: 40,
                       width: 144,
                       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
-                      child: TextField(
+                      child: TextFormField(
+                        keyboardType: TextInputType.datetime,
                         controller: checkInController,
+                        
                         decoration: InputDecoration(
                           enabledBorder: buildOutlineInputBorder(5),
                           focusedBorder: buildOutlineInputBorder(5),
@@ -89,7 +91,8 @@ class _CardeReserveState extends State<CardeReserve> {
                       height: 40,
                       width: 144,
                       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
-                      child: TextField(
+                      child: TextFormField(
+                        keyboardType: TextInputType.datetime,
                         controller: checkOutController,
                         decoration: InputDecoration(
                           enabledBorder: buildOutlineInputBorder(5),

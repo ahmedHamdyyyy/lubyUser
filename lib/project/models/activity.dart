@@ -126,7 +126,9 @@ class ActivityModel extends Equatable {
 
   factory ActivityModel.fromJson(Map<String, dynamic> json) => ActivityModel(
     id: json['_id'] ?? '',
-    address: json['address'] ?? '',
+    address: json[AppConst.address] is Map<String, dynamic>
+        ? Address.fromJson(json[AppConst.address] as Map<String, dynamic>)
+        : Address.initial,
     details: json['details'] ?? '',
     tags: List<String>.from(json['tags'] ?? []),
     price: (json['price'] as num?)?.toDouble() ?? 0.0,

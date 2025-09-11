@@ -14,20 +14,32 @@ import '../../models/favorite.dart';
 import '../../profile/screens/propreties/views/rental_details_view.dart';
 import '../cubit/cubit.dart';
 
-class Favorite2Screen extends StatefulWidget {
-  const Favorite2Screen({super.key});
+class FavoriteScreen extends StatefulWidget {
+  const FavoriteScreen({super.key});
   @override
-  State<Favorite2Screen> createState() => _Favorite2ScreenState();
+  State<FavoriteScreen> createState() => _FavoriteScreenState();
 }
 
-class _Favorite2ScreenState extends State<Favorite2Screen> {
+class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProviderStateMixin {
   final _scrollController = ScrollController();
   bool _isLoadingMore = false;
+  late final AnimationController _emptyAnimationController;
+  late final Animation<double> _floatAnimation;
   @override
   void initState() {
     getIt.get<FavoritesCubit>().fetchFavorites();
     _handleFetchMoreItems();
+    _emptyAnimationController = AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    _floatAnimation = Tween<double>(begin: -10, end: 10).animate(CurvedAnimation(parent: _emptyAnimationController, curve: Curves.easeInOut));
+    _emptyAnimationController.repeat(reverse: true);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _emptyAnimationController.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void _handleFetchMoreItems() {
@@ -73,7 +85,64 @@ class _Favorite2ScreenState extends State<Favorite2Screen> {
                   }
                   if (state.favorites.isEmpty) {
                     return Center(
-                      child: Text('No favorites found', style: TextStyle(color: AppColors.grayTextColor, fontSize: 16)),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            AnimatedBuilder(
+                              animation: _floatAnimation,
+                              builder: (context, child) => Transform.translate(
+                                offset: Offset(0, _floatAnimation.value),
+                                child: child,
+                              ),
+                              child: SvgPicture.asset(
+                                ImageAssets.noItemInFavorite,
+                                height: 180,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Your favorite is empty',
+                              style: GoogleFonts.poppins(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.primaryTextColor,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Explore the offers and add what you like to your favorite to find it quickly later',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: AppColors.grayTextColor,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 20),
+                            SizedBox(
+                              width: 200,
+                              height: 44,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primaryColor,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                  elevation: 0,
+                                ),
+                                onPressed: () {
+                                  // Trigger a refresh or navigate to explore screen
+                                  getIt.get<FavoritesCubit>().fetchFavorites();
+                                },
+                                child: const Text(
+                                  'Start exploring',
+                                  style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     );
                   }
                   return SingleChildScrollView(
@@ -88,7 +157,7 @@ class _Favorite2ScreenState extends State<Favorite2Screen> {
                             crossAxisSpacing: 10,
                             mainAxisSpacing: 10,
                             childAspectRatio: 1,
-                            mainAxisExtent: 250,
+                            mainAxisExtent: 280,
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           itemCount: state.favorites.length,
@@ -149,20 +218,23 @@ class _Favorite2ScreenState extends State<Favorite2Screen> {
                                                   overflow: TextOverflow.ellipsis,
                                                   fontWeight: FontWeight.w500,
                                                 ),
+                                                maxLines: 1,
                                               ),
                                               Row(
                                                 children: [
                                                   const Icon(Icons.star, color: AppColors.primaryColor, size: 10),
                                                   const SizedBox(width: 4),
-                                                  Text('4.5', style: TextStyle(color: AppColors.primaryColor, fontSize: 14)),
+                                                  Text(item.averageRating.toStringAsFixed(1), style: TextStyle(color: AppColors.primaryColor, fontSize: 14)),
                                                 ],
                                               ),
                                             ],
                                           ),
                                           const SizedBox(height: 4),
                                           Text(
-                                            item.address,
+                                            item.address.formattedAddress??'',
                                             style: const TextStyle(color: AppColors.grayTextColor, fontSize: 14),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                           const SizedBox(height: 4),
                                           Text(
@@ -174,6 +246,7 @@ class _Favorite2ScreenState extends State<Favorite2Screen> {
                                               overflow: TextOverflow.ellipsis,
                                               color: AppColors.grayTextColor,
                                             ),
+                                            maxLines: 1,
                                           ),
                                           const SizedBox(height: 8),
                                           Row(
@@ -190,6 +263,7 @@ class _Favorite2ScreenState extends State<Favorite2Screen> {
                                                     overflow: TextOverflow.ellipsis,
                                                     color: AppColors.primaryColor,
                                                   ),
+                                                  maxLines: 1,
                                                 ),
                                               ),
                                               const SizedBox(width: 5),
@@ -202,6 +276,7 @@ class _Favorite2ScreenState extends State<Favorite2Screen> {
                                                   overflow: TextOverflow.ellipsis,
                                                   color: AppColors.grayTextColor,
                                                 ),
+                                                maxLines: 1,
                                               ),
                                             ],
                                           ),
@@ -211,14 +286,19 @@ class _Favorite2ScreenState extends State<Favorite2Screen> {
                                   ),
                                   Positioned(
                                     top: 15,
-                                    right: 15,
-                                    child: GestureDetector(
-                                      onTap:
-                                          () => getIt.get<FavoritesCubit>().removeFromFavorites(
-                                            item.itemId,
-                                            FavoriteType.property,
-                                          ),
-                                      child: SvgPicture.asset(ImageAssets.heartBlack, width: 20, height: 20),
+                                    right: 15, 
+                                    child: GestureDetector( 
+                                      onTap: () {  item.type == FavoriteType.property ?
+                                        getIt.get<FavoritesCubit>().removeFromFavorites(
+                                          item.itemId,
+                                          FavoriteType.property,
+                                        )
+                                      : getIt.get<FavoritesCubit>().removeFromFavorites(
+                                          item.itemId,
+                                          FavoriteType.activity,
+                                        );
+                                      },
+                                      child: SvgPicture.asset(ImageAssets.heartBlack, width: 25, height: 25),
                                     ),
                                   ),
                                 ],

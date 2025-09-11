@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../config/constants/constance.dart';
+import '../../../config/widget/widget.dart';
 import '../../models/favorite.dart';
 import '../data/repository.dart';
 
@@ -34,23 +35,27 @@ class FavoritesCubit extends Cubit<FavoritesState> {
     try {
       await _favoritesRepository.addToFavorites(id, type);
       emit(state.copyWith(addToFavoritesStatus: Status.success));
+      showToast(text: 'Added to favorites', stute: ToustStute.success);
     } catch (e) {
       emit(state.copyWith(addToFavoritesStatus: Status.error, message: e.toString()));
+      showToast(text: 'Failed to add to favorites', stute: ToustStute.error);
     }
   }
 
   Future<void> removeFromFavorites(String id, FavoriteType type) async {
-    emit(state.copyWith(addToFavoritesStatus: Status.loading));
+    emit(state.copyWith(removeFromFavoritesStatus: Status.loading));
     try {
       await _favoritesRepository.removeFromFavorites(id, type);
       emit(
         state.copyWith(
           favorites: state.favorites.where((f) => f.itemId != id).toList(),
-          addToFavoritesStatus: Status.success,
+          removeFromFavoritesStatus: Status.success,
         ),
       );
+      showToast(text: 'Removed from favorites', stute: ToustStute.worning);
     } catch (e) {
-      emit(state.copyWith(addToFavoritesStatus: Status.error, message: e.toString()));
+      emit(state.copyWith(removeFromFavoritesStatus: Status.error, message: e.toString()));
+      showToast(text: 'Failed to remove from favorites', stute: ToustStute.worning);
     }
   }
 }

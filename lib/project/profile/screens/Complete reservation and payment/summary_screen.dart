@@ -121,27 +121,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // PromoCodeInputWidget(
-                  //   controller: _promoCodeController,
-                  //   buttonText: isApplied ? "Apply" : "Submit",
-                  //   hintText: "Enter the promo code",
-                  //   isApplied: isApplied,
-                  //   onApplyPressed: () {
-                  //     setState(() {
-                  //       isApplied = true;
-                  //       showSuccessMessage = true;
-                  //     });
-                  //   },
-                  // ),
-                  // if (showSuccessMessage) PromoCodeSuccessMessageWidget(),
-                  // const SizedBox(height: 20),
-                  // const SummaryRowWidget(title: "Total", value: "1000 SAR"),
-                  // if (isApplied)
-                  //   DiscountRowWidget(
-                  //     discountText: "After Discount",
-                  //     savedAmount: "(You Saved 100 SAR)",
-                  //     finalPrice: "900 SAR",
-                  //   ),
+              
                   const SizedBox(height: 20),
                   ActionButtonWidget(
                     text: "Save Reservation",
@@ -149,7 +129,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
                       if (widget.reservation.id.isEmpty) {
                         getIt<ReservationsCubit>().createReservation(widget.reservation);
                       } else {
-                        getIt<ReservationsCubit>().updateReservation(widget.reservation);
+                        //getIt<ReservationsCubit>().updateReservation(widget.reservation);
                       }
                     },
                     fontSize: 18,

@@ -20,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final screen = [HomeScreenMain(), Favorite2Screen(), ReservationScreen(), ConversationScreen(), ProfileFeaturesScreen()];
+  final screen = [HomeScreenMain(), FavoriteScreen(), ReservationScreen(), ConversationScreen(), ProfileFeaturesScreen()];
 
   @override
   void initState() {

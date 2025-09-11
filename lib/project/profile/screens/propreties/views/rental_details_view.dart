@@ -100,6 +100,9 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                                       context.read<HomeCubit>().setPropertyFavorite(!state.property.isFavorite);
                                       waitingForFavorite = false;
                                     }
+                                    if (waitingForFavorite && favoritesState.removeFromFavoritesStatus == Status.error) {
+                                      waitingForFavorite = false;
+                                    }
                                   },
                                   child: InkWell(
                                     onTap: () {

@@ -15,16 +15,23 @@ class ConversationScreen extends StatefulWidget {
   State<ConversationScreen> createState() => _ConversationScreenState();
 }
 
-class _ConversationScreenState extends State<ConversationScreen> {
+class _ConversationScreenState extends State<ConversationScreen> with SingleTickerProviderStateMixin {
   final _searchController = TextEditingController();
+  String _searchTerm = '';
+  late final AnimationController _emptyController;
+  late final Animation<double> _floatAnim;
 
   @override
   void initState() {
+    _emptyController = AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    _floatAnim = Tween<double>(begin: -8, end: 8).animate(CurvedAnimation(parent: _emptyController, curve: Curves.easeInOut));
+    _emptyController.repeat(reverse: true);
     super.initState();
   }
 
   @override
   void dispose() {
+    _emptyController.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -47,17 +54,20 @@ class _ConversationScreenState extends State<ConversationScreen> {
         const SizedBox(height: 20),
 
         // Search bar
+
+
         Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 20),
+          padding: const EdgeInsets.only(left: 20.0, right: 20),
           child: TextField(
             controller: _searchController,
             decoration: InputDecoration(
               hintText: "Search...",
               prefixIcon: const Icon(Icons.search),
+            
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               contentPadding: const EdgeInsets.symmetric(vertical: 10),
             ),
-            onChanged: (term) {},
+            onChanged: (term) => setState(() => _searchTerm = term.trim().toLowerCase()),
           ),
         ),
 
@@ -75,19 +85,80 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
                 final chats = snapshot.data ?? [];
+                final filtered = _searchTerm.isEmpty
+                    ? chats
+                    : chats.where((c) => c.vendorName.toLowerCase().contains(_searchTerm)).toList();
+                if (filtered.isEmpty) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          AnimatedBuilder(
+                            animation: _floatAnim,
+                            builder: (context, child) => Transform.translate(offset: Offset(0, _floatAnim.value), child: child),
+                            child: Icon(Icons.chat_bubble_outline, size: 120, color: AppColors.grayTextColor.withOpacity(0.4)),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'No conversations yet',
+                            style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.primaryTextColor),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Start by contacting the sellers and the conversations will be displayed here',
+                            style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            height: 44,
+                            child: ElevatedButton(
+                              onPressed: () => Navigator.pop(context),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primaryColor,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                elevation: 0,
+                              ),
+                              child: const Text('Return', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
                 return ListView.separated(
                   shrinkWrap: true,
-                  itemCount: chats.length,
+                  itemCount: filtered.length,
                   separatorBuilder: (_, __) => const Padding(padding: EdgeInsets.only(left: 12.0), child: Divider()),
                   itemBuilder: (context, index) {
-                    final chat = chats[index];
+                    final chat = filtered[index];
                     return ListTile(
                       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ChatScreen(chat: chat))),
+                      onLongPress: () async {
+                        final confirmed = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Delete conversation'),
+                            content: const Text('Are you sure you want to delete this conversation? This cannot be undone.'),
+                            actions: [
+                              TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+                              TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete')),
+                            ],
+                          ),
+                        );
+                        if (confirmed == true) {
+                          await FirestoreService().deleteChat(chat.id);
+                        }
+                      },
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
                         child: FadeInImage.assetNetwork(
                           placeholder: 'assets/images/saudian_man.png',
-                          image: chat.vendorImageUrl,
+                          image: chat.profilePicture,
                           imageErrorBuilder: (context, error, stackTrace) => Image.asset('assets/images/saudian_man.png'),
                           width: 50,
                           height: 50,
