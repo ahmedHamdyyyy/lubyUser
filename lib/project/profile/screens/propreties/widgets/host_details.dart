@@ -51,7 +51,7 @@ class HostDetailsWidget extends StatelessWidget {
                         id: '${vendor.id}_${user.id}',
                         vendorId: vendor.id,
                         vendorName: '${vendor.firstName} ${vendor.lastName}',
-                        vendorImageUrl: vendor.profilePicture,
+                        profilePicture: vendor.profilePicture,
                         lastMessage: '',
                         lastTimestamp: DateTime.now(),
                         userId: user.id,

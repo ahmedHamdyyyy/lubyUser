@@ -9,6 +9,7 @@ import '../../../../../../config/widget/helper.dart';
 import '../../../../../../locator.dart';
 import '../../../../../config/colors/colors.dart';
 import '../../../favorites/cubit/cubit.dart';
+import '../../../profile/screens/propreties/widgets/amenities_widget.dart';
 import '../../../profile/screens/propreties/widgets/host_details.dart';
 import '../../../profile/screens/propreties/widgets/image_list.dart';
 import '../../../profile/screens/propreties/widgets/read_details_widget.dart';
@@ -130,7 +131,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                           fontWeight: FontWeight.w600,
                         ),
                         TextWidget(
-                          text: state.activity.address.formattedAddress,
+                          text: state.activity.address.formattedAddress??'',
                           color: Color(0xFF414141),
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -148,7 +149,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                state.activity.address.formattedAddress,
+                                state.activity.address.formattedAddress??'',
                                 style: TextStyle(color: AppColors.grayTextColor, fontSize: 16, fontWeight: FontWeight.w500),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -216,7 +217,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                         ),
                         const SizedBox(height: 24),
                         const Driver(),
-                        // AmenitiesWidget(state: state),
+                        AmenitiesWidgetActivity(state: state.activity),
                         const SizedBox(height: 20),
                       ],
                     ),

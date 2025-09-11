@@ -14,20 +14,29 @@ import '../../models/favorite.dart';
 import '../../profile/screens/propreties/views/rental_details_view.dart';
 import '../cubit/cubit.dart';
 
-class Favorite2Screen extends StatefulWidget {
-  const Favorite2Screen({super.key});
+class FavoriteScreen extends StatefulWidget {
+  const FavoriteScreen({super.key});
   @override
-  State<Favorite2Screen> createState() => _Favorite2ScreenState();
+  State<FavoriteScreen> createState() => _FavoriteScreenState();
 }
 
-class _Favorite2ScreenState extends State<Favorite2Screen> {
+class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProviderStateMixin {
   final _scrollController = ScrollController();
   bool _isLoadingMore = false;
+  late final AnimationController _emptyAnimationController;
+  late final Animation<double> _floatAnimation;
   @override
   void initState() {
     getIt.get<FavoritesCubit>().fetchFavorites();
     _handleFetchMoreItems();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _emptyAnimationController.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void _handleFetchMoreItems() {
@@ -88,7 +97,7 @@ class _Favorite2ScreenState extends State<Favorite2Screen> {
                             crossAxisSpacing: 10,
                             mainAxisSpacing: 10,
                             childAspectRatio: 1,
-                            mainAxisExtent: 250,
+                            mainAxisExtent: 280,
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           itemCount: state.favorites.length,
@@ -149,6 +158,7 @@ class _Favorite2ScreenState extends State<Favorite2Screen> {
                                                   overflow: TextOverflow.ellipsis,
                                                   fontWeight: FontWeight.w500,
                                                 ),
+                                                maxLines: 1,
                                               ),
                                               Row(
                                                 children: [
@@ -165,6 +175,8 @@ class _Favorite2ScreenState extends State<Favorite2Screen> {
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: const TextStyle(color: AppColors.grayTextColor, fontSize: 14),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                           const SizedBox(height: 4),
                                           Text(
@@ -176,6 +188,7 @@ class _Favorite2ScreenState extends State<Favorite2Screen> {
                                               overflow: TextOverflow.ellipsis,
                                               color: AppColors.grayTextColor,
                                             ),
+                                            maxLines: 1,
                                           ),
                                           const SizedBox(height: 8),
                                           Row(
@@ -192,6 +205,7 @@ class _Favorite2ScreenState extends State<Favorite2Screen> {
                                                     overflow: TextOverflow.ellipsis,
                                                     color: AppColors.primaryColor,
                                                   ),
+                                                  maxLines: 1,
                                                 ),
                                               ),
                                               const SizedBox(width: 5),
@@ -204,6 +218,7 @@ class _Favorite2ScreenState extends State<Favorite2Screen> {
                                                   overflow: TextOverflow.ellipsis,
                                                   color: AppColors.grayTextColor,
                                                 ),
+                                                maxLines: 1,
                                               ),
                                             ],
                                           ),

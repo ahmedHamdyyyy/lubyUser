@@ -58,7 +58,7 @@ class ApiExceptionHandler {
     if (data == null) return null;
     try {
       if (data is Map<String, dynamic>) {
-        return data['message'] ?? data['error'];
+        return data['message'][0] ?? data['error'];
       } else if (data is String) {
         return data;
       }

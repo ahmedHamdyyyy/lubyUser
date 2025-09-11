@@ -56,7 +56,7 @@ class _ChatScreenState extends State<ChatScreen> {
       children: [
         const SizedBox(height: 35),
         // User info header
-        UserInfoHeaderWidget(userName: widget.chat.vendorName, userImage: widget.chat.vendorImageUrl),
+        UserInfoHeaderWidget(userName: widget.chat.vendorName, userImage: widget.chat.profilePicture),
         // Messages list
         Expanded(
           child: StreamBuilder(
