@@ -31,91 +31,97 @@ Future<dynamic> showActivityReserveDialoge(
         insetPadding: const EdgeInsets.all(5),
         child: Container(
           padding: const EdgeInsets.only(left: 16, right: 16, top: 0),
-          height: 457,
           width: 335,
           child: StatefulBuilder(
             builder: (context, setState) {
               return Form(
                 key: formKey,
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 40.0, left: 0, right: 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const TextWidget(
-                            text: 'Date',
-                            color: Color(0xFF414141),
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          const SizedBox(height: 4),
-                          SizedBox(
-                            height: 40,
-                            width: 144,
-                            child: TextFormField(
-                              controller: dateController,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) return 'Please enter date';
-                                final date = Utils.parseDate(value);
-                                if (date == null) return 'Invalid date format';
-                                final now = DateTime.now();
-                                if (date.isBefore(now)) return 'date must be in the future';
-                                return null;
-                              },
-                              keyboardType: TextInputType.datetime,
-                              onChanged: (value) => setState(() {}),
-                              decoration: InputDecoration(
-                                enabledBorder: buildOutlineInputBorder(5),
-                                focusedBorder: buildOutlineInputBorder(5),
-                                hintText: 'dd/mm/yyyy',
-                                hintStyle: const TextStyle(
-                                  color: Color(0xFF757575),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
+                    const SizedBox(height: 24),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const TextWidget(
+                                text: 'Date',
+                                color: Color(0xFF414141),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              const SizedBox(height: 4),
+                              SizedBox(
+                                height: 40,
+                                width: 144,
+                                child: TextFormField(
+                                  controller: dateController,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) return 'Please enter date';
+                                    final date = Utils.parseDate(value);
+                                    if (date == null) return 'Invalid date format';
+                                    final now = DateTime.now();
+                                    if (date.isBefore(now)) return 'date must be in the future';
+                                    return null;
+                                  },
+                                  keyboardType: TextInputType.datetime,
+                                  onChanged: (value) => setState(() {}),
+                                  decoration: InputDecoration(
+                                    enabledBorder: buildOutlineInputBorder(5),
+                                    focusedBorder: buildOutlineInputBorder(5),
+                                    hintText: 'dd/mm/yyyy',
+                                    hintStyle: const TextStyle(
+                                      color: Color(0xFF757575),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const TextWidget(
-                          text: 'Guests No.',
-                          color: Color(0xFF414141),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
                         ),
-                        const SizedBox(height: 4),
-                        SizedBox(
-                          height: 40,
-                          width: double.infinity,
-                          child: TextFormField(
-                            controller: guestController,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) return 'invalid guest number';
-                              final guests = int.tryParse(value);
-                              if (guests == null || guests < 1) return 'invalid guest number';
-                              return null;
-                            },
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                            onChanged: (value) => setState(() {}),
-                            decoration: InputDecoration(
-                              enabledBorder: buildOutlineInputBorder(5),
-                              focusedBorder: buildOutlineInputBorder(5),
-                              hintText: '1 Guests',
-                              hintStyle: const TextStyle(
-                                color: Color(0xFF757575),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const TextWidget(
+                                text: 'Guests No.',
+                                color: Color(0xFF414141),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
                               ),
-                            ),
+                              const SizedBox(height: 4),
+                              SizedBox(
+                                height: 40,
+                                width: double.infinity,
+                                child: TextFormField(
+                                  controller: guestController,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) return 'invalid guest number';
+                                    final guests = int.tryParse(value);
+                                    if (guests == null || guests < 1) return 'invalid guest number';
+                                    return null;
+                                  },
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                  onChanged: (value) => setState(() {}),
+                                  decoration: InputDecoration(
+                                    enabledBorder: buildOutlineInputBorder(5),
+                                    focusedBorder: buildOutlineInputBorder(5),
+                                    hintText: '1 Guests',
+                                    hintStyle: const TextStyle(
+                                      color: Color(0xFF757575),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -254,6 +260,7 @@ Future<dynamic> showActivityReserveDialoge(
                         ],
                       ),
                     ),
+                    const SizedBox(height: 24),
                   ],
                 ),
               );

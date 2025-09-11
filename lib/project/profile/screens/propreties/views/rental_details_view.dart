@@ -94,30 +94,19 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                                   height: 24,
                                 ),
                                 const SizedBox(width: 8),
-                                BlocListener<FavoritesCubit, FavoritesState>(
-                                  listener: (context, favoritesState) {
-                                    if (waitingForFavorite && favoritesState.addToFavoritesStatus == Status.success) {
-                                      context.read<HomeCubit>().setPropertyFavorite(!state.property.isFavorite);
-                                      waitingForFavorite = false;
+                                InkWell(
+                                  onTap: () {
+                                    if (state.property.isFavorite) {
+                                      getIt<FavoritesCubit>().removeFromFavorites(state.property.id, FavoriteType.property);
+                                    } else {
+                                      getIt<FavoritesCubit>().addToFavorites(state.property.id, FavoriteType.property);
                                     }
+                                    waitingForFavorite = true;
                                   },
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (state.property.isFavorite) {
-                                        getIt<FavoritesCubit>().removeFromFavorites(
-                                          state.property.id,
-                                          FavoriteType.property,
-                                        );
-                                      } else {
-                                        getIt<FavoritesCubit>().addToFavorites(state.property.id, FavoriteType.property);
-                                      }
-                                      waitingForFavorite = true;
-                                    },
-                                    child: Icon(
-                                      state.property.isFavorite ? Icons.favorite : Icons.favorite_border,
-                                      size: 24,
-                                      color: Colors.white,
-                                    ),
+                                  child: Icon(
+                                    state.property.isFavorite ? Icons.favorite : Icons.favorite_border,
+                                    size: 24,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ],

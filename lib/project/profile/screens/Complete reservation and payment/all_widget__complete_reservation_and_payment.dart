@@ -983,7 +983,13 @@ class ReservedItemCardWidget extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: const BorderRadius.horizontal(left: Radius.circular(10), right: Radius.circular(10)),
-                      child: FadeInImage.assetNetwork(placeholder: 'assets/images/IMAG.png', image: imagePath),
+                      child: FadeInImage.assetNetwork(
+                        placeholder: 'assets/images/IMAG.png',
+                        image: imagePath,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: 125,
+                      ),
                     ),
                   ],
                 ),
@@ -1010,9 +1016,19 @@ class ReservedItemCardWidget extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 10),
-                      Text(location, style: GoogleFonts.poppins(color: AppColors.grayTextColor)),
+                      Text(
+                        location,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(color: AppColors.grayTextColor),
+                      ),
                       const SizedBox(height: 10),
-                      Text(dateDetails, style: GoogleFonts.poppins(color: AppColors.grayTextColor)),
+                      Text(
+                        dateDetails,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(color: AppColors.grayTextColor),
+                      ),
                       const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1064,9 +1080,8 @@ class ReservedItemCardWidget extends StatelessWidget {
 
 // Promo Code Success Message Widget
 class PromoCodeSuccessMessageWidget extends StatelessWidget {
-  final String message;
-
   const PromoCodeSuccessMessageWidget({super.key, this.message = "The promo code has been applied successfully"});
+  final String message;
 
   @override
   Widget build(BuildContext context) {

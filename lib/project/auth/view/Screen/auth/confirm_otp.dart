@@ -229,11 +229,7 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(16),
                                 boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.05),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 4),
-                                  ),
+                                  BoxShadow(color: Colors.black.withAlpha(12), blurRadius: 10, offset: const Offset(0, 4)),
                                 ],
                               ),
                               child: TextFormField(
@@ -283,7 +279,7 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                                   backgroundColor: const Color(0xFF10B981),
                                   foregroundColor: Colors.white,
                                   elevation: 0,
-                                  shadowColor: const Color(0xFF10B981).withOpacity(0.3),
+                                  shadowColor: const Color(0xFF10B981).withAlpha(76),
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                                 ),
                                 child:

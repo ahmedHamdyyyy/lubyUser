@@ -26,6 +26,26 @@ class CustomPropertyModel extends Equatable {
     required this.pricePerNight,
   });
 
+  CustomPropertyModel copyWith({
+    String? id,
+    String? type,
+    String? imageUrl,
+    String? address,
+    int? guestNumber,
+    bool? isFavorite,
+    double? rate,
+    double? pricePerNight,
+  }) => CustomPropertyModel(
+    id: id ?? this.id,
+    type: type ?? this.type,
+    imageUrl: imageUrl ?? this.imageUrl,
+    address: address ?? this.address,
+    guestNumber: guestNumber ?? this.guestNumber,
+    isFavorite: isFavorite ?? this.isFavorite,
+    rate: rate ?? this.rate,
+    pricePerNight: pricePerNight ?? this.pricePerNight,
+  );
+
   factory CustomPropertyModel.fromJson(Map<String, dynamic> json) => CustomPropertyModel(
     id: json[AppConst.id] ?? '',
     type: json[AppConst.type] ?? '',

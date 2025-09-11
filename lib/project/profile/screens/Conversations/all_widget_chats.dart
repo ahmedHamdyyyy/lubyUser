@@ -180,7 +180,7 @@ class ChatMessageItemWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isMine ? Colors.white : AppColors.primaryColor,
                 borderRadius: BorderRadius.circular(20),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4, offset: const Offset(0, 2))],
+                boxShadow: [BoxShadow(color: Colors.black.withAlpha(25), blurRadius: 4, offset: const Offset(0, 2))],
               ),
               child: Text(
                 message.text,

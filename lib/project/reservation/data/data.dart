@@ -17,7 +17,10 @@ class ReservationsData {
       'registrations/me',
       queryParameters: {'status': status.name, 'page': _currentPage},
     );
-    final reservations = (response.data['data']['data'] as List).map((item) => ReservationModel.fromMap(item)).toList();
+    print(response.data);
+    if (response.statusCode != 200) throw DioException(requestOptions: response.requestOptions, response: response);
+    final reservations =
+        ((response.data['data']?['data'] as List?) ?? []).map((item) => ReservationModel.fromMap(item)).toList();
     final hasNextPage = (response.data['data']?['pagination']?['hasNextPage'] as bool?) ?? false;
     return (reservations: reservations, hasNextPage: hasNextPage);
   }
@@ -27,12 +30,12 @@ class ReservationsData {
   Future<ReservationModel> createReservation(ReservationModel reservation) async {
     final response = await _apiService.dio.post('registrations', data: reservation.toMap());
     if (response.statusCode != 200) throw DioException(requestOptions: response.requestOptions, response: response);
-    return ReservationModel.fromMap(response.data);
+    return ReservationModel.fromMap(response.data['data'], item: reservation.item);
   }
 
   Future<ReservationModel> updateReservation(ReservationModel reservation) async {
     final response = await _apiService.dio.put('/registrations/${reservation.id}', data: reservation.toMap());
-    return ReservationModel.fromMap(response.data);
+    return ReservationModel.fromMap(response.data['data'], item: reservation.item);
   }
 
   Future<void> removeReservation(String id) async {

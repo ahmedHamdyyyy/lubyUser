@@ -26,7 +26,7 @@ class FavoriteModel extends Equatable {
       id: json['_id'] ?? '',
       itemId: json['propertyId']['_id'] ?? '',
       title: json['propertyId']['type'] ?? '',
-      address: json['propertyId']['address'] ?? '',
+      address: json['propertyId']?['address']?['formattedAddress'] ?? '',
       imageUrl: (medias.isNotEmpty ? medias.first : '') ?? '',
       price: (json['propertyId']['pricePerNight'] ?? 0).toDouble(),
       rate: (json['propertyId']['rate'] ?? 0).toDouble(),

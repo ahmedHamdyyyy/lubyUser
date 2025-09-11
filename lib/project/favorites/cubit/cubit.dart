@@ -29,7 +29,14 @@ class FavoritesCubit extends Cubit<FavoritesState> {
     }
   }
 
+  String _itemId = '';
+  String get itemId => _itemId;
+  bool _isProperty = false;
+  bool get isProperty => _isProperty;
+
   Future<void> addToFavorites(String id, FavoriteType type) async {
+    _itemId = id;
+    _isProperty = type == FavoriteType.property;
     emit(state.copyWith(addToFavoritesStatus: Status.loading));
     try {
       await _favoritesRepository.addToFavorites(id, type);
@@ -40,6 +47,8 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   }
 
   Future<void> removeFromFavorites(String id, FavoriteType type) async {
+    _itemId = id;
+    _isProperty = type == FavoriteType.property;
     emit(state.copyWith(addToFavoritesStatus: Status.loading));
     try {
       await _favoritesRepository.removeFromFavorites(id, type);

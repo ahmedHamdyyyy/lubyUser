@@ -162,6 +162,8 @@ class _Favorite2ScreenState extends State<Favorite2Screen> {
                                           const SizedBox(height: 4),
                                           Text(
                                             item.address,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                             style: const TextStyle(color: AppColors.grayTextColor, fontSize: 14),
                                           ),
                                           const SizedBox(height: 4),

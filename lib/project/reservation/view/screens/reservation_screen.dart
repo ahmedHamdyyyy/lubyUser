@@ -81,7 +81,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
             child: BlocBuilder<ReservationsCubit, ReservationsState>(
               builder: (context, state) {
                 if (state.getReservationsStatus == Status.loading) {
-                  return const Center(child: CircularProgressIndicator());
+                  WidgetsBinding.instance.addPostFrameCallback((_) => setState(() => _isLoadingMore = true));
+                } else {
+                  WidgetsBinding.instance.addPostFrameCallback((_) => setState(() => _isLoadingMore = false));
                 }
                 final properties = state.reservations.where((r) => r.type == ReservationType.property).toList();
                 final activities = state.reservations.where((r) => r.type == ReservationType.activity).toList();
@@ -150,7 +152,12 @@ class _ReservationScreenState extends State<ReservationScreen> {
                             },
                           ),
                         if (_isLoadingMore)
-                          const Padding(padding: EdgeInsets.symmetric(vertical: 16), child: CircularProgressIndicator()),
+                          Center(
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
                       ],
                     ),
                   ),

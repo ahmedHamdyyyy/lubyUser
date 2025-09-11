@@ -62,8 +62,18 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  void setPropertyFavorite(bool isFavorite) {
-    emit(state.copyWith(property: state.property.copyWith(isFavorite: isFavorite)));
+  void toggleFavorite(String id) {
+    final updatedProperties =
+        state.properties.map((property) {
+          if (property.id == id) {
+            return property.copyWith(isFavorite: !property.isFavorite);
+          }
+          return property;
+        }).toList();
+    emit(state.copyWith(properties: updatedProperties));
+    if (state.property.id == id) {
+      emit(state.copyWith(property: state.property.copyWith(isFavorite: !state.property.isFavorite)));
+    }
   }
 
   void updateCurrentScreenIndex(int index) {

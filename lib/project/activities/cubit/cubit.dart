@@ -40,6 +40,18 @@ class ActivitiesCubit extends Cubit<ActivitiesState> {
     }
   }
 
+  void toggleFavorite(String id) {
+    final updatedActivities =
+        state.activities.map((activity) {
+          if (activity.id == id) return activity.copyWith(isFavorite: !activity.isFavorite);
+          return activity;
+        }).toList();
+    emit(state.copyWith(activities: updatedActivities));
+    if (state.activity.id == id) {
+      emit(state.copyWith(activity: state.activity.copyWith(isFavorite: !state.activity.isFavorite)));
+    }
+  }
+
   void setActivityReview(ReviewModel review) {
     emit(state.copyWith(activity: state.activity.copyWith(review: review)));
   }
