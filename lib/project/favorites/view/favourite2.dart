@@ -171,12 +171,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProvid
                                           ),
                                           const SizedBox(height: 4),
                                           Text(
-                                            item.address,
+                                            item.address.formattedAddress,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: const TextStyle(color: AppColors.grayTextColor, fontSize: 14),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
                                           ),
                                           const SizedBox(height: 4),
                                           Text(

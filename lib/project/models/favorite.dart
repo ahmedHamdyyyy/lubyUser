@@ -4,7 +4,7 @@ import 'package:luby2/project/models/address.dart';
 enum FavoriteType { activity, property }
 
 class FavoriteModel extends Equatable {
-  final String id, itemId, title, address, imageUrl;
+  final String id, itemId, title, imageUrl;
   final double price, rate;
   final FavoriteType type;
   final int guests;
@@ -20,7 +20,6 @@ class FavoriteModel extends Equatable {
     required this.rate,
     required this.guests,
     required this.type,
-    required this.averageRating,
   });
 
   factory FavoriteModel.fromJsonProperty(Map<String, dynamic> json) {
@@ -46,16 +45,15 @@ class FavoriteModel extends Equatable {
       id: json['_id'] ?? '',
       itemId: activityId?['_id'] ?? '',
       title: activityId?['name'] ?? '',
-      averageRating: (activityId?['averageRating'] ?? 0).toDouble(),
+      rate: (activityId?['averageRating'] ?? 0).toDouble(),
       address: Address.fromJson(activityId?['address'] ?? {}),
       imageUrl: (medias.isNotEmpty ? medias.first : '') ?? '',
       price: (activityId?['price'] ?? 0).toDouble(),
-      rate: (activityId?['rate'] ?? 0).toDouble(),
       guests: (activityId?['guestNumber'] ?? 0).toInt(),
       type: FavoriteType.activity,
     );
   }
 
   @override
-  List<Object?> get props => [id, title, address, imageUrl, price, rate, guests, type, averageRating];
+  List<Object?> get props => [id, title, address, imageUrl, price, rate, guests, type, rate];
 }
