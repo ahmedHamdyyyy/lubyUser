@@ -420,7 +420,7 @@ Widget buildPropertyList({
               physics: NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 1 / 1.5,
+                childAspectRatio: 1 / 1.6,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
               ),
