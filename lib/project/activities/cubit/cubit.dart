@@ -14,7 +14,7 @@ class ActivitiesCubit extends Cubit<ActivitiesState> {
   bool _hasNextPage = false;
 
   void getActivities({bool fetchNext = false, Map<String, dynamic>? filters}) async {
-    if (fetchNext && !_hasNextPage) return;
+    if (fetchNext && !_hasNextPage || state.getAllActivitiesStatus == Status.loading) return;
     emit(state.copyWith(getAllActivitiesStatus: Status.loading));
     try {
       final activitiesData = await _repo.getActivities(fetchNext, filters);

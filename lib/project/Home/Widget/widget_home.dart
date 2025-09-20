@@ -420,7 +420,7 @@ Widget buildPropertyList({
               physics: NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 1 / 1.7, // Increased aspect ratio for taller cards
+                childAspectRatio: 1 / 1.5,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
               ),
@@ -439,7 +439,7 @@ Widget buildPropertyCard(BuildContext context, CustomPropertyModel property) {
     },
     child: Card(
       color: Colors.white,
-      elevation: 0, // Reduced elevation
+      elevation: 5, // Reduced elevation
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -448,18 +448,22 @@ Widget buildPropertyCard(BuildContext context, CustomPropertyModel property) {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Image with fixed aspect ratio and heart icon
-          Stack(
-            children: [
-              Image.network(height: 155, width: 155, property.imageUrl, fit: BoxFit.cover),
-              Positioned(
-                top: 10,
-                right: 10,
-                child: StatefulBuilder(
-                  builder: (context, setState) {
-                    return Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: GestureDetector(
-                        onTap: () {
+          Expanded(
+            child: Stack(
+              alignment: AlignmentDirectional.topEnd,
+              children: [
+                FadeInImage.assetNetwork(
+                  image: property.imageUrl,
+                  width: double.infinity,
+                  height: double.infinity,
+                  fit: BoxFit.cover,
+                  placeholder: 'assets/images/IMAG.png',
+                  placeholderFit: BoxFit.cover,
+                ),
+                StatefulBuilder(
+                  builder:
+                      (context, setState) => IconButton(
+                        onPressed: () {
                           if (isFavorite) {
                             getIt<FavoritesCubit>().removeFromFavorites(property.id, FavoriteType.property);
                           } else {
@@ -467,21 +471,14 @@ Widget buildPropertyCard(BuildContext context, CustomPropertyModel property) {
                           }
                           setState(() => isFavorite = !isFavorite);
                         },
-                        child:
-                            isFavorite
-                                ? SvgPicture.asset(ImageAssets.heartBlack, fit: BoxFit.cover, width: 20, height: 20)
-                                : SvgPicture.asset(ImageAssets.heart, fit: BoxFit.cover, width: 20, height: 20),
+                        icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border, size: 24),
                       ),
-                    );
-                  },
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-
-          // Content with minimal padding and layout
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 3.0), // Reduced padding
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -508,16 +505,12 @@ Widget buildPropertyCard(BuildContext context, CustomPropertyModel property) {
                     ),
                   ],
                 ),
-
-                // Location with tiny font
                 Text(
                   property.address,
                   style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor, fontWeight: FontWeight.w400),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-
-                // Price and guests in one row
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1005,7 +998,7 @@ class _HomeGuestsSelectorState extends State<HomeGuestsSelector> {
       children: [
         Expanded(
           child: Text(
-            "$guestsCount Guests",
+            "Guests",
             style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.grayTextColor),
           ),
         ),

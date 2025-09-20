@@ -17,21 +17,16 @@ class HomeCubit extends Cubit<HomeState> {
 
   void fetchUser() async {
     emit(state.copyWith(getUserStatus: Status.loading));
-
     try {
       final user = await repo.fetchUser();
-
       emit(state.copyWith(getUserStatus: Status.success, user: user, msg: 'User fetched successfully'));
-      if (kDebugMode) {
-        print(state.user.toString());
-      }
     } catch (e) {
       emit(state.copyWith(getUserStatus: Status.error, msg: e.toString()));
     }
   }
 
   void getProperties({bool fetchNext = false, Map<String, dynamic>? filters}) async {
-    if (fetchNext && !_hasNextPage) return;
+    if (fetchNext && !_hasNextPage || state.propertiesStatus == Status.loading) return;
     emit(state.copyWith(propertiesStatus: Status.loading));
     try {
       final propertiesData = await repo.getProperties(fetchNext, filters);

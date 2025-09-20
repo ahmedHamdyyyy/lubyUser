@@ -199,7 +199,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                             ),
                           ),
                         if (selectedMainCategory == "Rental Services")
-                          buildPropertyList(title: '', context: context, state: state)
+                          buildPropertyList(title: 'Most Viewed', context: context, state: state)
                         else if (selectedMainCategory == "Tourist Activities")
                           BlocBuilder<ActivitiesCubit, ActivitiesState>(
                             builder: (context, state) {

@@ -14,8 +14,8 @@ import '../widgets/amenities_widget.dart';
 import '../widgets/booking_details_widget.dart';
 import '../widgets/carde_reserve.dart';
 import '../widgets/host_details.dart';
-import '../widgets/image_list.dart';
 import '../widgets/location_widget.dart';
+import '../widgets/medias_list.dart';
 import '../widgets/read_details_widget.dart';
 import '../widgets/read_more.dart';
 import '../widgets/rental_unit_widget.dart';
@@ -146,7 +146,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                           totalRate: state.property.totalRate,
                         ),
                         HostDetailsWidget(vendor: state.property.vendor),
-                        ImageListWidget(images: state.property.medias),
+                        MediasListWidget(medias: state.property.medias),
                         const Driver(),
                         if (isExpanded != true)
                           ReadMoreTextWidget(details: state.property.details)

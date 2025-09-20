@@ -49,7 +49,7 @@ class CustomPropertyModel extends Equatable {
   factory CustomPropertyModel.fromJson(Map<String, dynamic> json) => CustomPropertyModel(
     id: json[AppConst.id] ?? '',
     type: json[AppConst.type] ?? '',
-    imageUrl: json[AppConst.medias]?.first ?? '',
+    imageUrl: json[AppConst.medias]?.firstWhere((media) => !media.toString().endsWith('mp4'), orElse: () => ''),
     address: json[AppConst.address]?['formattedAddress'] ?? '',
     guestNumber: json[AppConst.guestNumber] ?? 0,
     isFavorite: json[AppConst.isFavorite] ?? false,

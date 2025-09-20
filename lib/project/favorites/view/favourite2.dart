@@ -24,7 +24,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProvid
   final _scrollController = ScrollController();
   bool _isLoadingMore = false;
   late final AnimationController _emptyAnimationController;
-  late final Animation<double> _floatAnimation;
+  // late final Animation<double> _floatAnimation;
   @override
   void initState() {
     getIt.get<FavoritesCubit>().fetchFavorites();
