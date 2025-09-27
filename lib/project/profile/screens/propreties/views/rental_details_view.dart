@@ -3,11 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../../../config/constants/constance.dart';
-import '../../../../../../config/images/assets.dart';
 import '../../../../../../config/widget/helper.dart';
 import '../../../../../../locator.dart';
 import '../../../../Home/cubit/home_cubit.dart';
-import '../../../../Home/ui/hom_screen.dart';
 import '../../../../favorites/cubit/cubit.dart';
 import '../../../../models/favorite.dart';
 import '../widgets/amenities_widget.dart';
@@ -62,8 +60,13 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                       child: Container(
                         height: 250,
                         width: double.infinity,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(image: AssetImage(AssetsData.apartmentView), fit: BoxFit.cover),
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(
+                              state.property.medias.firstWhere((media) => !media.endsWith('mp4'), orElse: () => ''),
+                            ),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
@@ -77,12 +80,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             InkWell(
-                              onTap: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const HomeScreen()),
-                                );
-                              },
+                              onTap: () => Navigator.of(context).pop(),
                               child: const Icon(Icons.arrow_back_ios_new, size: 24, color: Colors.white),
                             ),
                             Row(
@@ -90,7 +88,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                                 SvgPicture.asset(
                                   'assets/images/export.svg',
                                   // ignore: deprecated_member_use
-                                  color: Colors.white, // Changes SVG color
+                                  color: Colors.white,
                                   height: 24,
                                 ),
                                 const SizedBox(width: 8),
@@ -116,12 +114,12 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                       ),
                     ),
                     // Title
-                    const Positioned(
+                    Positioned(
                       top: 100,
                       bottom: 0,
                       left: 23,
                       child: TextWidget(
-                        text: 'Great Studio with a Great View',
+                        text: 'Great ${state.property.type.toUpperCase()} with a Great View',
                         color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -132,7 +130,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                         const SizedBox(height: 112),
                         CardeReserve(property: state.property),
                         const SizedBox(height: 10),
-                        BookingDetailsWidget(state: state),
+                        BookingDetailsWidget(property: state.property),
                         const Driver(),
                         RentalUnitWidget(state: state),
                         const Driver(),

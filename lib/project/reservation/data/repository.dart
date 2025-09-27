@@ -24,7 +24,7 @@ class ReservationsRepository {
       }
       throw Exception('An unknown error occurred');
     } catch (e, s) {
-      print('Error stack trace: $s');
+      print('Error $e stack trace: $s');
       throw Exception('An unexpected error occurred: $e');
     }
   }
@@ -32,7 +32,8 @@ class ReservationsRepository {
   Future<ReservationModel> createReservation(ReservationModel reservation) async {
     try {
       return await _data.createReservation(reservation);
-    } on DioException catch (e) {
+    } on DioException catch (e, s) {
+      print('Error $e stack trace: $s');
       if (e.response?.data != null && e.response?.data['error'] != null) {
         final errorMessage = e.response!.data['error'];
         if (errorMessage is List) {
@@ -43,7 +44,7 @@ class ReservationsRepository {
       }
       throw Exception('An unknown error occurred');
     } catch (e, s) {
-      print('Error stack trace: $s');
+      print('Error $e stack trace: $s');
       throw Exception('An unexpected error occurred: $e');
     }
   }

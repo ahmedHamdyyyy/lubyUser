@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 
 import '../../../../config/constants/api_constance.dart';
@@ -43,6 +45,7 @@ class HomeData {
   Future<PropertyModel> getProperty(String id) async {
     final response = await _apiService.dio.get(ApiConstance.getProperty(id));
     _checkIfSuccess(response);
+    log(response.data.toString());
     return PropertyModel.fromJson(response.data['data']['property']);
   }
 

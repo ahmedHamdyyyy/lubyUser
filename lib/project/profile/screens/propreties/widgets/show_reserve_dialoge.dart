@@ -21,7 +21,6 @@ Future<dynamic> showReseverDialoge(
     final checkInDate = Utils.parseDate(checkInController.text);
     final checkOutDate = Utils.parseDate(checkOutController.text);
     final guestCount = int.tryParse(guestController.text) ?? 1;
-
     if (checkInDate != null && checkOutDate != null) {
       final duration = checkOutDate.difference(checkInDate).inDays;
       return duration * property.pricePerNight * guestCount;
@@ -61,30 +60,43 @@ Future<dynamic> showReseverDialoge(
                                   fontWeight: FontWeight.w500,
                                 ),
                                 const SizedBox(height: 4),
-                                SizedBox(
-                                  height: 40,
-                                  width: 144,
-                                  child: TextFormField(
-                                    controller: checkInController,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) return 'Please enter check-in date';
-                                      final date = Utils.parseDate(value);
-                                      if (date == null) return 'Invalid date format';
-                                      final now = DateTime.now();
-                                      if (date.isBefore(now)) return 'check-in date must be in the future';
-                                      return null;
-                                    },
-                                    keyboardType: TextInputType.datetime,
-                                    onChanged: (value) => setState(() {}),
-                                    decoration: InputDecoration(
-                                      enabledBorder: buildOutlineInputBorder(5),
-                                      focusedBorder: buildOutlineInputBorder(5),
-                                      hintText: 'dd/mm/yyyy',
-                                      hintStyle: const TextStyle(
-                                        color: Color(0xFF757575),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                      ),
+                                TextFormField(
+                                  controller: checkInController,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) return 'Please enter check-in date';
+                                    if (!RegExp(r'^\d{1,2}/\d{1,2}/\d{4}$').hasMatch(value)) {
+                                      return 'Enter date in DD/MM/YYYY format';
+                                    }
+                                    final dateParts = value.split('/');
+                                    final day = int.tryParse(dateParts[0]);
+                                    final month = int.tryParse(dateParts[1]);
+                                    final year = int.tryParse(dateParts[2]);
+                                    if (day == null || month == null || year == null) return 'Invalid date components';
+                                    final date = DateTime(year, month, day);
+                                    if (date.isBefore(DateTime.now())) return 'Check-in date must be in the future';
+                                    final startDate = DateTime.tryParse(property.startDate) ?? DateTime.now();
+                                    final endDate = DateTime.tryParse(property.endDate) ?? DateTime.now();
+                                    if (date.isBefore(startDate) || date.isAfter(endDate)) {
+                                      return 'Date must be within property availability';
+                                    }
+                                    return null;
+                                  },
+                                  keyboardType: TextInputType.datetime,
+                                  onChanged: (value) => setState(() {}),
+                                  decoration: InputDecoration(
+                                    enabledBorder: buildOutlineInputBorder(5),
+                                    focusedBorder: buildOutlineInputBorder(5),
+                                    hintText: property.startDate
+                                        .split('T')
+                                        .first
+                                        .replaceAll('-', '/')
+                                        .split('/')
+                                        .reversed
+                                        .join('/'),
+                                    hintStyle: const TextStyle(
+                                      color: Color(0xFF757575),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                 ),
@@ -103,30 +115,53 @@ Future<dynamic> showReseverDialoge(
                                   fontWeight: FontWeight.w500,
                                 ),
                                 const SizedBox(height: 4),
-                                SizedBox(
-                                  height: 40,
-                                  width: 144,
-                                  child: TextFormField(
-                                    controller: checkOutController,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) return 'Please enter check-in date';
-                                      final date = Utils.parseDate(value);
-                                      if (date == null) return 'Invalid date format';
-                                      final now = DateTime.now();
-                                      if (date.isBefore(now)) return 'check-in date must be in the future';
-                                      return null;
-                                    },
-                                    keyboardType: TextInputType.datetime,
-                                    onChanged: (value) => setState(() {}),
-                                    decoration: InputDecoration(
-                                      enabledBorder: buildOutlineInputBorder(5),
-                                      focusedBorder: buildOutlineInputBorder(5),
-                                      hintText: '6/4/2024',
-                                      hintStyle: const TextStyle(
-                                        color: Color(0xFF757575),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                      ),
+                                TextFormField(
+                                  controller: checkOutController,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) return 'Please enter check-in date';
+                                    if (!RegExp(r'^\d{1,2}/\d{1,2}/\d{4}$').hasMatch(value)) {
+                                      return 'Enter date in DD/MM/YYYY format';
+                                    }
+                                    final dateParts = value.split('/');
+                                    final day = int.tryParse(dateParts[0]);
+                                    final month = int.tryParse(dateParts[1]);
+                                    final year = int.tryParse(dateParts[2]);
+                                    if (day == null || month == null || year == null) return 'Invalid date components';
+                                    final date = DateTime(year, month, day);
+                                    if (date.isBefore(DateTime.now())) return 'Check-in date must be in the future';
+                                    final startDate = DateTime.tryParse(property.startDate) ?? DateTime.now();
+                                    final endDate = DateTime.tryParse(property.endDate) ?? DateTime.now();
+                                    if (date.isBefore(startDate) || date.isAfter(endDate)) {
+                                      return 'Date must be within property availability';
+                                    }
+                                    if (checkInController.text.isNotEmpty) {
+                                      final checkInParts = checkInController.text.split('/');
+                                      final checkInDay = int.tryParse(checkInParts[0]);
+                                      final checkInMonth = int.tryParse(checkInParts[1]);
+                                      final checkInYear = int.tryParse(checkInParts[2]);
+                                      if (checkInDay != null && checkInMonth != null && checkInYear != null) {
+                                        final checkInDate = DateTime(checkInYear, checkInMonth, checkInDay);
+                                        if (!date.isAfter(checkInDate)) return 'Check-out must be after check-in';
+                                      }
+                                    }
+                                    return null;
+                                  },
+                                  keyboardType: TextInputType.datetime,
+                                  onChanged: (value) => setState(() {}),
+                                  decoration: InputDecoration(
+                                    enabledBorder: buildOutlineInputBorder(5),
+                                    focusedBorder: buildOutlineInputBorder(5),
+                                    hintText: property.endDate
+                                        .split('T')
+                                        .first
+                                        .replaceAll('-', '/')
+                                        .split('/')
+                                        .reversed
+                                        .join('/'),
+                                    hintStyle: const TextStyle(
+                                      color: Color(0xFF757575),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                 ),
@@ -147,30 +182,22 @@ Future<dynamic> showReseverDialoge(
                           fontWeight: FontWeight.w500,
                         ),
                         const SizedBox(height: 4),
-                        SizedBox(
-                          height: 40,
-                          width: double.infinity,
-                          child: TextFormField(
-                            controller: guestController,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) return 'invalid guest number';
-                              final guests = int.tryParse(value);
-                              if (guests == null || guests < 1) return 'invalid guest number';
-                              return null;
-                            },
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                            onChanged: (value) => setState(() {}),
-                            decoration: InputDecoration(
-                              enabledBorder: buildOutlineInputBorder(5),
-                              focusedBorder: buildOutlineInputBorder(5),
-                              hintText: '1 Guests',
-                              hintStyle: const TextStyle(
-                                color: Color(0xFF757575),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
+                        TextFormField(
+                          controller: guestController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) return 'invalid guest number';
+                            final guests = int.tryParse(value);
+                            if (guests == null || guests < 1) return 'invalid guest number';
+                            return null;
+                          },
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          onChanged: (value) => setState(() {}),
+                          decoration: InputDecoration(
+                            enabledBorder: buildOutlineInputBorder(5),
+                            focusedBorder: buildOutlineInputBorder(5),
+                            hintText: '1 Guests',
+                            hintStyle: const TextStyle(color: Color(0xFF757575), fontSize: 14, fontWeight: FontWeight.w400),
                           ),
                         ),
                       ],

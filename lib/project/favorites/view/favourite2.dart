@@ -23,7 +23,6 @@ class FavoriteScreen extends StatefulWidget {
 class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProviderStateMixin {
   final _scrollController = ScrollController();
   bool _isLoadingMore = false;
-  late final AnimationController _emptyAnimationController;
   // late final Animation<double> _floatAnimation;
   @override
   void initState() {
@@ -34,7 +33,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProvid
 
   @override
   void dispose() {
-    _emptyAnimationController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -171,7 +169,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProvid
                                           ),
                                           const SizedBox(height: 4),
                                           Text(
-                                            item.address.formattedAddress,
+                                            item.address,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: const TextStyle(color: AppColors.grayTextColor, fontSize: 14),

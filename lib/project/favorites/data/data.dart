@@ -18,7 +18,6 @@ class FavoritesData {
     }
     final favorites = <FavoriteModel>[];
     final favoriteData = response.data['data']['data'] as List;
-    print(favoriteData);
     for (final item in favoriteData) {
       if (item.containsKey('propertyId')) {
         favorites.add(FavoriteModel.fromJsonProperty(item));

@@ -13,7 +13,7 @@ import 'project/auth/cubit/auth_cubit.dart';
 import 'project/auth/view/Screen/splash/luby_screen_splash.dart';
 import 'project/favorites/cubit/cubit.dart';
 import 'project/reservation/cubit/cubit.dart';
-  
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -44,7 +44,12 @@ class MyApp extends StatelessWidget {
         designSize: const Size(360, 690),
         minTextAdapt: true,
         splitScreenMode: true,
-        builder: (context, child) => MaterialApp(debugShowCheckedModeBanner: false, home: const LubyScreenSplash()),
+        builder:
+            (context, child) => MaterialApp(
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+              home: const LubyScreenSplash(),
+            ),
       ),
     );
   }

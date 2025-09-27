@@ -91,9 +91,6 @@ class TileItemList extends StatelessWidget {
   }
 }
 
-
-
-
 class AmenitiesWidgetActivity extends StatelessWidget {
   final ActivityModel state;
   const AmenitiesWidgetActivity({super.key, required this.state});
@@ -123,7 +120,7 @@ class AmenitiesWidgetActivity extends StatelessWidget {
                 height: 35,
                 child: ElevatedButton(
                   onPressed: () {
-                     Navigator.push(context, MaterialPageRoute(builder: (context) => PlaceOffersViewActivity(state: state)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => PlaceOffersViewActivity(state: state)));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF262626),
@@ -165,7 +162,6 @@ class TileItemListActivity extends StatelessWidget {
         (tags.length > 2 && tags[2].isNotEmpty)
             ? ListTileItem(icon: 'assets/images/washing_machine.svg', text: tags[2])
             : const SizedBox.shrink(),
-       
       ],
     );
   }

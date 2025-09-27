@@ -21,7 +21,7 @@ class FavoritesRepository {
       }
       throw Exception('An unknown error occurred');
     } catch (e, s) {
-      print('Error stack trace: $s');
+      print('Error $e stack trace: $s');
       throw Exception('An unexpected error occurred: $e');
     }
   }

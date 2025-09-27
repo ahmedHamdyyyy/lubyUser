@@ -74,20 +74,21 @@ class _SummaryScreenState extends State<SummaryScreen> {
               const SizedBox(height: 15),
               Builder(
                 builder: (context) {
+                  final nights =
+                      DateTime.parse(
+                        widget.reservation.checkOutDate,
+                      ).difference(DateTime.parse(widget.reservation.checkInDate)).inDays;
                   if (widget.reservation.type == ReservationType.property) {
                     final item = widget.reservation.item as PropertyModel;
-                    final nights =
-                        DateTime.parse(
-                          widget.reservation.checkOutDate,
-                        ).difference(DateTime.parse(widget.reservation.checkInDate)).inDays;
                     return ReservedItemCardWidget(
                       imagePath: item.medias.first,
                       title: item.type,
                       location: item.address.formattedAddress,
-                      dateDetails: item.details,
+                      details: item.details,
                       price: item.pricePerNight,
                       totalPrice: widget.reservation.totalPrice.toInt(),
                       guestNumber: widget.reservation.guestNumber,
+                      startDate: widget.reservation.checkInDate,
                       nights: nights,
                       onEdit: () {
                         showReseverDialoge(
@@ -106,11 +107,12 @@ class _SummaryScreenState extends State<SummaryScreen> {
                       imagePath: item.medias.first,
                       title: item.name,
                       location: item.address.formattedAddress,
-                      dateDetails: item.details,
+                      details: item.details,
                       price: item.price,
+                      startDate: widget.reservation.checkInDate,
                       guestNumber: widget.reservation.guestNumber,
                       totalPrice: widget.reservation.totalPrice.toInt(),
-                      nights: 5, //-----------------------
+                      nights: nights,
                       onEdit: () => Navigator.pop(context),
                       // onDelete: () {},
                     );
@@ -121,7 +123,6 @@ class _SummaryScreenState extends State<SummaryScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-              
                   const SizedBox(height: 20),
                   ActionButtonWidget(
                     text: "Save Reservation",
@@ -129,7 +130,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
                       if (widget.reservation.id.isEmpty) {
                         getIt<ReservationsCubit>().createReservation(widget.reservation);
                       } else {
-                        //getIt<ReservationsCubit>().updateReservation(widget.reservation);
+                        getIt<ReservationsCubit>().updateReservation(widget.reservation);
                       }
                     },
                     fontSize: 18,

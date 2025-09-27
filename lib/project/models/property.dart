@@ -62,7 +62,7 @@ class CustomPropertyModel extends Equatable {
 }
 
 class PropertyModel extends Equatable {
-  final String id, type, details, endDate, startDate, reservationId, reservationCheckInDate;
+  final String id, type, details, endDate, startDate, reservationId, reservationCheckInDate, reservationCheckOutDate;
   final int guestNumber, bedrooms, bathrooms, beds, reviewsCount, reservationGuestNumber, reservationNumber;
   final List<String> tags, medias, ownershipContract, facilityLicense;
   final bool available, isFavorite;
@@ -96,6 +96,7 @@ class PropertyModel extends Equatable {
     required this.review,
     required this.reservationId,
     required this.reservationCheckInDate,
+    required this.reservationCheckOutDate,
     required this.reservationStatus,
     required this.reservationGuestNumber,
     required this.reservationNumber,
@@ -124,6 +125,7 @@ class PropertyModel extends Equatable {
     review: ReviewModel.initial,
     reservationId: '',
     reservationCheckInDate: '',
+    reservationCheckOutDate: '',
     reservationStatus: ReservationStatus.pending,
     reservationGuestNumber: 1,
     reservationNumber: 0,
@@ -164,6 +166,7 @@ class PropertyModel extends Equatable {
       review: ReviewModel.fromJson(json['review'] ?? {}, ReviewType.property),
       reservationId: json['registration']?['_id'] ?? '',
       reservationCheckInDate: json['registration']?['checkInDate'] ?? '',
+      reservationCheckOutDate: json['registration']?['checkOutDate'] ?? '',
       reservationStatus: ReservationStatus.values.firstWhere(
         (status) => json['registration']?['status'] == status,
         orElse: () => ReservationStatus.pending,
@@ -217,6 +220,7 @@ class PropertyModel extends Equatable {
     totalRate: totalRate ?? this.totalRate,
     vendor: vendor,
     reservationCheckInDate: reservationCheckInDate,
+    reservationCheckOutDate: reservationCheckOutDate,
     reservationGuestNumber: reservationGuestNumber,
     reservationId: reservationId,
     reservationNumber: reservationNumber,
@@ -247,6 +251,7 @@ class PropertyModel extends Equatable {
     totalRate,
     vendor,
     reservationCheckInDate,
+    reservationCheckOutDate,
     reservationGuestNumber,
     reservationId,
     reservationNumber,

@@ -1,14 +1,12 @@
 ﻿import 'package:equatable/equatable.dart';
-import 'package:luby2/project/models/address.dart';
 
 enum FavoriteType { activity, property }
 
 class FavoriteModel extends Equatable {
-  final String id, itemId, title, imageUrl;
+  final String id, itemId, title, address, imageUrl;
   final double price, rate;
   final FavoriteType type;
   final int guests;
-  final Address address;
 
   const FavoriteModel({
     required this.id,
@@ -46,7 +44,7 @@ class FavoriteModel extends Equatable {
       itemId: activityId?['_id'] ?? '',
       title: activityId?['name'] ?? '',
       rate: (activityId?['averageRating'] ?? 0).toDouble(),
-      address: Address.fromJson(activityId?['address'] ?? {}),
+      address: json['activityId']?['address']?['formattedAddress'] ?? '',
       imageUrl: (medias.isNotEmpty ? medias.first : '') ?? '',
       price: (activityId?['price'] ?? 0).toDouble(),
       guests: (activityId?['guestNumber'] ?? 0).toInt(),

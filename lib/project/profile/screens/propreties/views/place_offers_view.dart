@@ -23,12 +23,7 @@ class PlaceOffersView extends StatelessWidget {
             child: Row(
               children: [
                 IconButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => const RentalDetailScreen(id: '')),
-                    );
-                  },
+                  onPressed: () => Navigator.pop(context),
                   icon: const Icon(Icons.arrow_back_ios_new, size: 24),
                   color: const Color(0xFF757575),
                 ),
@@ -60,9 +55,6 @@ class PlaceOffersView extends StatelessWidget {
     );
   }
 }
-
-
-
 
 class PlaceOffersViewActivity extends StatelessWidget {
   final ActivityModel state;

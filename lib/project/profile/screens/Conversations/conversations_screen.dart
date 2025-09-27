@@ -24,7 +24,10 @@ class _ConversationScreenState extends State<ConversationScreen> with SingleTick
   @override
   void initState() {
     _emptyController = AnimationController(vsync: this, duration: const Duration(seconds: 2));
-    _floatAnim = Tween<double>(begin: -8, end: 8).animate(CurvedAnimation(parent: _emptyController, curve: Curves.easeInOut));
+    _floatAnim = Tween<double>(
+      begin: -8,
+      end: 8,
+    ).animate(CurvedAnimation(parent: _emptyController, curve: Curves.easeInOut));
     _emptyController.repeat(reverse: true);
     super.initState();
   }
@@ -54,8 +57,6 @@ class _ConversationScreenState extends State<ConversationScreen> with SingleTick
         const SizedBox(height: 20),
 
         // Search bar
-
-
         Padding(
           padding: const EdgeInsets.only(left: 20.0, right: 20),
           child: TextField(
@@ -63,7 +64,7 @@ class _ConversationScreenState extends State<ConversationScreen> with SingleTick
             decoration: InputDecoration(
               hintText: "Search...",
               prefixIcon: const Icon(Icons.search),
-            
+
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               contentPadding: const EdgeInsets.symmetric(vertical: 10),
             ),
@@ -85,9 +86,10 @@ class _ConversationScreenState extends State<ConversationScreen> with SingleTick
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
                 final chats = snapshot.data ?? [];
-                final filtered = _searchTerm.isEmpty
-                    ? chats
-                    : chats.where((c) => c.vendorName.toLowerCase().contains(_searchTerm)).toList();
+                final filtered =
+                    _searchTerm.isEmpty
+                        ? chats
+                        : chats.where((c) => c.vendorName.toLowerCase().contains(_searchTerm)).toList();
                 if (filtered.isEmpty) {
                   return Center(
                     child: Padding(
@@ -97,13 +99,18 @@ class _ConversationScreenState extends State<ConversationScreen> with SingleTick
                         children: [
                           AnimatedBuilder(
                             animation: _floatAnim,
-                            builder: (context, child) => Transform.translate(offset: Offset(0, _floatAnim.value), child: child),
-                            child: Icon(Icons.chat_bubble_outline, size: 120, color: AppColors.grayTextColor.withOpacity(0.4)),
+                            builder:
+                                (context, child) => Transform.translate(offset: Offset(0, _floatAnim.value), child: child),
+                            child: Icon(Icons.chat_bubble_outline, size: 120, color: AppColors.grayTextColor.withAlpha(100)),
                           ),
                           const SizedBox(height: 16),
                           Text(
                             'No conversations yet',
-                            style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.primaryTextColor),
+                            style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.primaryTextColor,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 8),
@@ -111,19 +118,6 @@ class _ConversationScreenState extends State<ConversationScreen> with SingleTick
                             'Start by contacting the sellers and the conversations will be displayed here',
                             style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor),
                             textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 20),
-                          SizedBox(
-                            height: 44,
-                            child: ElevatedButton(
-                              onPressed: () => Navigator.pop(context),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primaryColor,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                elevation: 0,
-                              ),
-                              child: const Text('Return', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
-                            ),
                           ),
                         ],
                       ),
@@ -141,14 +135,17 @@ class _ConversationScreenState extends State<ConversationScreen> with SingleTick
                       onLongPress: () async {
                         final confirmed = await showDialog<bool>(
                           context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text('Delete conversation'),
-                            content: const Text('Are you sure you want to delete this conversation? This cannot be undone.'),
-                            actions: [
-                              TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-                              TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete')),
-                            ],
-                          ),
+                          builder:
+                              (context) => AlertDialog(
+                                title: const Text('Delete conversation'),
+                                content: const Text(
+                                  'Are you sure you want to delete this conversation? This cannot be undone.',
+                                ),
+                                actions: [
+                                  TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+                                  TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete')),
+                                ],
+                              ),
                         );
                         if (confirmed == true) {
                           await FirestoreService().deleteChat(chat.id);

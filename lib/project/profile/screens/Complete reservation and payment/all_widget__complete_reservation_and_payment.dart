@@ -946,7 +946,8 @@ class ReservedItemCardWidget extends StatelessWidget {
   final String imagePath;
   final String title;
   final String location;
-  final String dateDetails;
+  final String details;
+  final String startDate;
   final int guestNumber, nights, totalPrice;
   final double price;
   final VoidCallback? onEdit;
@@ -957,11 +958,12 @@ class ReservedItemCardWidget extends StatelessWidget {
     required this.imagePath,
     required this.title,
     required this.location,
-    required this.dateDetails,
+    required this.details,
     required this.price,
     required this.guestNumber,
     required this.nights,
     required this.totalPrice,
+    required this.startDate,
     this.onEdit,
     this.onDelete,
   });
@@ -988,7 +990,7 @@ class ReservedItemCardWidget extends StatelessWidget {
                         image: imagePath,
                         fit: BoxFit.cover,
                         width: double.infinity,
-                        height: 125,
+                        height: 135,
                       ),
                     ),
                   ],
@@ -1024,7 +1026,7 @@ class ReservedItemCardWidget extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        dateDetails,
+                        details,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.poppins(color: AppColors.grayTextColor),
@@ -1056,7 +1058,7 @@ class ReservedItemCardWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  "Free cancellation before 27 October",
+                  "Free cancellation before ${startDate.split('T').first.replaceAll('-', '/').split('/').reversed.join('/')}",
                   style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 14, fontWeight: FontWeight.w400),
                 ),
               ),

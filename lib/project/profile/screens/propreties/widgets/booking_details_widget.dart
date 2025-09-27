@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/widget/helper.dart';
-import '../../../../Home/cubit/home_cubit.dart';
+import '../../../../models/property.dart';
 
 class BookingDetailsWidget extends StatelessWidget {
-  final HomeState state;
-  const BookingDetailsWidget({
-    required this.state,
-    super.key,
-  });
+  const BookingDetailsWidget({required this.property, super.key});
+  final PropertyModel property;
+
+  int get totalNights {
+    final start = DateTime.tryParse(property.startDate) ?? DateTime.now();
+    final end = DateTime.tryParse(property.endDate) ?? DateTime.now();
+    return end.difference(start).inDays;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +22,10 @@ class BookingDetailsWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
       child: Column(
         children: [
-           Row(
+          Row(
             children: [
               TextWidget(
-                text: '${state.property.guestNumber * state.property.pricePerNight} SAR',
+                text: '${totalNights * property.pricePerNight} SAR',
                 color: AppColors.primaryColor,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -30,14 +34,14 @@ class BookingDetailsWidget extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: 8.0, left: 8.0),
                 child: TextWidget(
-                  text: '${ state.property.guestNumber.toString()} Night',
+                  text: '$totalNights Night',
                   color: AppColors.secondTextColor,
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
                 ),
               ),
               TextWidget(
-                text: '${state.property.pricePerNight.toString()} Per Night',
+                text: '${property.pricePerNight} Per Night',
                 color: AppColors.grayTextColor,
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
@@ -58,13 +62,8 @@ class BookingDetailsWidget extends StatelessWidget {
               const SizedBox(width: 8),
               Flexible(
                 child: Text(
-                  'Free cancellation before ${state.property.startDate.split('T')[0]}',
-                  style: GoogleFonts.poppins(
-                    color: AppColors.secondTextColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    //overflow: TextOverflow.ellipsis,
-                  ),
+                  'Free cancellation before ${property.startDate.split('T').first.replaceAll('-', '/')}',
+                  style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 16, fontWeight: FontWeight.w500),
                 ),
               ),
             ],
