@@ -5,7 +5,7 @@ import '../../../../../../config/constants/constance.dart';
 import '../../../../../../config/widget/widget.dart';
 import '../../../../../../locator.dart';
 import '../../../../Home/cubit/home_cubit.dart';
-import '../../../../Home/ui/hom_screen.dart';
+import '../../../../Home/ui/home_screen.dart';
 import '../../../../models/user.dart';
 import '../../../cubit/auth_cubit.dart';
 import 'reset_password.dart';

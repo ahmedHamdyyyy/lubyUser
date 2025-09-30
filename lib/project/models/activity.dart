@@ -117,7 +117,7 @@ class ActivityModel extends Equatable {
     review: ReviewModel.initial,
     reservationId: '',
     reservationCheckInDate: '',
-    reservationStatus: ReservationStatus.pending,
+    reservationStatus: ReservationStatus.draft,
     reservationGuestNumber: 1,
     reservationNumber: 0,
     reservationTotalPrice: 0.0,
@@ -145,7 +145,7 @@ class ActivityModel extends Equatable {
     reservationCheckInDate: json['registration']?['checkInDate'] ?? '',
     reservationStatus: ReservationStatus.values.firstWhere(
       (status) => json['registration']?['status'] == status,
-      orElse: () => ReservationStatus.pending,
+      orElse: () => ReservationStatus.draft,
     ),
     reservationGuestNumber: json['registration']?['guestNumber'] ?? 1,
     reservationNumber: json['registration']?['registrationNumber'] ?? 0,

@@ -5,7 +5,7 @@ import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/constants/constance.dart';
 import '../../../../../../config/widget/widget.dart';
 import '../../../../../../locator.dart';
-import '../../../../Home/ui/hom_screen.dart';
+import '../../../../Home/ui/home_screen.dart';
 import '../../../cubit/auth_cubit.dart';
 import '../../Widget/all_widget_auth.dart';
 import '../splash/splash_screens.dart';

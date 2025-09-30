@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'all_widget_notfication.dart';
 
 class NotificationDetailScreen extends StatelessWidget {
   final Map<String, dynamic> notification;
 
-  const NotificationDetailScreen({
-    super.key,
-    required this.notification,
-  });
+  const NotificationDetailScreen({super.key, required this.notification});
 
   @override
   Widget build(BuildContext context) {

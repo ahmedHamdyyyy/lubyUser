@@ -120,24 +120,19 @@ class _SummaryScreenState extends State<SummaryScreen> {
                 },
               ),
               const Divider(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 20),
-                  ActionButtonWidget(
-                    text: "Save Reservation",
-                    onPressed: () {
-                      if (widget.reservation.id.isEmpty) {
-                        getIt<ReservationsCubit>().createReservation(widget.reservation);
-                      } else {
-                        getIt<ReservationsCubit>().updateReservation(widget.reservation);
-                      }
-                    },
-                    fontSize: 18,
-                  ),
-                  const SizedBox(height: 24),
-                ],
+              const SizedBox(height: 20),
+              ActionButtonWidget(
+                text: "Save Reservation",
+                onPressed: () {
+                  if (widget.reservation.id.isEmpty) {
+                    getIt<ReservationsCubit>().createReservation(widget.reservation);
+                  } else {
+                    getIt<ReservationsCubit>().updateReservation(widget.reservation);
+                  }
+                },
+                fontSize: 18,
               ),
+              const SizedBox(height: 24),
             ],
           ),
         ),

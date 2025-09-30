@@ -1,9 +1,12 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/widget/helper.dart';
+import '../../../../config/images/image_assets.dart';
 import 'all_widget__complete_reservation_and_payment.dart';
 import 'thank_you_screen.dart';
 
@@ -31,26 +34,89 @@ class ConfirmedPaymentScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: appBarPop(context, "Confirmed reservation", AppColors.primary),
-      body: ConfirmedPaymentScreenContent(
-        reservationNumber: '1234',
-        reservationItems: reservationItems,
-        summaryItems: summaryItems,
-        onDonePressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => ThankYouScreen()));
-        },
-        onMessagePressed: (hostName, imagePath) {
-          //TODO: handle chat hereeeeeee
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => ChatScreen(
-          //       vendorId: vendorId,
-          //       userName: hostName,
-          //       userImage: imagePath,
-          //     ),
-          //   ),
-          // );
-        },
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Confirmed reservation number ${1234}",
+              style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400, color: AppColors.secondTextColor),
+            ),
+            const SizedBox(height: 10),
+            ...reservationItems.map(
+              (item) => ReservationItemWidget(
+                imagePath: item['imagePath']!,
+                title: item['title']!,
+                hostName: item['hostName']!,
+                onMessageTap: () {
+                  // final hostName = item['hostName']!;
+                  // final imagePath = item['imagePath']!;
+                  //TODO: handle chat hereeeeeee
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => ChatScreen(
+                  //       vendorId: vendorId,
+                  //       userName: hostName,
+                  //       userImage: imagePath,
+                  //     ),
+                  //   ),
+                  // );
+                },
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              "Summary",
+              style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.primaryColor),
+            ),
+            const SizedBox(height: 10),
+            ...summaryItems.map((item) => SummaryRowWidget(title: item['title']!, value: item['value']!)),
+            const Divider(),
+            Card(
+              elevation: 0,
+              color: Colors.white,
+              child: Row(
+                children: [
+                  Image.asset(ImageAssets.pdfIcon, width: 30, height: 30),
+                  const SizedBox(width: 10),
+                  Text(
+                    "View reservation summary",
+                    style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 16, fontWeight: FontWeight.w400),
+                  ),
+                  const Spacer(),
+                  SvgPicture.asset(ImageAssets.arrowDown, color: AppColors.primaryColor),
+                ],
+              ),
+            ),
+            const Divider(),
+            const SizedBox(height: 10),
+            Text(
+              "Lobby disclaims responsibility for any financial\ntransfers outside the platform.\nIf there is a deposit or a balance, it is paid\nbefore you enter.",
+              style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 14, fontWeight: FontWeight.w400),
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ThankYouScreen()));
+                },
+                child: Text(
+                  "Done",
+                  style: GoogleFonts.poppins(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w400),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

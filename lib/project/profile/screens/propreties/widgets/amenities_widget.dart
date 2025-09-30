@@ -44,7 +44,7 @@ class AmenitiesWidget extends StatelessWidget {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                   ),
                   child: const TextWidget(
-                    text: 'Show All 24 Amenities',
+                    text: 'Show All Amenities',
                     color: Color(0xFFFFFFFF),
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -129,7 +129,7 @@ class AmenitiesWidgetActivity extends StatelessWidget {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                   ),
                   child: const TextWidget(
-                    text: 'Show All 24 Amenities',
+                    text: 'Show All Amenities',
                     color: Color(0xFFFFFFFF),
                     fontSize: 16,
                     fontWeight: FontWeight.w500,

@@ -49,9 +49,9 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
   @override
   Widget build(BuildContext context) => BlocBuilder<HomeCubit, HomeState>(
     builder: (context, state) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => setState(() => _isLoadingMore = state.propertiesStatus == Status.loading),
-      );
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() => _isLoadingMore = state.propertiesStatus == Status.loading);
+      });
       return Scaffold(
         body: RefreshIndicator(
           onRefresh: () async {

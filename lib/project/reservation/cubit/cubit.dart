@@ -65,6 +65,30 @@ class ReservationsCubit extends Cubit<ReservationsState> {
     }
   }
 
+  Future<({String message, bool isSuccess})> initiatePayment(String reservationId) async {
+    try {
+      final paymentLink = await _repository.payment(reservationId);
+      return (message: paymentLink, isSuccess: true);
+    } catch (e) {
+      emit(state.copyWith(message: e.toString()));
+      return (message: e.toString(), isSuccess: false);
+    }
+  }
+
+  Future<bool> checkPaymentStatus(String reservationId) async {
+    try {
+      final reservation = await _repository.getReservation(reservationId);
+      if (reservation.status == ReservationStatus.completed) {
+        emit(state.copyWith(reservations: state.reservations.map((r) => r.id == reservation.id ? reservation : r).toList()));
+        return true;
+      }
+      return false;
+    } catch (e) {
+      emit(state.copyWith(message: e.toString()));
+      return false;
+    }
+  }
+
   void initStatus() {
     emit(
       state.copyWith(

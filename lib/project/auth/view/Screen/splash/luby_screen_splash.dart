@@ -7,7 +7,7 @@ import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/constants/constance.dart';
 import '../../../../../../core/services/cach_services.dart';
 import '../../../../../../locator.dart';
-import '../../../../Home/ui/hom_screen.dart';
+import '../../../../Home/ui/home_screen.dart';
 import 'language_selection_screen.dart';
 
 class LubyScreenSplash extends StatefulWidget {

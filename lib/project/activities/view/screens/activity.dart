@@ -118,6 +118,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                       ),
                     ),
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 112),
                         ActivityCardeReserve(activity: state.activity),

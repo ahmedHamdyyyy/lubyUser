@@ -19,23 +19,11 @@ class ActivityBookingDetailsWidget extends StatelessWidget {
           Row(
             children: [
               TextWidget(
-                text: '${activity.price.toString()} SAR',
-                color: AppColors.primaryColor,
+                text: '${activity.price} Per Night',
+                color: AppColors.grayTextColor,
                 fontSize: 16,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w400,
               ),
-              // TextWidget(
-              //   text: '${activity.guestNumber.toString()} Night',
-              //   color: AppColors.secondTextColor,
-              //   fontSize: 16,
-              //   fontWeight: FontWeight.w400,
-              // ),
-              // TextWidget(
-              //   text: ' - 649 Per Night',
-              //   color: AppColors.grayTextColor,
-              //   fontSize: 16,
-              //   fontWeight: FontWeight.w400,
-              // ),
             ],
           ),
           const SizedBox(height: 16),
@@ -52,7 +40,7 @@ class ActivityBookingDetailsWidget extends StatelessWidget {
               const SizedBox(width: 8),
               Flexible(
                 child: Text(
-                  'Free cancellation before 27 October',
+                  'Free cancellation before ${activity.date.split('T').first.replaceAll('-', '/')}',
                   style: GoogleFonts.poppins(
                     color: AppColors.secondTextColor,
                     fontSize: 16,

@@ -8,19 +8,18 @@ import '../../../../locator.dart';
 import '../../favorites/view/favourite2.dart';
 import '../../profile/screens/Conversations/conversations_screen.dart';
 import '../../profile/screens/account/account_info/account.dart';
-import '../../reservation/view/screens/reservation_screen.dart';
+import '../../reservation/view/screens/reservations_screen.dart';
 import '../cubit/home_cubit.dart';
 import 'home_main_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final screen = [HomeScreenMain(), FavoriteScreen(), ReservationScreen(), ConversationScreen(), ProfileFeaturesScreen()];
+  final screen = [HomeScreenMain(), FavoriteScreen(), ReservationsScreen(), ConversationScreen(), ProfileFeaturesScreen()];
 
   @override
   void initState() {

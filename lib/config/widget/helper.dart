@@ -18,10 +18,7 @@ AppBar appBarPop(BuildContext context, String title, Color color) {
       icon: const Icon(Icons.arrow_back_ios, color: AppColors.grayColorIcon),
       onPressed: () => Navigator.pop(context),
     ),
-    title: Text(
-      title,
-      style: const TextStyle(color: AppColors.grayTextColor, fontSize: 16, fontWeight: FontWeight.w400),
-    ),
+    title: Text(title, style: const TextStyle(color: AppColors.grayTextColor, fontSize: 16, fontWeight: FontWeight.w400)),
   );
 }
 
@@ -38,10 +35,7 @@ class _DriverState extends State<Driver> {
   @override
   Widget build(BuildContext context) {
     const Color color = Color(0xFFCBCBCB);
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.0),
-      child: Divider(height: 1, color: color),
-    );
+    return const Padding(padding: EdgeInsets.symmetric(horizontal: 20.0), child: Divider(height: 1, color: color));
   }
 }
 
@@ -56,6 +50,7 @@ class TextWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
+      textAlign: TextAlign.start,
       style: GoogleFonts.poppins(color: color, fontSize: fontSize, fontWeight: fontWeight),
     );
   }

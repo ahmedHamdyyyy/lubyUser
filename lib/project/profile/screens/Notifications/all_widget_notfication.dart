@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/images/image_assets.dart';
 import '../../../../../../config/widget/helper.dart';
-import '../../../reservation/view/screens/reservation_screen.dart';
+import '../../../reservation/view/screens/reservations_screen.dart';
 import 'notification_detail_screen.dart';
 import 'notification_details_reservation_screen.dart';
 
@@ -125,7 +125,7 @@ class NotificationReservationContent extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => ReservationScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ReservationsScreen()));
         },
         child: Text(
           'Show reservation details',
