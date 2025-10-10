@@ -7,16 +7,18 @@ import '../data/repository.dart';
 
 part 'state.dart';
 
+enum ReservationsFilterType { draft, current, last }
+
 class ReservationsCubit extends Cubit<ReservationsState> {
   ReservationsCubit(this._repository) : super(const ReservationsState());
   final ReservationsRepository _repository;
   bool _hasNextPage = false;
 
-  void getReservations(ReservationStatus status, {bool fetchNext = false}) async {
+  void getReservations(ReservationsFilterType filter, {bool fetchNext = false}) async {
     if (fetchNext && !_hasNextPage) return;
     emit(state.copyWith(getReservationsStatus: Status.loading));
     try {
-      final reservationsData = await _repository.getReservations(fetchNext, status);
+      final reservationsData = await _repository.getReservations(fetchNext, filter);
       _hasNextPage = reservationsData.hasNextPage;
       emit(
         state.copyWith(

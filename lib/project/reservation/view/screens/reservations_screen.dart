@@ -18,15 +18,12 @@ class ReservationsScreen extends StatefulWidget {
 }
 
 class _ReservationsScreenState extends State<ReservationsScreen> {
-  bool isCurrentReservations = true;
+  ReservationsFilterType _filterType = ReservationsFilterType.current;
   final _scrollController = ScrollController();
   bool _isLoadingMore = false;
   @override
   void initState() {
-    getIt<ReservationsCubit>().getReservations(
-      isCurrentReservations ? ReservationStatus.draft : ReservationStatus.completed,
-    );
-
+    getIt<ReservationsCubit>().getReservations(_filterType);
     _handleFetchModeItems();
     super.initState();
   }
@@ -34,12 +31,16 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
   void _handleFetchModeItems() {
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
-        getIt<ReservationsCubit>().getReservations(
-          isCurrentReservations ? ReservationStatus.draft : ReservationStatus.completed,
-          fetchNext: true,
-        );
+        getIt<ReservationsCubit>().getReservations(_filterType, fetchNext: true);
       }
     });
+  }
+
+  void _setFilter(ReservationsFilterType type) {
+    if (_filterType != type) {
+      setState(() => _filterType = type);
+      getIt<ReservationsCubit>().getReservations(type);
+    }
   }
 
   @override
@@ -56,22 +57,30 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(bottom: 16, top: 0, right: 18, left: 18),
+          padding: const EdgeInsets.only(bottom: 16, top: 12, right: 18, left: 18),
           child: Row(
             children: [
               Expanded(
                 child: buildTabButton(
-                  text: 'Current Reservations',
-                  isSelected: isCurrentReservations,
-                  onTap: () => setState(() => isCurrentReservations = true),
+                  text: 'Pending',
+                  isSelected: _filterType == ReservationsFilterType.draft,
+                  onTap: () => _setFilter(ReservationsFilterType.draft),
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: buildTabButton(
-                  text: 'Last Reservations',
-                  isSelected: !isCurrentReservations,
-                  onTap: () => setState(() => isCurrentReservations = false),
+                  text: 'Current',
+                  isSelected: _filterType == ReservationsFilterType.current,
+                  onTap: () => _setFilter(ReservationsFilterType.current),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: buildTabButton(
+                  text: 'Last',
+                  isSelected: _filterType == ReservationsFilterType.last,
+                  onTap: () => _setFilter(ReservationsFilterType.last),
                 ),
               ),
             ],
@@ -102,7 +111,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                           icon: Icons.home_outlined,
                           title: 'No Property Reservations',
                           subtitle: 'You don\'t have any current property reservations.',
-                          isCurrent: isCurrentReservations,
+                          isCurrent: _filterType == ReservationsFilterType.current,
                         )
                       else
                         ListView.builder(
@@ -248,7 +257,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                           icon: Icons.sports_soccer_outlined,
                           title: 'No Activity Reservations',
                           subtitle: 'You don\'t have any current activity reservations.',
-                          isCurrent: isCurrentReservations,
+                          isCurrent: _filterType == ReservationsFilterType.current,
                         )
                       else
                         ListView.builder(

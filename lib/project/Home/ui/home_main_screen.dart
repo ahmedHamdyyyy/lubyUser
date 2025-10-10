@@ -95,7 +95,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                       ),
                     ),
                   ),
-                  Positioned(top: 40, left: 20, right: 20, child: iconImageTaxt(state)),
+                  Positioned(top: 40, left: 20, right: 20, child: iconImageTaxt(state, context)),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Column(

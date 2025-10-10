@@ -116,9 +116,7 @@ class _PropertyLocationViewState extends State<PropertyLocationView> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 8, offset: const Offset(0, 2)),
-                        ],
+                        boxShadow: [BoxShadow(color: Colors.black.withAlpha(25), blurRadius: 8, offset: const Offset(0, 2))],
                       ),
                       child: const Text(
                         'Property Location',
@@ -138,9 +136,9 @@ class _PropertyLocationViewState extends State<PropertyLocationView> {
             child: Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.95),
+                color: Colors.white.withAlpha(240),
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 20, offset: const Offset(0, -5))],
+                boxShadow: [BoxShadow(color: Colors.black.withAlpha(25), blurRadius: 20, offset: const Offset(0, -5))],
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -216,7 +214,7 @@ class _PropertyLocationViewState extends State<PropertyLocationView> {
               padding: const EdgeInsets.only(top: 8, left: 8),
               child: ClipOval(
                 child: Material(
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withAlpha(225),
                   child: InkWell(
                     onTap: () => Navigator.of(context).pop(),
                     child: const SizedBox(width: 42, height: 42, child: Icon(Icons.arrow_back, color: Colors.black87)),

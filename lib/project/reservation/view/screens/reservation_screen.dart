@@ -311,12 +311,19 @@ class _ReservationScreenState extends State<ReservationScreen> {
                     text: "Pay Now",
                     fontSize: 18,
                     onPressed: () async {
-                      if (_paymentStatus != PaymentStatus.initial) {
-                        setState(() => _paymentStatus = PaymentStatus.loading);
+                      print('Payment is already in progress or being checked. $_paymentStatus');
+                      if (_paymentStatus == PaymentStatus.initial) {
+                        // WidgetsBinding.instance.addPostFrameCallback((_) {
+                        setState(() => _paymentStatus = PaymentStatus.initial);
+                        // });
                         final result = await getIt.get<ReservationsCubit>().initiatePayment(widget.reservation.id);
+                        print('Payment initiation result: isSuccess=${result.isSuccess}, message=${result.message}');
                         if (result.isSuccess) {
                           setState(() => _paymentStatus = PaymentStatus.paying);
-                          launchUrlString(result.message.replaceAll('pay', 'sandbox'), mode: LaunchMode.externalApplication);
+                          launchUrlString(
+                            result.message.replaceFirst('https://pay.', 'https://sandbox.'),
+                            mode: LaunchMode.externalApplication,
+                          );
                         } else {
                           setState(() => _paymentStatus = PaymentStatus.initial);
                           Utils.errorDialog(context, result.message);

@@ -126,10 +126,10 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                       ),
                     ),
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 112),
                         CardeReserve(property: state.property),
-                        const SizedBox(height: 10),
                         BookingDetailsWidget(property: state.property),
                         const Driver(),
                         RentalUnitWidget(state: state),
@@ -176,7 +176,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                         ),
                         const SizedBox(height: 24),
                         const Driver(),
-                        AmenitiesWidget(state: state),
+                        AmenitiesWidget(tags: state.property.tags),
                         const SizedBox(height: 20),
                       ],
                     ),

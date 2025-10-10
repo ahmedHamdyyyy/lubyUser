@@ -218,7 +218,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                         ),
                         const SizedBox(height: 24),
                         const Driver(),
-                        AmenitiesWidgetActivity(state: state.activity),
+                        AmenitiesWidget(tags: state.activity.tags),
                         const SizedBox(height: 20),
                       ],
                     ),

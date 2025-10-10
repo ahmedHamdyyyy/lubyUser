@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 
 import '../../../../core/services/api_services.dart';
 import '../../models/reversation.dart';
+import '../cubit/cubit.dart';
 
 class ReservationsData {
   ReservationsData(this._apiService);
@@ -10,12 +11,12 @@ class ReservationsData {
 
   Future<({List<ReservationModel> reservations, bool hasNextPage})> getReservations(
     bool fetchNext,
-    ReservationStatus status,
+    ReservationsFilterType filter,
   ) async {
     _setPage(fetchNext);
     final response = await _apiService.dio.get(
       'registrations/me',
-      queryParameters: {'status': 'draft', 'page': _currentPage},
+      queryParameters: {'status': filter.name, 'page': _currentPage},
     );
     print(response.data);
     if (response.statusCode != 200) throw DioException(requestOptions: response.requestOptions, response: response);

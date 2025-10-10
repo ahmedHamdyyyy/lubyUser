@@ -18,6 +18,32 @@ class _CardeReserveState extends State<CardeReserve> {
   final guestController = TextEditingController(text: '1');
   final formKey = GlobalKey<FormState>();
   @override
+  void initState() {
+    if (widget.property.reservationCheckInDate.isNotEmpty) {
+      checkInController.text = widget.property.reservationCheckInDate
+          .split('T')
+          .first
+          .replaceAll('-', '/')
+          .split('/')
+          .reversed
+          .join('/');
+    }
+    if (widget.property.reservationCheckOutDate.isNotEmpty) {
+      checkOutController.text = widget.property.reservationCheckOutDate
+          .split('T')
+          .first
+          .replaceAll('-', '/')
+          .split('/')
+          .reversed
+          .join('/');
+    }
+    if (widget.property.reservationGuestNumber > 0) {
+      guestController.text = widget.property.reservationGuestNumber.toString();
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) => Container(
     margin: const EdgeInsets.all(20),
     padding: const EdgeInsets.all(16),

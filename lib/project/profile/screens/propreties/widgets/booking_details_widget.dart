@@ -21,54 +21,41 @@ class BookingDetailsWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              TextWidget(
-                text: '${totalNights * property.pricePerNight} SAR',
-                color: AppColors.primaryColor,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-              const SizedBox(width: 8),
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0, left: 8.0),
-                child: TextWidget(
-                  text: '$totalNights Night',
-                  color: AppColors.secondTextColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              TextWidget(
-                text: '${property.pricePerNight} Per Night',
-                color: AppColors.grayTextColor,
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+            child: TextWidget(
+              text:
+                  'Available For $totalNights Night from ${property.startDate.split('T').first.replaceAll('-', '/')} to ${property.endDate.split('T').first.replaceAll('-', '/')} with price ${property.pricePerNight} Per Night',
+              color: AppColors.secondTextColor,
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+            ),
           ),
           const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SvgPicture.asset(
-                'assets/images/clipboard-close.svg',
-                // ignore: deprecated_member_use
-                color: AppColors.secondTextColor,
-                height: 24,
-              ),
-              const SizedBox(width: 8),
-              Flexible(
-                child: Text(
-                  'Free cancellation before ${property.startDate.split('T').first.replaceAll('-', '/')}',
-                  style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 16, fontWeight: FontWeight.w500),
+          if (property.reservationId.isNotEmpty) ...[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SvgPicture.asset(
+                  'assets/images/clipboard-close.svg',
+                  // ignore: deprecated_member_use
+                  color: AppColors.secondTextColor,
+                  height: 24,
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Text(
+                    'Free cancellation before ${property.startDate.split('T').first.replaceAll('-', '/')}',
+                    style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+          ],
         ],
       ),
     );

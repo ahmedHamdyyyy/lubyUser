@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../models/reversation.dart';
+import '../cubit/cubit.dart';
 import 'data.dart';
 
 class ReservationsRepository {
@@ -9,10 +10,10 @@ class ReservationsRepository {
 
   Future<({List<ReservationModel> reservations, bool hasNextPage})> getReservations(
     bool fetchNext,
-    ReservationStatus status,
+    ReservationsFilterType filter,
   ) async {
     try {
-      return await _data.getReservations(fetchNext, status);
+      return await _data.getReservations(fetchNext, filter);
     } on DioException catch (e) {
       if (e.response?.data != null && e.response?.data['message'] != null) {
         final errorMessage = e.response!.data['message'];

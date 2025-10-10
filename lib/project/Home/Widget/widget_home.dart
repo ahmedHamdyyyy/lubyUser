@@ -16,6 +16,7 @@ import '../../models/activity.dart';
 import '../../models/favorite.dart';
 import '../../models/property.dart';
 import '../../profile/screens/Notifications/notifications_screen.dart';
+import '../../profile/screens/account/account_info/account_screen.dart';
 import '../../profile/screens/propreties/views/rental_details_view.dart';
 import '../cubit/home_cubit.dart';
 import 'select_citi_widget.dart';
@@ -79,61 +80,64 @@ class IconNotifcationVendor extends StatelessWidget {
   }
 }
 
-Row iconImageTaxt(HomeState state) {
+Row iconImageTaxt(HomeState state, BuildContext context) {
   return Row(
     children: [
-      ClipRRect(
-        borderRadius: BorderRadius.circular(50),
-        child:
-            state.user.profilePicture.isNotEmpty
-                ? Image.network(
-                  state.user.profilePicture,
-                  width: 50,
-                  height: 50,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(50)),
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+      GestureDetector(
+        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => AccountScreen())),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child:
+              state.user.profilePicture.isNotEmpty
+                  ? Image.network(
+                    state.user.profilePicture,
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(50)),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Colors.blue.shade300, Colors.blue.shade600],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Colors.blue.shade300, Colors.blue.shade600],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(50),
                         ),
-                        borderRadius: BorderRadius.circular(50),
+                        child: Icon(Icons.person, color: Colors.white, size: 28),
+                      );
+                    },
+                  )
+                  : Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.blue.shade300, Colors.blue.shade600],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                      child: Icon(Icons.person, color: Colors.white, size: 28),
-                    );
-                  },
-                )
-                : Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.blue.shade300, Colors.blue.shade600],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                      borderRadius: BorderRadius.circular(50),
                     ),
-                    borderRadius: BorderRadius.circular(50),
+                    child: Icon(Icons.person, color: Colors.white, size: 28),
                   ),
-                  child: Icon(Icons.person, color: Colors.white, size: 28),
-                ),
+        ),
       ),
       const SizedBox(width: 8),
       Column(
