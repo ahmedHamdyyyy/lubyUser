@@ -134,7 +134,7 @@ class PropertyModel extends Equatable {
     vendor: Vendor.initial,
   );
 
-  factory PropertyModel.fromJson(Map<String, dynamic> json) {
+  factory PropertyModel.fromJson(Map<String, dynamic> json, {Map<String, dynamic>? review, int? reviewsCount}) {
     List<String> parseStringOrList(dynamic value) {
       if (value == null) return [];
       if (value is List) return List<String>.from(value);
@@ -149,7 +149,7 @@ class PropertyModel extends Equatable {
       type: json[AppConst.type] ?? '',
       available: json[AppConst.available] ?? false,
       guestNumber: json[AppConst.guestNumber] ?? 0,
-      reviewsCount: json[AppConst.reviewsCount] ?? 0,
+      reviewsCount: reviewsCount ?? 0,
       bedrooms: json[AppConst.bedrooms] ?? 0,
       bathrooms: json[AppConst.bathrooms] ?? 0,
       beds: json[AppConst.beds] ?? 0,
@@ -163,7 +163,7 @@ class PropertyModel extends Equatable {
       isFavorite: json[AppConst.isFavorite] ?? false,
       totalRate: (json['averageRating'] ?? 0.0).toDouble(),
       vendor: json[AppConst.vendorId] is String ? Vendor.initial : Vendor.fromJson(json[AppConst.vendorId] ?? {}),
-      review: ReviewModel.fromJson(json['review'] ?? {}, ReviewType.property),
+      review: ReviewModel.fromJson(review ?? {}, ReviewType.property),
       reservationId: json['registration']?['_id'] ?? '',
       reservationCheckInDate: json['registration']?['checkInDate'] ?? '',
       reservationCheckOutDate: json['registration']?['checkOutDate'] ?? '',
@@ -197,10 +197,11 @@ class PropertyModel extends Equatable {
     String? startDate,
     double? totalRate,
     ReviewModel? review,
+    int? reviewsCount,
   }) => PropertyModel(
     id: id ?? this.id,
     endDate: endDate ?? this.endDate,
-    reviewsCount: reviewsCount,
+    reviewsCount: reviewsCount ?? this.reviewsCount,
     startDate: startDate ?? this.startDate,
     type: type ?? this.type,
     facilityLicense: facilityLicense ?? this.facilityLicense,

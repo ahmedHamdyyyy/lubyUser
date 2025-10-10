@@ -7,22 +7,41 @@ import '../../../../../../config/colors/colors.dart';
 // import '../../../../../core/app_router.dart';
 import '../../../../../../config/images/assets.dart';
 import '../../../../../../config/widget/helper.dart';
+import '../../../../../locator.dart';
 import '../../../../Home/cubit/home_cubit.dart';
 import '../../../../models/review.dart';
 import '../widgets/show_review_dialoge.dart';
 
-class ReviewsScreen extends StatelessWidget {
-  const ReviewsScreen({super.key, required this.entityId, required this.isProperty, required this.review});
+class ReviewsScreen extends StatefulWidget {
+  const ReviewsScreen({
+    super.key,
+    required this.entityId,
+    required this.isProperty,
+    required this.review,
+    required this.totalRate,
+  });
   final String entityId;
   final bool isProperty;
   final ReviewModel review;
+  final double totalRate;
+  @override
+  State<ReviewsScreen> createState() => _ReviewsScreenState();
+}
+
+class _ReviewsScreenState extends State<ReviewsScreen> {
+  @override
+  void initState() {
+    getIt<HomeCubit>().getReviewes(widget.entityId, widget.isProperty ? ReviewType.property : ReviewType.activity);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
     body: SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 22),
+          const SizedBox(height: 44),
           Row(
             children: [
               IconButton(
@@ -51,56 +70,45 @@ class ReviewsScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const TextWidget(
-                  text: 'Apartment',
-                  color: AppColors.primaryColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                const TextWidget(text: 'Rate ', color: Color(0xFF414141), fontSize: 16, fontWeight: FontWeight.w400),
+                Row(
+                  children: List.generate(5, (index) {
+                    return Icon(
+                      index < widget.totalRate ? Icons.star : Icons.star_border,
+                      color: const Color(0xFF414141),
+                      size: 20,
+                    );
+                  }),
+                ),
+                Expanded(
+                  child: BlocBuilder<HomeCubit, HomeState>(
+                    buildWhen: (previous, current) => previous.reviews.length != current.reviews.length,
+                    builder: (context, state) {
+                      return TextWidget(
+                        text: '( ${state.reviews.length} Reviews )',
+                        color: AppColors.grayTextColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      );
+                    },
+                  ),
                 ),
                 TextButton(
-                  onPressed:
-                      () => showReviewDialoge(
-                        context,
-                        entityId: entityId,
-                        type: isProperty ? ReviewType.property : ReviewType.activity,
-                        review: review,
-                      ),
+                  onPressed: () {
+                    showReviewDialoge(
+                      context,
+                      entityId: widget.entityId,
+                      type: widget.isProperty ? ReviewType.property : ReviewType.activity,
+                      review: widget.review,
+                    );
+                  },
                   child: TextWidget(
-                    text: review.id.isEmpty ? 'Add Review' : 'Edit Review',
+                    text: widget.review.id.isEmpty ? 'Add Review' : 'Edit Review',
                     color: AppColors.primaryColor,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            child: Row(
-              children: [
-                const TextWidget(text: 'Rate ', color: Color(0xFF414141), fontSize: 16, fontWeight: FontWeight.w400),
-                Row(
-                  children: List.generate(
-                    5,
-                    (index) => Padding(
-                      padding: const EdgeInsets.only(right: 4.0),
-                      child: SvgPicture.asset(
-                        'assets/images/stare.svg',
-                        // ignore: deprecated_member_use
-                        color: const Color(0xFF414141),
-                        height: 10,
-                      ),
-                    ),
-                  ),
-                ),
-                const TextWidget(
-                  text: ' ( 9 Reviews )',
-                  color: AppColors.grayTextColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
                 ),
               ],
             ),
@@ -114,6 +122,7 @@ class ReviewsScreen extends StatelessWidget {
               return ListView.builder(
                 shrinkWrap: true,
                 itemCount: state.reviews.length,
+                padding: EdgeInsets.all(0),
                 itemBuilder: (context, index) {
                   return _buildReviewItem(state.reviews[index]);
                 },
@@ -132,13 +141,19 @@ class ReviewsScreen extends StatelessWidget {
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               width: 72,
               height: 72,
-              decoration: const BoxDecoration(
-                image: DecorationImage(image: AssetImage(AssetsData.host2), fit: BoxFit.cover),
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+              child: FadeInImage.assetNetwork(
+                placeholder: AssetsData.host2,
+                image: review.profilePicture,
+                fit: BoxFit.cover,
+                imageErrorBuilder: (context, error, stackTrace) {
+                  return Image.asset(AssetsData.host2, fit: BoxFit.cover);
+                },
               ),
             ),
             const SizedBox(width: 12),

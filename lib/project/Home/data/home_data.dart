@@ -46,7 +46,11 @@ class HomeData {
     final response = await _apiService.dio.get(ApiConstance.getProperty(id));
     _checkIfSuccess(response);
     log(response.data.toString());
-    return PropertyModel.fromJson(response.data['data']['property']);
+    return PropertyModel.fromJson(
+      response.data['data']['property'],
+      review: response.data['data']['review'],
+      reviewsCount: response.data['data']?['reviewsCount'],
+    );
   }
 
   void _checkIfSuccess(Response<dynamic> response) {
@@ -58,7 +62,7 @@ class HomeData {
   Future<List<ReviewModel>> getReviewes(String itemId, ReviewType type) async {
     final response = await _apiService.dio.get(ApiConstance.reviews, data: {'type': type.name, 'itemId': itemId});
     _checkIfSuccess(response);
-    return (response.data['data'] as List).map((e) => ReviewModel.fromJson(e, type)).toList();
+    return ((response.data['data']?['data'] as List?) ?? []).map((e) => ReviewModel.fromJson(e, type)).toList();
   }
 
   Future<ReviewModel> addReview(ReviewModel review) async {

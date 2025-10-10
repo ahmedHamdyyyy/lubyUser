@@ -138,9 +138,9 @@ Future<dynamic> showReviewDialoge(
                           Navigator.pop(context);
                           Navigator.pop(context);
                           if (type == ReviewType.activity) {
-                            getIt<ActivitiesCubit>().setActivityReview(state.reviews.last);
+                            getIt<ActivitiesCubit>().updateActivityReview(state.reviews.last);
                           } else {
-                            getIt<HomeCubit>().setPropertyReview(state.reviews.last);
+                            getIt<HomeCubit>().updatePropertyReview(state.reviews.last);
                           }
                           showToast(text: 'review posted successfully', stute: ToustStute.success);
                           break;
@@ -161,6 +161,7 @@ Future<dynamic> showReviewDialoge(
                               type: type,
                               rating: rate,
                             ),
+                            type == ReviewType.property,
                           );
                         }
                       },

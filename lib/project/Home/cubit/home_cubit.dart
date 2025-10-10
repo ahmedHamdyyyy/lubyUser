@@ -85,7 +85,7 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  void addReview(ReviewModel review) async {
+  void addReview(ReviewModel review, bool isProperty) async {
     emit(state.copyWith(reviewStatus: Status.loading));
     try {
       final newReview = await repo.addReview(review);
@@ -99,6 +99,19 @@ class HomeCubit extends Cubit<HomeState> {
     } catch (e) {
       emit(state.copyWith(reviewStatus: Status.error, msg: e.toString()));
     }
+  }
+
+  void updatePropertyReview(ReviewModel review) {
+    emit(
+      state.copyWith(
+        property: state.property.copyWith(
+          review: review,
+          totalRate:
+              ((state.property.totalRate * state.property.reviewsCount) + review.rating) / (state.property.reviewsCount + 1),
+          reviewsCount: state.property.reviewsCount + 1,
+        ),
+      ),
+    );
   }
 
   void updateReview(String id, String comment, int rating) async {
@@ -131,10 +144,6 @@ class HomeCubit extends Cubit<HomeState> {
     } catch (e) {
       emit(state.copyWith(reviewStatus: Status.error, msg: e.toString()));
     }
-  }
-
-  void setPropertyReview(ReviewModel review) {
-    emit(state.copyWith(property: state.property.copyWith(review: review)));
   }
 
   void initReviewStatus() => emit(state.copyWith(reviewStatus: Status.initial));

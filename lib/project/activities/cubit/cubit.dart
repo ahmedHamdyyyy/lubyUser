@@ -40,6 +40,19 @@ class ActivitiesCubit extends Cubit<ActivitiesState> {
     }
   }
 
+  void updateActivityReview(ReviewModel review) {
+    emit(
+      state.copyWith(
+        activity: state.activity.copyWith(
+          review: review,
+          totalRate:
+              ((state.activity.totalRate * state.activity.reviewsCount) + review.rating) / (state.activity.reviewsCount + 1),
+          reviewsCount: state.activity.reviewsCount + 1,
+        ),
+      ),
+    );
+  }
+
   void toggleFavorite(String id) {
     final updatedActivities =
         state.activities.map((activity) {
@@ -50,9 +63,5 @@ class ActivitiesCubit extends Cubit<ActivitiesState> {
     if (state.activity.id == id) {
       emit(state.copyWith(activity: state.activity.copyWith(isFavorite: !state.activity.isFavorite)));
     }
-  }
-
-  void setActivityReview(ReviewModel review) {
-    emit(state.copyWith(activity: state.activity.copyWith(review: review)));
   }
 }

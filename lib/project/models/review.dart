@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 enum ReviewType { activity, property }
 
 class ReviewModel extends Equatable {
-  final String id, itemId, userId, userFirstName, userLastName, comment;
+  final String id, itemId, userId, userFirstName, userLastName, profilePicture, comment;
   final ReviewType type;
   final int rating;
 
@@ -13,6 +13,7 @@ class ReviewModel extends Equatable {
     required this.userId,
     required this.userFirstName,
     required this.userLastName,
+    required this.profilePicture,
     required this.comment,
     required this.type,
     required this.rating,
@@ -24,6 +25,7 @@ class ReviewModel extends Equatable {
     userId: '',
     userFirstName: '',
     userLastName: '',
+    profilePicture: '',
     comment: '',
     type: ReviewType.activity,
     rating: 0,
@@ -35,6 +37,7 @@ class ReviewModel extends Equatable {
     String? userId,
     String? userFirstName,
     String? userLastName,
+    String? profilePicture,
     String? comment,
     ReviewType? type,
     int? rating,
@@ -45,22 +48,26 @@ class ReviewModel extends Equatable {
       userId: userId ?? this.userId,
       userFirstName: userFirstName ?? this.userFirstName,
       userLastName: userLastName ?? this.userLastName,
+      profilePicture: profilePicture ?? this.profilePicture,
       comment: comment ?? this.comment,
       type: type ?? this.type,
       rating: rating ?? this.rating,
     );
   }
 
-  factory ReviewModel.fromJson(Map<String, dynamic> json, ReviewType type) => ReviewModel(
-    id: json['_id'] ?? '',
-    itemId: json[type == ReviewType.activity ? 'activityId' : 'propertyId'] ?? '',
-    userId: json['userId']?['_id'] ?? '',
-    userFirstName: json['userId']?['firstName'] ?? '',
-    userLastName: json['userId']?['lastName'] ?? '',
-    comment: json['comment'] ?? '',
-    type: type,
-    rating: (json['rating'] as num?)?.toInt() ?? 0,
-  );
+  factory ReviewModel.fromJson(Map<String, dynamic> json, ReviewType type) {
+    return ReviewModel(
+      id: json['_id'] ?? '',
+      itemId: json[type == ReviewType.activity ? 'activityId' : 'propertyId'] ?? '',
+      userId: json['userId'] is String ? json['userId'] : json['userId']?['_id'] ?? '',
+      userFirstName: json['userId'] is String ? '' : json['userId']?['firstName'] ?? '',
+      userLastName: json['userId'] is String ? '' : json['userId']?['lastName'] ?? '',
+      profilePicture: json['userId'] is String ? '' : json['userId']?['profilePicture'] ?? '',
+      comment: json['comment'] ?? '',
+      type: type,
+      rating: (json['rating'] as num?)?.toInt() ?? 0,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     '_id': id,

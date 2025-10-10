@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 // import '../../../../../core/app_router.dart';
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/widget/helper.dart';
-import '../../../../../../locator.dart';
-import '../../../../Home/cubit/home_cubit.dart';
 import '../../../../models/review.dart';
 import '../views/review_view.dart';
 
@@ -26,10 +24,14 @@ class ReviewsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => InkWell(
     onTap: () {
-      getIt<HomeCubit>().getReviewes(entityId, isProperty ? ReviewType.property : ReviewType.activity);
+      print(review.comment);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ReviewsScreen(entityId: entityId, isProperty: isProperty, review: review)),
+        MaterialPageRoute(
+          builder: (context) {
+            return ReviewsScreen(entityId: entityId, isProperty: isProperty, review: review, totalRate: totalRate);
+          },
+        ),
       );
     },
     child: Container(
