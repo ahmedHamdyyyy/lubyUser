@@ -147,18 +147,18 @@ class _ConversationScreenState extends State<ConversationScreen> with SingleTick
                                 ],
                               ),
                         );
-                        if (confirmed == true) {
-                          await FirestoreService().deleteChat(chat.id);
-                        }
+                        if (confirmed == true) await FirestoreService().deleteChat(chat.id);
                       },
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
                         child: FadeInImage.assetNetwork(
-                          placeholder: 'assets/images/saudian_man.png',
                           image: chat.profilePicture,
-                          imageErrorBuilder: (context, error, stackTrace) => Image.asset('assets/images/saudian_man.png'),
                           width: 50,
                           height: 50,
+                          fit: BoxFit.cover,
+                          placeholderFit: BoxFit.cover,
+                          placeholder: 'assets/images/saudian_man.png',
+                          imageErrorBuilder: (context, error, stackTrace) => Image.asset('assets/images/saudian_man.png'),
                         ),
                       ),
                       title: Text(

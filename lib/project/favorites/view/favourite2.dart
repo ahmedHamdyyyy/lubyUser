@@ -118,13 +118,11 @@ class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProvid
                                   Card(
                                     color: Colors.white,
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                    elevation: 0,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          ClipRRect(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                          child: ClipRRect(
                                             borderRadius: BorderRadius.circular(10),
                                             child: FadeInImage.assetNetwork(
                                               placeholder: 'assets/images/apartment_view.jpg',
@@ -137,89 +135,98 @@ class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProvid
                                                   fit: BoxFit.cover,
                                                 );
                                               },
-                                              width: 159,
-                                              height: 159,
+                                              width: double.infinity,
                                               fit: BoxFit.cover,
                                             ),
                                           ),
-                                          const SizedBox(height: 8),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                item.title,
-                                                style: const TextStyle(
-                                                  color: AppColors.secondTextColor,
-                                                  height: 0.9,
-                                                  fontSize: 14,
-                                                  fontFamily: 'Poppins',
-                                                  overflow: TextOverflow.ellipsis,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                                maxLines: 1,
-                                              ),
                                               Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
-                                                  const Icon(Icons.star, color: AppColors.primaryColor, size: 10),
-                                                  const SizedBox(width: 4),
-                                                  Text('4.5', style: TextStyle(color: AppColors.primaryColor, fontSize: 14)),
+                                                  Text(
+                                                    item.title,
+                                                    style: const TextStyle(
+                                                      color: AppColors.secondTextColor,
+                                                      height: 0.9,
+                                                      fontSize: 14,
+                                                      fontFamily: 'Poppins',
+                                                      overflow: TextOverflow.ellipsis,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                                    maxLines: 1,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      const Icon(Icons.star, color: AppColors.primaryColor, size: 10),
+                                                      const SizedBox(width: 4),
+                                                      Text(
+                                                        '4.5',
+                                                        style: TextStyle(color: AppColors.primaryColor, fontSize: 14),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ],
                                               ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            item.address,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(color: AppColors.grayTextColor, fontSize: 14),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            '${item.guests} guests',
-                                            style: const TextStyle(
-                                              height: 0.9,
-                                              fontSize: 14,
-                                              fontFamily: 'Poppins',
-                                              overflow: TextOverflow.ellipsis,
-                                              color: AppColors.grayTextColor,
-                                            ),
-                                            maxLines: 1,
-                                          ),
-                                          const SizedBox(height: 8),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              Expanded(
-                                                child: Text(
-                                                  '${item.price} per night',
-                                                  style: const TextStyle(
-                                                    height: 0.9,
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontFamily: 'Poppins',
-                                                    overflow: TextOverflow.ellipsis,
-                                                    color: AppColors.primaryColor,
-                                                  ),
-                                                  maxLines: 1,
-                                                ),
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                item.address,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(color: AppColors.grayTextColor, fontSize: 14),
                                               ),
-                                              const SizedBox(width: 5),
-                                              const Text(
-                                                'Per night',
-                                                style: TextStyle(
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                '${item.guests} guests',
+                                                style: const TextStyle(
                                                   height: 0.9,
-                                                  fontSize: 12,
+                                                  fontSize: 14,
                                                   fontFamily: 'Poppins',
                                                   overflow: TextOverflow.ellipsis,
                                                   color: AppColors.grayTextColor,
                                                 ),
                                                 maxLines: 1,
                                               ),
+                                              const SizedBox(height: 8),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                      '${item.price} per night',
+                                                      style: const TextStyle(
+                                                        height: 0.9,
+                                                        fontSize: 14,
+                                                        fontWeight: FontWeight.w400,
+                                                        fontFamily: 'Poppins',
+                                                        overflow: TextOverflow.ellipsis,
+                                                        color: AppColors.primaryColor,
+                                                      ),
+                                                      maxLines: 1,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 5),
+                                                  const Text(
+                                                    'Per night',
+                                                    style: TextStyle(
+                                                      height: 0.9,
+                                                      fontSize: 12,
+                                                      fontFamily: 'Poppins',
+                                                      overflow: TextOverflow.ellipsis,
+                                                      color: AppColors.grayTextColor,
+                                                    ),
+                                                    maxLines: 1,
+                                                  ),
+                                                ],
+                                              ),
                                             ],
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   Positioned(
