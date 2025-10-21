@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
-import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/constants/constance.dart';
 import '../../../../../../config/widget/widget.dart';
 import '../../../../../../locator.dart';
 import '../../../../Home/ui/home_screen.dart';
 import '../../../cubit/auth_cubit.dart';
 import '../../Widget/all_widget_auth.dart';
-import '../splash/splash_screens.dart';
 import 'sign_up.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -34,7 +33,7 @@ class _SignInScreenState extends State<SignInScreen> {
     final email = emailController.text.trim();
     final password = passwordController.text;
     if (email.isEmpty || password.isEmpty) {
-      showToast(text: 'يرجى ملء جميع الحقول', stute: ToustStute.error);
+      showToast(text: context.l10n.fillAllFields, stute: ToustStute.error);
       return;
     }
     getIt<AuthCubit>().signin(email: email, password: password);
@@ -64,16 +63,6 @@ class _SignInScreenState extends State<SignInScreen> {
       },
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: AppColors.primaryIcon),
-            onPressed: () {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SplashScreens()));
-            },
-          ),
-        ),
         body: BlocBuilder<AuthCubit, AuthState>(
           builder: (context, state) {
             return Stack(

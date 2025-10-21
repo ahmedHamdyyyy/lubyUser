@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:luby2/project/Home/data/home_repo.dart';
 
 import '../../../../config/constants/constance.dart';
+import '../../models/notification.dart';
 import '../../models/property.dart';
 import '../../models/review.dart';
 import '../../models/user.dart';
@@ -14,6 +15,7 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit(this.repo) : super(const HomeState());
   final HomeRespository repo;
   bool _hasNextPage = false;
+  bool _hasNextNotificationsPage = false;
 
   void fetchUser() async {
     emit(state.copyWith(getUserStatus: Status.loading));
@@ -162,4 +164,44 @@ class HomeCubit extends Cubit<HomeState> {
       emit(state.copyWith(updateUserStatus: Status.error, msg: e.toString()));
     }
   }
+
+  void loadNotifications({bool fetchNext = false}) async {
+    if (fetchNext && !_hasNextNotificationsPage || state.loadNotificationsStatus == Status.loading) return;
+    emit(state.copyWith(loadNotificationsStatus: Status.loading));
+    try {
+      final notifications = await repo.fetchNotifications(fetchNext);
+      _hasNextNotificationsPage = notifications.hasNextPage;
+      emit(state.copyWith(loadNotificationsStatus: Status.success, notifications: notifications.notifications));
+    } catch (e) {
+      emit(state.copyWith(loadNotificationsStatus: Status.error, msg: e.toString()));
+    } finally {
+      emit(state.copyWith(loadNotificationsStatus: Status.initial));
+    }
+  }
+
+  void readNotification(String id) async {
+    emit(state.copyWith(readNotificationStatus: Status.loading));
+    try {
+      await repo.readNotification(id);
+      emit(
+        state.copyWith(
+          readNotificationStatus: Status.success,
+          notifications: [
+            ...state.notifications.map((notification) {
+              if (notification.id == id) {
+                return notification.copyWith(isRead: true);
+              }
+              return notification;
+            }),
+          ],
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(readNotificationStatus: Status.error, msg: e.toString()));
+    } finally {
+      emit(state.copyWith(readNotificationStatus: Status.initial));
+    }
+  }
+
+  void initNotifications() => emit(state.copyWith(notifications: []));
 }

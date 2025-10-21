@@ -4,6 +4,7 @@ import 'package:luby2/config/widget/widget.dart';
 
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../core/services/firestore_service.dart';
+import '../../../../core/localization/l10n_ext.dart';
 import '../../../models/chat.dart';
 import 'all_widget_chats.dart';
 
@@ -37,7 +38,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> _handleSendMessage() async {
     if (_messageController.text.isEmpty) {
-      showToast(text: 'Message Can`t be Empty', stute: ToustStute.worning);
+      showToast(text: context.l10n.messageCannotBeEmpty, stute: ToustStute.worning);
       return;
     }
     setState(() => _isSending = true);
@@ -66,7 +67,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 return Center(child: CircularProgressIndicator());
               }
               if (asyncSnapshot.hasError) {
-                return Center(child: Text('Error: ${asyncSnapshot.error}'));
+                return Center(child: Text('${context.l10n.errorLabel}: ${asyncSnapshot.error}'));
               }
               final messages = asyncSnapshot.data ?? [];
               return Container(
@@ -82,10 +83,13 @@ class _ChatScreenState extends State<ChatScreen> {
                             children: [
                               Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey[400]),
                               const SizedBox(height: 16),
-                              Text('No messages yet', style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[600])),
+                              Text(
+                                context.l10n.noMessagesYet,
+                                style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[600]),
+                              ),
                               const SizedBox(height: 8),
                               Text(
-                                'Start the conversation!',
+                                context.l10n.startConversation,
                                 style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[500]),
                               ),
                             ],
@@ -126,7 +130,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         onTap: () {},
                         child: Icon(Icons.sentiment_satisfied_alt_outlined, color: AppColors.grayTextColor),
                       ),
-                      hintText: "Type a message...",
+                      hintText: context.l10n.typeMessageHint,
                       hintStyle: GoogleFonts.poppins(
                         color: AppColors.grayTextColor,
                         fontSize: 16,

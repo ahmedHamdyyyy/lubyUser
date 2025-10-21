@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../config/colors/colors.dart';
 // import 'package:go_router/go_router.dart';
@@ -117,7 +118,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
           BlocBuilder<HomeCubit, HomeState>(
             builder: (context, state) {
               if (state.reviews.isEmpty) {
-                return Center(child: Padding(padding: EdgeInsetsGeometry.all(16), child: Text('No Reviews until now')));
+                return Center(child: Padding(padding: EdgeInsetsGeometry.all(16), child: Text(context.l10n.noReviewsYet)));
               }
               return ListView.builder(
                 shrinkWrap: true,

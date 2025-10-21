@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 import 'package:luby2/locator.dart';
 
 import '../../../../../../config/colors/colors.dart';
@@ -33,9 +34,14 @@ class AccountInfoAppBar extends StatelessWidget implements PreferredSizeWidget {
         icon: Icon(Icons.arrow_back_ios, color: AppColors.grayColorIcon),
         onPressed: () => Navigator.pop(context),
       ),
-      title: const Text(
-        "Account info",
-        style: TextStyle(color: AppColors.grayTextColor, fontSize: 16, fontFamily: 'Poppins', fontWeight: FontWeight.w400),
+      title: Text(
+        context.l10n.accountInfoTitle,
+        style: const TextStyle(
+          color: AppColors.grayTextColor,
+          fontSize: 16,
+          fontFamily: 'Poppins',
+          fontWeight: FontWeight.w400,
+        ),
       ),
       centerTitle: false,
       actions: [if (!isEditing) IconButton(icon: SvgPicture.asset(ImageAssets.editIcon), onPressed: onEditPressed)],
@@ -168,7 +174,7 @@ class ActionButton extends StatelessWidget {
         decoration: BoxDecoration(color: AppColors.primaryColor, borderRadius: BorderRadius.circular(10)),
         child: Center(
           child: Text(
-            isEditing ? "Save" : "Delete Account",
+            isEditing ? context.l10n.saveLabel : context.l10n.deleteAccount,
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white, fontFamily: 'Poppins'),
           ),
         ),
@@ -191,8 +197,8 @@ class DeleteAccountDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              "Delete Account",
+            Text(
+              context.l10n.deleteAccount,
               style: TextStyle(
                 fontSize: 16,
                 color: AppColors.primaryColor,
@@ -206,8 +212,8 @@ class DeleteAccountDialog extends StatelessWidget {
               width: 120,
               color: AppColors.primaryColor,
             ),
-            const Text(
-              "Are you sure about deleting your account?",
+            Text(
+              context.l10n.areYouSureDeleteAccount,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
@@ -229,8 +235,8 @@ class DeleteAccountDialog extends StatelessWidget {
                       backgroundColor: AppColors.primaryColor,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
-                    child: const Text(
-                      "Yes",
+                    child: Text(
+                      context.l10n.commonYes,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w400,
@@ -248,8 +254,8 @@ class DeleteAccountDialog extends StatelessWidget {
                       side: const BorderSide(color: AppColors.primaryColor),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
-                    child: const Text(
-                      "Cancel",
+                    child: Text(
+                      context.l10n.commonCancel,
                       style: TextStyle(
                         color: AppColors.primaryTextColor,
                         fontWeight: FontWeight.w400,
@@ -461,8 +467,11 @@ class PlaceholderScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarPop(context, title, AppColors.grayTextColor),
-      body: const Center(
-        child: Text("Coming Soon...", style: TextStyle(fontSize: 20, color: Colors.grey, fontFamily: 'Poppins')),
+      body: Center(
+        child: Text(
+          context.l10n.comingSoon,
+          style: const TextStyle(fontSize: 20, color: Colors.grey, fontFamily: 'Poppins'),
+        ),
       ),
     );
   }
@@ -474,7 +483,7 @@ class RateAppScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const PlaceholderScreenWidget(title: "Rate App");
+    return PlaceholderScreenWidget(title: context.l10n.rateAppTitle);
   }
 }
 
@@ -483,7 +492,7 @@ class InviteFriendsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const PlaceholderScreenWidget(title: "Invite Friends");
+    return PlaceholderScreenWidget(title: context.l10n.inviteFriendsTitle);
   }
 }
 
@@ -504,7 +513,7 @@ class AccountInfoHeader extends StatelessWidget {
             InkWell(onTap: () => Navigator.pop(context), child: Icon(Icons.arrow_back_ios, color: AppColors.grayColorIcon)),
             const SizedBox(width: 8),
             Text(
-              "Account info",
+              context.l10n.accountInfoTitle,
               style: TextStyle(
                 fontFamily: 'Poppins',
                 color: AppColors.grayTextColor,
@@ -515,9 +524,14 @@ class AccountInfoHeader extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 10),
-        const Text(
-          "Please complete the following\ninformation",
-          style: TextStyle(fontFamily: 'Poppins', color: AppColors.primaryColor, fontSize: 16, fontWeight: FontWeight.w400),
+        Text(
+          context.l10n.pleaseCompleteInfo,
+          style: const TextStyle(
+            fontFamily: 'Poppins',
+            color: AppColors.primaryColor,
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+          ),
         ),
       ],
     );
@@ -706,9 +720,9 @@ class TermsCheckbox extends StatelessWidget {
                   : SvgPicture.asset(ImageAssets.cracalWhite, width: 20, height: 20),
         ),
         const SizedBox(width: 10),
-        const Text(
-          "Agree to the terms and conditions",
-          style: TextStyle(
+        Text(
+          context.l10n.agreeToTermsAndConditions,
+          style: const TextStyle(
             fontFamily: 'Poppins',
             fontSize: 16,
             color: AppColors.primaryTextColor,
@@ -737,9 +751,9 @@ class SaveButton extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onPressed: onPressed,
-        child: const Text(
-          "Save",
-          style: TextStyle(fontFamily: 'Poppins', fontSize: 16, color: Colors.white, fontWeight: FontWeight.w400),
+        child: Text(
+          context.l10n.saveLabel,
+          style: const TextStyle(fontFamily: 'Poppins', fontSize: 16, color: Colors.white, fontWeight: FontWeight.w400),
         ),
       ),
     );

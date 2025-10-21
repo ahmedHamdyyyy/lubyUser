@@ -1,14 +1,13 @@
 // ignore_for_file: unused_local_variable, curly_braces_in_flow_control_structures
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/widget/helper.dart';
+import 'all_wideget_bank_card.dart';
 // import 'package:fondok/core/widget/widgets.dart';
 import 'bank_cards2_screen.dart';
-
-import 'all_wideget_bank_card.dart';
-
 
 class AddCardScreen extends StatefulWidget {
   const AddCardScreen({super.key});
@@ -114,8 +113,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
       int inputYear = int.parse(digitsOnly.substring(2, 4));
 
       // Check if date is in the future
-      if ((inputYear > currentYear) ||
-          (inputYear == currentYear && inputMonth >= currentMonth)) {
+      if ((inputYear > currentYear) || (inputYear == currentYear && inputMonth >= currentMonth)) {
         _isExpirationValid = true;
       }
     }
@@ -134,10 +132,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
   // Validate all fields
   bool isFormValid() {
-    return _isCardNumberValid &&
-        _isExpirationValid &&
-        _isCvvValid &&
-        _isCardNameValid;
+    return _isCardNumberValid && _isExpirationValid && _isCvvValid && _isCardNameValid;
   }
 
   // Handle card number changes
@@ -168,27 +163,19 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
   // Handle add button press
   void _handleAddPressed() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const SavedCardsScreen(),
-      ),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (_) => const SavedCardsScreen()));
 
     // Show success message
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Card details added successfully"),
-        backgroundColor: Colors.green,
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(context.l10n.cardDetailsAddedSuccessfully), backgroundColor: Colors.green));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: appBarPop(context, "Add Card", AppColors.primaryTextColor),
+      appBar: appBarPop(context, context.l10n.addCardTitle, AppColors.primaryTextColor),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: CardFormWidget(
@@ -208,18 +195,9 @@ class _AddCardScreenState extends State<AddCardScreen> {
             });
           },
           onAddPressed: _handleAddPressed,
-          cardNumberFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(16),
-          ],
-          expirationFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(4),
-          ],
-          cvvFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(3),
-          ],
+          cardNumberFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],
+          expirationFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(4)],
+          cvvFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(3)],
         ),
       ),
     );

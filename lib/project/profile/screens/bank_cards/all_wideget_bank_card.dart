@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
+
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/images/image_assets.dart';
 
@@ -12,12 +14,8 @@ class CardDetailsTitleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      "Card details",
-      style: GoogleFonts.poppins(
-        fontSize: 16,
-        fontWeight: FontWeight.w600,
-        color: AppColors.primaryColor,
-      ),
+      context.l10n.cardDetails,
+      style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.primaryColor),
     );
   }
 }
@@ -63,9 +61,7 @@ class CardInputField extends StatelessWidget {
         Container(
           width: double.infinity,
           height: 48,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
           child: TextField(
             controller: controller,
             keyboardType: keyboardType,
@@ -76,21 +72,15 @@ class CardInputField extends StatelessWidget {
               fontWeight: FontWeight.w400,
               fontFamily: 'Poppins',
             ),
-            inputFormatters: formatters ??
-                [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(maxLength),
-                ],
+            inputFormatters:
+                formatters ?? [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(maxLength)],
             onChanged: onChanged,
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: GoogleFonts.poppins(
-                color: const Color(0xFFCBCBCB),
-              ),
+              hintStyle: GoogleFonts.poppins(color: const Color(0xFFCBCBCB)),
               filled: true,
               fillColor: Colors.white,
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             ),
           ),
         ),
@@ -104,11 +94,7 @@ class SaveDataCheckbox extends StatelessWidget {
   final bool saveData;
   final Function(bool) onToggle;
 
-  const SaveDataCheckbox({
-    super.key,
-    required this.saveData,
-    required this.onToggle,
-  });
+  const SaveDataCheckbox({super.key, required this.saveData, required this.onToggle});
 
   @override
   Widget build(BuildContext context) {
@@ -117,17 +103,11 @@ class SaveDataCheckbox extends StatelessWidget {
       children: [
         InkWell(
           onTap: () => onToggle(!saveData),
-          child: saveData
-              ? SvgPicture.asset(ImageAssets.cracalBlack)
-              : SvgPicture.asset(ImageAssets.cracalWhite),
+          child: saveData ? SvgPicture.asset(ImageAssets.cracalBlack) : SvgPicture.asset(ImageAssets.cracalWhite),
         ),
         Text(
-          "  Save data when paying later",
-          style: GoogleFonts.poppins(
-            color: AppColors.secondTextColor,
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-          ),
+          context.l10n.saveDataWhenPayLater,
+          style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 14, fontWeight: FontWeight.w400),
         ),
       ],
     );
@@ -139,11 +119,7 @@ class AddCardButton extends StatelessWidget {
   final bool isFormValid;
   final VoidCallback onPressed;
 
-  const AddCardButton({
-    super.key,
-    required this.isFormValid,
-    required this.onPressed,
-  });
+  const AddCardButton({super.key, required this.isFormValid, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -152,18 +128,11 @@ class AddCardButton extends StatelessWidget {
       height: 48,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: isFormValid
-              ? AppColors.primaryColor
-              : AppColors.primaryColor.withValues(alpha: 0.5),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          backgroundColor: isFormValid ? AppColors.primaryColor : AppColors.primaryColor.withValues(alpha: 0.5),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onPressed: isFormValid ? onPressed : null,
-        child: const Text(
-          "Add",
-          style: TextStyle(fontSize: 18, color: Colors.white),
-        ),
+        child: Text(context.l10n.addLabel, style: const TextStyle(fontSize: 18, color: Colors.white)),
       ),
     );
   }
@@ -215,9 +184,9 @@ class CardFormWidget extends StatelessWidget {
           const CardDetailsTitleWidget(),
           const SizedBox(height: 20),
           CardInputField(
-            label: "Card Number",
+            label: context.l10n.cardNumber,
             controller: cardNumberController,
-            hint: "0000 0000 0000 0000",
+            hint: context.l10n.cardNumberHint,
             keyboardType: TextInputType.number,
             maxLength: 19,
             onChanged: onCardNumberChanged,
@@ -225,13 +194,10 @@ class CardFormWidget extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           CardInputField(
-            label: "Card Name",
+            label: context.l10n.cardName,
             controller: cardNameController,
-            hint: "Cardholder Name",
-            formatters: [
-              FilteringTextInputFormatter.singleLineFormatter,
-              LengthLimitingTextInputFormatter(50),
-            ],
+            hint: context.l10n.cardholderName,
+            formatters: [FilteringTextInputFormatter.singleLineFormatter, LengthLimitingTextInputFormatter(50)],
             keyboardType: TextInputType.text,
             maxLength: 50,
             onChanged: onCardNameChanged,
@@ -241,9 +207,9 @@ class CardFormWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: CardInputField(
-                  label: "Expiration Date",
+                  label: context.l10n.expirationDate,
                   controller: expirationController,
-                  hint: "MM/YY",
+                  hint: context.l10n.expirationHint,
                   keyboardType: TextInputType.number,
                   maxLength: 5,
                   onChanged: onExpirationChanged,
@@ -253,7 +219,7 @@ class CardFormWidget extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: CardInputField(
-                  label: "CVV",
+                  label: context.l10n.cvv,
                   controller: cvvController,
                   hint: "***",
                   keyboardType: TextInputType.number,
@@ -266,15 +232,9 @@ class CardFormWidget extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          SaveDataCheckbox(
-            saveData: saveData,
-            onToggle: onSaveDataToggle,
-          ),
+          SaveDataCheckbox(saveData: saveData, onToggle: onSaveDataToggle),
           const SizedBox(height: 20),
-          AddCardButton(
-            isFormValid: isFormValid,
-            onPressed: onAddPressed,
-          ),
+          AddCardButton(isFormValid: isFormValid, onPressed: onAddPressed),
           const SizedBox(height: 20),
         ],
       ),
@@ -309,9 +269,9 @@ class BankCardsTitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text(
-      "Bank Cards",
-      style: TextStyle(
+    return Text(
+      context.l10n.bankCardsTitle,
+      style: const TextStyle(
         fontFamily: 'Poppins',
         color: AppColors.primaryTextColor,
         fontSize: 16,
@@ -330,13 +290,11 @@ class NoCardsWidget extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 25),
-        Center(
-          child: SvgPicture.asset(ImageAssets.card2, height: 150),
-        ),
+        Center(child: SvgPicture.asset(ImageAssets.card2, height: 150)),
         const SizedBox(height: 20),
-        const Text(
-          "You have not added any bank card yet",
-          style: TextStyle(
+        Text(
+          context.l10n.noCardsAddedYet,
+          style: const TextStyle(
             fontFamily: 'Poppins',
             color: AppColors.primaryTextColor,
             fontSize: 16,
@@ -353,10 +311,7 @@ class NoCardsWidget extends StatelessWidget {
 class AddCardButtonLarge extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const AddCardButtonLarge({
-    super.key,
-    required this.onPressed,
-  });
+  const AddCardButtonLarge({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -365,19 +320,12 @@ class AddCardButtonLarge extends StatelessWidget {
         backgroundColor: AppColors.primaryColor,
         padding: const EdgeInsets.symmetric(vertical: 15),
         minimumSize: const Size(double.infinity, 50),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
       onPressed: onPressed,
-      child: const Text(
-        "Add Card",
-        style: TextStyle(
-          fontFamily: 'Poppins',
-          color: Colors.white,
-          fontSize: 16,
-          fontWeight: FontWeight.w400,
-        ),
+      child: Text(
+        context.l10n.addCardTitle,
+        style: const TextStyle(fontFamily: 'Poppins', color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),
       ),
     );
   }
@@ -387,10 +335,7 @@ class AddCardButtonLarge extends StatelessWidget {
 class BankCardsScreenContent extends StatelessWidget {
   final VoidCallback onAddCardPressed;
 
-  const BankCardsScreenContent({
-    super.key,
-    required this.onAddCardPressed,
-  });
+  const BankCardsScreenContent({super.key, required this.onAddCardPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -416,9 +361,9 @@ class SavedCardsTitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text(
-      "Save Cards",
-      style: TextStyle(
+    return Text(
+      context.l10n.saveCards,
+      style: const TextStyle(
         color: AppColors.primaryTextColor,
         fontSize: 16,
         fontWeight: FontWeight.w600,
@@ -435,16 +380,8 @@ class SeparatorLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        top: 10,
-        right: 10,
-        left: 10,
-      ),
-      child: Container(
-        height: 1,
-        width: 50,
-        color: AppColors.primaryTextColor,
-      ),
+      padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
+      child: Container(height: 1, width: 50, color: AppColors.primaryTextColor),
     );
   }
 }
@@ -473,10 +410,7 @@ class SavedCardItem extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(10),
-      ),
+      decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(10)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -484,23 +418,16 @@ class SavedCardItem extends StatelessWidget {
             children: [
               InkWell(
                 onTap: () => onToggle(!isChecked),
-                child: isChecked
-                    ? SvgPicture.asset(
-                        ImageAssets.cracalWhite,
-                        height: 20,
-                        width: 20,
-                      )
-                    : SvgPicture.asset(
-                        ImageAssets.cracalBlack,
-                        height: 20,
-                        width: 20,
-                      ),
+                child:
+                    isChecked
+                        ? SvgPicture.asset(ImageAssets.cracalWhite, height: 20, width: 20)
+                        : SvgPicture.asset(ImageAssets.cracalBlack, height: 20, width: 20),
               ),
               const SizedBox(width: 8),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  "Use this card to pay",
-                  style: TextStyle(
+                  context.l10n.useThisCardToPay,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
                     color: AppColors.primaryTextColor,
@@ -508,23 +435,9 @@ class SavedCardItem extends StatelessWidget {
                   ),
                 ),
               ),
-              InkWell(
-                onTap: onEdit,
-                child: SvgPicture.asset(
-                  ImageAssets.editIcon,
-                  height: 25,
-                  width: 25,
-                ),
-              ),
+              InkWell(onTap: onEdit, child: SvgPicture.asset(ImageAssets.editIcon, height: 25, width: 25)),
               const SizedBox(width: 8),
-              InkWell(
-                onTap: onDelete,
-                child: SvgPicture.asset(
-                  ImageAssets.deleteIcon,
-                  height: 25,
-                  width: 25,
-                ),
-              ),
+              InkWell(onTap: onDelete, child: SvgPicture.asset(ImageAssets.deleteIcon, height: 25, width: 25)),
             ],
           ),
           const SeparatorLine(),
@@ -557,30 +470,20 @@ class SavedCardItem extends StatelessWidget {
 class AddNewCardButton extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const AddNewCardButton({
-    super.key,
-    required this.onPressed,
-  });
+  const AddNewCardButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primaryTextColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         minimumSize: const Size(double.infinity, 50),
       ),
       onPressed: onPressed,
-      child: const Text(
-        "Add New Card",
-        style: TextStyle(
-          color: Colors.white,
-          fontFamily: 'Poppins',
-          fontSize: 16,
-          fontWeight: FontWeight.w400,
-        ),
+      child: Text(
+        context.l10n.addNewCard,
+        style: const TextStyle(color: Colors.white, fontFamily: 'Poppins', fontSize: 16, fontWeight: FontWeight.w400),
       ),
     );
   }
@@ -646,14 +549,15 @@ class DeleteCardDialogTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: Text(
-        "Delete Card",
-        style: TextStyle(
-            fontSize: 16,
-            fontFamily: 'Poppins',
-            color: AppColors.primaryColor,
-            fontWeight: FontWeight.w500),
+        context.l10n.deleteCardTitle,
+        style: const TextStyle(
+          fontSize: 16,
+          fontFamily: 'Poppins',
+          color: AppColors.primaryColor,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }
@@ -665,10 +569,10 @@ class DeleteCardDialogContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text(
-      "Are you sure about deleting your Card ?",
+    return Text(
+      context.l10n.deleteCardConfirmBody,
       textAlign: TextAlign.center,
-      style: TextStyle(
+      style: const TextStyle(
         fontSize: 16,
         color: AppColors.primaryTextColor,
         fontWeight: FontWeight.w400,
@@ -682,10 +586,7 @@ class DeleteCardDialogContent extends StatelessWidget {
 class DeleteCardConfirmButton extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const DeleteCardConfirmButton({
-    super.key,
-    required this.onPressed,
-  });
+  const DeleteCardConfirmButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -696,13 +597,10 @@ class DeleteCardConfirmButton extends StatelessWidget {
         minimumSize: const Size(100, 40),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
-      child: const Text("Yes",
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.white,
-            fontWeight: FontWeight.w400,
-            fontFamily: 'Poppins',
-          )),
+      child: Text(
+        context.l10n.commonYes,
+        style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w400, fontFamily: 'Poppins'),
+      ),
     );
   }
 }
@@ -711,10 +609,7 @@ class DeleteCardConfirmButton extends StatelessWidget {
 class DeleteCardCancelButton extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const DeleteCardCancelButton({
-    super.key,
-    required this.onPressed,
-  });
+  const DeleteCardCancelButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -725,8 +620,8 @@ class DeleteCardCancelButton extends StatelessWidget {
         side: const BorderSide(color: AppColors.primaryTextColor),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
-      child: const Text(
-        "Cancel",
+      child: Text(
+        context.l10n.commonCancel,
         style: TextStyle(
           fontSize: 16,
           color: AppColors.primaryTextColor,
@@ -743,11 +638,7 @@ class DeleteCardDialogWidget extends StatelessWidget {
   final VoidCallback onConfirm;
   final VoidCallback onCancel;
 
-  const DeleteCardDialogWidget({
-    super.key,
-    required this.onConfirm,
-    required this.onCancel,
-  });
+  const DeleteCardDialogWidget({super.key, required this.onConfirm, required this.onCancel});
 
   @override
   Widget build(BuildContext context) {
@@ -755,10 +646,7 @@ class DeleteCardDialogWidget extends StatelessWidget {
       title: const DeleteCardDialogTitle(),
       content: const DeleteCardDialogContent(),
       actionsAlignment: MainAxisAlignment.center,
-      actions: [
-        DeleteCardConfirmButton(onPressed: onConfirm),
-        DeleteCardCancelButton(onPressed: onCancel),
-      ],
+      actions: [DeleteCardConfirmButton(onPressed: onConfirm), DeleteCardCancelButton(onPressed: onCancel)],
     );
   }
 }
@@ -768,11 +656,7 @@ class EditCardButton extends StatelessWidget {
   final bool isFormValid;
   final VoidCallback onPressed;
 
-  const EditCardButton({
-    super.key,
-    required this.isFormValid,
-    required this.onPressed,
-  });
+  const EditCardButton({super.key, required this.isFormValid, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -781,22 +665,13 @@ class EditCardButton extends StatelessWidget {
       height: 48,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: isFormValid
-              ? AppColors.primaryColor
-              : AppColors.primaryColor.withValues(alpha: 0.5),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          backgroundColor: isFormValid ? AppColors.primaryColor : AppColors.primaryColor.withValues(alpha: 0.5),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onPressed: isFormValid ? onPressed : null,
-        child: const Text(
-          "Save",
-          style: TextStyle(
-            fontFamily: 'Poppins',
-            fontSize: 16,
-            color: Colors.white,
-            fontWeight: FontWeight.w400,
-          ),
+        child: Text(
+          context.l10n.saveLabel,
+          style: const TextStyle(fontFamily: 'Poppins', fontSize: 16, color: Colors.white, fontWeight: FontWeight.w400),
         ),
       ),
     );
@@ -849,9 +724,9 @@ class CardEditFormWidget extends StatelessWidget {
           const CardDetailsTitleWidget(),
           const SizedBox(height: 20),
           CardInputField(
-            label: "Card Number",
+            label: context.l10n.cardNumber,
             controller: cardNumberController,
-            hint: "0000 0000 0000 0000",
+            hint: context.l10n.cardNumberHint,
             keyboardType: TextInputType.number,
             maxLength: 19,
             onChanged: onCardNumberChanged,
@@ -859,9 +734,9 @@ class CardEditFormWidget extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           CardInputField(
-            label: "Card Name",
+            label: context.l10n.cardName,
             controller: cardNameController,
-            hint: "Cardholder Name",
+            hint: context.l10n.cardholderName,
             keyboardType: TextInputType.text,
             maxLength: 50,
             onChanged: onCardNameChanged,
@@ -871,9 +746,9 @@ class CardEditFormWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: CardInputField(
-                  label: "Expiration Date",
+                  label: context.l10n.expirationDate,
                   controller: expirationController,
-                  hint: "MM/YY",
+                  hint: context.l10n.expirationHint,
                   keyboardType: TextInputType.number,
                   maxLength: 5,
                   onChanged: onExpirationChanged,
@@ -883,7 +758,7 @@ class CardEditFormWidget extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: CardInputField(
-                  label: "CVV",
+                  label: context.l10n.cvv,
                   controller: cvvController,
                   hint: "***",
                   keyboardType: TextInputType.number,
@@ -896,15 +771,9 @@ class CardEditFormWidget extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          SaveDataCheckbox(
-            saveData: saveData,
-            onToggle: onSaveDataToggle,
-          ),
+          SaveDataCheckbox(saveData: saveData, onToggle: onSaveDataToggle),
           const SizedBox(height: 20),
-          EditCardButton(
-            isFormValid: isFormValid,
-            onPressed: onSavePressed,
-          ),
+          EditCardButton(isFormValid: isFormValid, onPressed: onSavePressed),
           const SizedBox(height: 20),
         ],
       ),

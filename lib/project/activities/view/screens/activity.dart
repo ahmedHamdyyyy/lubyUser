@@ -8,6 +8,7 @@ import '../../../../../../config/images/assets.dart';
 import '../../../../../../config/widget/helper.dart';
 import '../../../../../../locator.dart';
 import '../../../../../config/colors/colors.dart';
+import '../../../../../core/localization/l10n_ext.dart';
 import '../../../favorites/cubit/cubit.dart';
 import '../../../profile/screens/propreties/widgets/amenities_widget.dart';
 import '../../../profile/screens/propreties/widgets/host_details.dart';
@@ -106,12 +107,12 @@ class _ActivityScreenState extends State<ActivityScreen> {
                       ),
                     ),
                     // Title
-                    const Positioned(
+                    Positioned(
                       top: 100,
                       bottom: 0,
                       left: 23,
                       child: TextWidget(
-                        text: 'Great Activity',
+                        text: state.activity.name.isNotEmpty ? state.activity.name : context.l10n.touristActivity,
                         color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -169,8 +170,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                               width: 24,
                             ),
                             const SizedBox(width: 8),
-                            const TextWidget(
-                              text: 'View Location on Map',
+                            TextWidget(
+                              text: context.l10n.viewLocationOnMap,
                               color: Color(0xFF262626),
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -208,7 +209,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                               ),
                               child: TextWidget(
-                                text: isExpanded ? 'Read Less' : 'Read More',
+                                text: isExpanded ? context.l10n.readLess : context.l10n.readMore,
                                 color: const Color(0xFFFFFFFF),
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,

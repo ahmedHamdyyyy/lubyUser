@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/widget/helper.dart';
+import '../../../../../core/localization/l10n_ext.dart';
 import '../../../models/activity.dart';
 
 class ActivityBookingDetailsWidget extends StatelessWidget {
@@ -40,7 +41,7 @@ class ActivityBookingDetailsWidget extends StatelessWidget {
               const SizedBox(width: 8),
               Flexible(
                 child: Text(
-                  'Free cancellation before ${activity.date.split('T').first.replaceAll('-', '/')}',
+                  context.l10n.freeCancellationBefore(activity.date.split('T').first.replaceAll('-', '/')),
                   style: GoogleFonts.poppins(
                     color: AppColors.secondTextColor,
                     fontSize: 16,

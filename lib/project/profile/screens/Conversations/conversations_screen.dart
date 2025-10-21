@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../config/colors/colors.dart';
+import '../../../../../core/localization/l10n_ext.dart';
 import '../../../../../core/services/firestore_service.dart';
 import '../../../../../locator.dart';
 import '../../../Home/cubit/home_cubit.dart';
@@ -50,7 +51,7 @@ class _ConversationScreenState extends State<ConversationScreen> with SingleTick
         Padding(
           padding: const EdgeInsets.only(left: 20.0),
           child: Text(
-            'Your Conversations',
+            context.l10n.yourConversations,
             style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.primaryColor),
           ),
         ),
@@ -62,7 +63,7 @@ class _ConversationScreenState extends State<ConversationScreen> with SingleTick
           child: TextField(
             controller: _searchController,
             decoration: InputDecoration(
-              hintText: "Search...",
+              hintText: context.l10n.searchHint,
               prefixIcon: const Icon(Icons.search),
 
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
@@ -83,7 +84,7 @@ class _ConversationScreenState extends State<ConversationScreen> with SingleTick
                   return Center(child: CircularProgressIndicator());
                 }
                 if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
+                  return Center(child: Text('${context.l10n.errorLabel}: ${snapshot.error}'));
                 }
                 final chats = snapshot.data ?? [];
                 final filtered =
@@ -105,7 +106,7 @@ class _ConversationScreenState extends State<ConversationScreen> with SingleTick
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            'No conversations yet',
+                            context.l10n.noConversationsYet,
                             style: GoogleFonts.poppins(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
@@ -115,7 +116,7 @@ class _ConversationScreenState extends State<ConversationScreen> with SingleTick
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Start by contacting the sellers and the conversations will be displayed here',
+                            context.l10n.startByContactingSellers,
                             style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor),
                             textAlign: TextAlign.center,
                           ),
@@ -137,13 +138,17 @@ class _ConversationScreenState extends State<ConversationScreen> with SingleTick
                           context: context,
                           builder:
                               (context) => AlertDialog(
-                                title: const Text('Delete conversation'),
-                                content: const Text(
-                                  'Are you sure you want to delete this conversation? This cannot be undone.',
-                                ),
+                                title: Text(context.l10n.deleteConversationTitle),
+                                content: Text(context.l10n.deleteConversationBody),
                                 actions: [
-                                  TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-                                  TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete')),
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, false),
+                                    child: Text(context.l10n.commonCancel),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, true),
+                                    child: Text(context.l10n.commonDelete),
+                                  ),
                                 ],
                               ),
                         );

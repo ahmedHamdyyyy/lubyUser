@@ -1,9 +1,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Optional for pre-Android 13 permission model -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <!-- Android 13+ notifications permission -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Android 13+ runtime notification permission declared by Flutter automatically via plugin; ensure targetSdk >= 33 -->
     <!-- Permissions needed for web fallback & map display -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <application android:label="luby2" android:name="${applicationName}" android:icon="@mipmap/launcher_icon">
+        <!-- Default notification channel id for FCM (used when message doesn't specify channel) -->
+        <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="high_importance_channel" />
         <!-- Google Maps API Key: Using same key as vendor app for parity.
              NOTE: Consider reverting to placeholder + manifestPlaceholders to avoid exposing the key in VCS. -->
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDcWIxw6lRSHR9O8ts9R76d9Z7ZzsFmDa0" />

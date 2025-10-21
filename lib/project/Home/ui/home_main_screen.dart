@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 import 'package:luby2/locator.dart';
 import 'package:luby2/project/Home/cubit/home_cubit.dart';
 
@@ -112,7 +113,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                           },
                         ),
                         const SizedBox(height: 16),
-                        buildImageSlider(_pageController),
+                        buildImageSlider(context, _pageController),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                           child: Row(
@@ -140,7 +141,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                                     side: BorderSide(color: AppColors.primaryColor),
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                   ),
-                                  child: Text('Rental Service'),
+                                  child: Text(context.l10n.rentalService),
                                 ),
                               ),
                               const SizedBox(width: 8),
@@ -160,7 +161,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                                     side: BorderSide(color: AppColors.primaryColor),
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                   ),
-                                  child: Text('Tourist Activities'),
+                                  child: Text(context.l10n.touristActivities),
                                 ),
                               ),
                             ],
@@ -199,7 +200,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                             ),
                           ),
                         if (selectedMainCategory == "Rental Services")
-                          buildPropertyList(title: 'Most Viewed', context: context, state: state)
+                          buildPropertyList(title: context.l10n.mostViewed, context: context, state: state)
                         else if (selectedMainCategory == "Tourist Activities")
                           BlocBuilder<ActivitiesCubit, ActivitiesState>(
                             builder: (context, state) {

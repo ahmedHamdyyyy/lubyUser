@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../../../core/localization/l10n_ext.dart';
+
 // NOTE: This screen intentionally mirrors the styling concepts from the vendor
 // app's LocationConfirmationScreen (stack layout, center marker hint, bottom
 // information panel) but is read-only for end users.
@@ -33,7 +35,7 @@ class _PropertyLocationViewState extends State<PropertyLocationView> {
     if (_invalid) return;
     final lat = widget.latitude;
     final lng = widget.longitude;
-    final label = widget.address.isEmpty ? 'Property Location' : widget.address;
+    final label = widget.address.isEmpty ? context.l10n.propertyLocationLabel : widget.address;
     final encodedLabel = Uri.encodeComponent(label);
 
     // geo intent (preferred on Android). We try launching without pre-check to avoid false negatives.
@@ -56,7 +58,7 @@ class _PropertyLocationViewState extends State<PropertyLocationView> {
     }
     if (!mounted) return;
     if (!opened) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Unable to open Google Maps.')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.l10n.unableToOpenGoogleMaps)));
     }
   }
 
@@ -99,7 +101,7 @@ class _PropertyLocationViewState extends State<PropertyLocationView> {
             Container(
               color: Colors.grey.shade200,
               alignment: Alignment.center,
-              child: const Text('Location not available', style: TextStyle(fontSize: 16, color: Colors.black54)),
+              child: Text(context.l10n.locationNotAvailable, style: const TextStyle(fontSize: 16, color: Colors.black54)),
             ),
 
           // Center marker indicator (shown only if valid)
@@ -118,9 +120,9 @@ class _PropertyLocationViewState extends State<PropertyLocationView> {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [BoxShadow(color: Colors.black.withAlpha(25), blurRadius: 8, offset: const Offset(0, 2))],
                       ),
-                      child: const Text(
-                        'Property Location',
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.black87),
+                      child: Text(
+                        context.l10n.propertyLocationLabel,
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.black87),
                       ),
                     ),
                   ],
@@ -154,7 +156,7 @@ class _PropertyLocationViewState extends State<PropertyLocationView> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              _invalid ? 'No coordinates provided' : widget.address,
+                              _invalid ? context.l10n.noCoordinatesProvided : widget.address,
                               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black87),
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
@@ -162,7 +164,7 @@ class _PropertyLocationViewState extends State<PropertyLocationView> {
                             const SizedBox(height: 6),
                             Text(
                               _invalid
-                                  ? 'This property does not have a mapped location yet.'
+                                  ? context.l10n.noMappedLocationYet
                                   : '${_target.latitude.toStringAsFixed(5)}, ${_target.longitude.toStringAsFixed(5)}',
                               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black54),
                             ),
@@ -187,7 +189,7 @@ class _PropertyLocationViewState extends State<PropertyLocationView> {
                               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                             ),
                             icon: const Icon(Icons.map_outlined),
-                            label: const Text('Open in Google Maps'),
+                            label: Text(context.l10n.openInGoogleMaps),
                           ),
                         ),
                       if (!_invalid) const SizedBox(width: 12),
@@ -198,7 +200,7 @@ class _PropertyLocationViewState extends State<PropertyLocationView> {
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                           ),
-                          child: const Text('Close'),
+                          child: Text(context.l10n.commonClose),
                         ),
                       ),
                     ],

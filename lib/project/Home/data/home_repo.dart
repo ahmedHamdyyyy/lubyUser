@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../models/notification.dart';
 import '../../models/property.dart';
 import '../../models/review.dart';
 import '../../models/user.dart';
@@ -109,6 +110,30 @@ class HomeRespository {
       debugPrint('DioException: ${e.error}');
       throw Exception(e.response?.data['error'].toString());
     } catch (e) {
+      throw Exception('حدث خطأ غير متوقع');
+    }
+  }
+
+  Future<({List<NotificationModel> notifications, bool hasNextPage})> fetchNotifications(bool fetchNext) async {
+    try {
+      return await _homeData.fetchNotifications(fetchNext);
+    } on DioException catch (e) {
+      debugPrint('DioException: ${e.response?.data}');
+      throw Exception(e.response?.data['error'].toString());
+    } catch (e, s) {
+      debugPrint('Unexpected error: $e, $s');
+      throw Exception('حدث خطأ غير متوقع');
+    }
+  }
+
+  Future<void> readNotification(String id) async {
+    try {
+      await _homeData.readNotification(id);
+    } on DioException catch (e) {
+      debugPrint('DioException: ${e.response?.data}');
+      throw Exception(e.response?.data['error'].toString());
+    } catch (e, s) {
+      debugPrint('Unexpected error: $e, $s');
       throw Exception('حدث خطأ غير متوقع');
     }
   }

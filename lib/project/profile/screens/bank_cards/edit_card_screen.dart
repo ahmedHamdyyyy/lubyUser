@@ -1,12 +1,12 @@
 // ignore_for_file: unused_local_variable
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/widget/helper.dart';
 import 'all_wideget_bank_card.dart';
 import 'bank_cards2_screen.dart';
-
 
 class EditCardScreen extends StatefulWidget {
   const EditCardScreen({super.key});
@@ -36,13 +36,13 @@ class _EditCardScreenState extends State<EditCardScreen> {
     _cardNameController.text = "John Doe";
     _expirationController.text = "12/25";
     _cvvController.text = "123";
-    
+
     // Set validation flags
     _isCardNumberValid = true;
     _isCardNameValid = true;
     _isExpirationValid = true;
     _isCvvValid = true;
-    
+
     // Store raw card number
     _rawCardNumber = "4242424242424242";
   }
@@ -131,8 +131,7 @@ class _EditCardScreenState extends State<EditCardScreen> {
       int inputYear = int.parse(digitsOnly.substring(2, 4));
 
       // Check if date is in the future
-      if ((inputYear > currentYear) ||
-          (inputYear == currentYear && inputMonth >= currentMonth)) {
+      if ((inputYear > currentYear) || (inputYear == currentYear && inputMonth >= currentMonth)) {
         _isExpirationValid = true;
       }
     }
@@ -151,35 +150,24 @@ class _EditCardScreenState extends State<EditCardScreen> {
 
   // Validate all fields
   bool isFormValid() {
-    return _isCardNumberValid &&
-        _isExpirationValid &&
-        _isCvvValid &&
-        _isCardNameValid;
+    return _isCardNumberValid && _isExpirationValid && _isCvvValid && _isCardNameValid;
   }
 
   // Handle successful save action
   void _handleSavePressed() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const SavedCardsScreen(),
-      ),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (_) => const SavedCardsScreen()));
 
     // Show success message
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Card details updated successfully"),
-        backgroundColor: Colors.green,
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(context.l10n.cardDetailsUpdatedSuccessfully), backgroundColor: Colors.green));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: appBarPop(context, "Edit Card", AppColors.primaryTextColor),
+      appBar: appBarPop(context, context.l10n.editCardTitle, AppColors.primaryTextColor),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: CardEditFormWidget(
@@ -215,18 +203,9 @@ class _EditCardScreenState extends State<EditCardScreen> {
             });
           },
           onSavePressed: _handleSavePressed,
-          cardNumberFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(16),
-          ],
-          expirationFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(4),
-          ],
-          cvvFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(3),
-          ],
+          cardNumberFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],
+          expirationFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(4)],
+          cvvFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(3)],
         ),
       ),
     );

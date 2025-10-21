@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../config/constants/constance.dart';
 import '../../../cubit/auth_cubit.dart';
@@ -47,7 +48,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(title: const Text('Reset Password')),
+          appBar: AppBar(title: Text(context.l10n.resetPassword)),
           body: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Form(
@@ -59,7 +60,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     controller: _newPasswordController,
                     obscureText: _obscureNewPassword,
                     decoration: InputDecoration(
-                      labelText: 'New Password',
+                      labelText: context.l10n.newPasswordLabel,
                       suffixIcon: IconButton(
                         icon: Icon(_obscureNewPassword ? Icons.visibility : Icons.visibility_off),
                         onPressed: () {
@@ -71,10 +72,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter new password';
+                        return context.l10n.pleaseEnterNewPassword;
                       }
                       if (value.length < 6) {
-                        return 'Password must be at least 6 characters';
+                        return context.l10n.passwordTooShort;
                       }
                       return null;
                     },
@@ -84,7 +85,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     controller: _confirmPasswordController,
                     obscureText: _obscureConfirmPassword,
                     decoration: InputDecoration(
-                      labelText: 'Confirm Password',
+                      labelText: context.l10n.confirmNewPasswordLabel,
                       suffixIcon: IconButton(
                         icon: Icon(_obscureConfirmPassword ? Icons.visibility : Icons.visibility_off),
                         onPressed: () {
@@ -96,10 +97,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please confirm your password';
+                        return context.l10n.fillAllFields;
                       }
                       if (value != _newPasswordController.text) {
-                        return 'Passwords do not match';
+                        return context.l10n.passwordsDoNotMatch;
                       }
                       return null;
                     },
@@ -112,7 +113,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       child:
                           _isLoading
                               ? const CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
-                              : const Text('Reset Password'),
+                              : Text(context.l10n.resetPassword),
                     ),
                   ),
                 ],

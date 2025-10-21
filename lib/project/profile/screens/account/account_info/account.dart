@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../config/images/image_assets.dart';
 import '../../../../Home/cubit/home_cubit.dart';
@@ -45,13 +46,13 @@ class ProfileFeaturesScreen extends StatelessWidget {
                     MenuItemWidget(icon: ImageAssets.chat2, title: "Contact Us", screen: const ContactUsView()),
                     MenuItemWidget(
                       icon: ImageAssets.rate,
-                      title: "Rate App",
+                      title: context.l10n.rateAppTitle,
                       screen: const RateAppScreen(),
                       showArrow: false,
                     ),
                     MenuItemWidget(
                       icon: ImageAssets.invite,
-                      title: "Invite Friends",
+                      title: context.l10n.inviteFriendsTitle,
                       screen: const InviteFriendsScreen(),
                       showArrow: false,
                     ),

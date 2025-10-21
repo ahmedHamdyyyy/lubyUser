@@ -6,6 +6,7 @@ import '../../../../config/constants/api_constance.dart';
 import '../../../../config/constants/constance.dart';
 import '../../../../core/error/dio_error.dart';
 import '../../../../core/services/api_services.dart';
+import '../../models/notification.dart';
 import '../../models/property.dart';
 import '../../models/review.dart';
 import '../../models/user.dart';
@@ -13,7 +14,8 @@ import '../../models/user.dart';
 class HomeData {
   HomeData(this._apiService);
   final ApiService _apiService;
-  int _currentPage = 1;
+  int _currentPropertiesPage = 1;
+  int _currentNotificationsPage = 1;
 
   Future<UserModel> fetchUser() async {
     final response = await _apiService.dio.get(ApiConstance.userProfile);
@@ -33,14 +35,14 @@ class HomeData {
     _setPage(fetchNext);
     final response = await _apiService.dio.get(
       ApiConstance.createProperty,
-      queryParameters: {'page': _currentPage, ...?filters},
+      queryParameters: {'page': _currentPropertiesPage, ...?filters},
     );
     final properties = (response.data['data']['data'] as List).map((e) => CustomPropertyModel.fromJson(e)).toList();
     final hasNextPage = (response.data['data']?['pagination']?['hasNextPage'] as bool?) ?? false;
     return (properties: properties, hasNextPage: hasNextPage);
   }
 
-  void _setPage(bool fetchNext) => _currentPage = fetchNext ? _currentPage + 1 : 1;
+  void _setPage(bool fetchNext) => _currentPropertiesPage = fetchNext ? _currentPropertiesPage + 1 : 1;
 
   Future<PropertyModel> getProperty(String id) async {
     final response = await _apiService.dio.get(ApiConstance.getProperty(id));
@@ -54,8 +56,19 @@ class HomeData {
   }
 
   void _checkIfSuccess(Response<dynamic> response) {
-    if (!(response.data['success'] ?? false)) {
-      throw DioException(requestOptions: response.requestOptions, response: response, error: response.data['error']);
+    final code = response.statusCode ?? 0;
+    final isOk = code >= 200 && code < 300; // accept 2xx (e.g., 200, 204)
+
+    bool successFlag = true; // default to true when no flag is present
+    final data = response.data;
+    if (data is Map) {
+      final dynamic s = data['success'];
+      if (s is bool) successFlag = s;
+    }
+
+    if (!isOk || !successFlag) {
+      final errorPayload = (data is Map) ? data['error'] : data;
+      throw DioException(requestOptions: response.requestOptions, response: response, error: errorPayload);
     }
   }
 
@@ -103,5 +116,25 @@ class HomeData {
     );
     _checkIfSuccess(response);
     return UserModel.fromJson(response.data['data']);
+  }
+
+  Future<({List<NotificationModel> notifications, bool hasNextPage})> fetchNotifications(bool fetchNext) async {
+    _setNotificationsPage(fetchNext);
+    final response = await _apiService.dio.get(
+      ApiConstance.notifications,
+      queryParameters: {'page': _currentNotificationsPage},
+    );
+    _checkIfSuccess(response);
+    return (
+      notifications: ((response.data['data']['data'] as List?) ?? []).map((e) => NotificationModel.fromMap(e)).toList(),
+      hasNextPage: (response.data['data']['pagination']['hasNextPage'] as bool?) ?? false,
+    );
+  }
+
+  void _setNotificationsPage(bool fetchNext) => _currentNotificationsPage = fetchNext ? _currentNotificationsPage + 1 : 1;
+
+  Future<void> readNotification(String id) async {
+    final response = await _apiService.dio.patch(ApiConstance.readNotification(id));
+    _checkIfSuccess(response);
   }
 }

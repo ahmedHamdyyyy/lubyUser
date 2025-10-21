@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../../config/images/image_assets.dart';
+import '../../../../../core/localization/l10n_ext.dart';
 import '../../../../config/colors/colors.dart';
 import '../../../models/reversation.dart';
 import 'all_widget__complete_reservation_and_payment.dart';
@@ -147,8 +148,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   Widget build(BuildContext context) {
     // Define payment options
     final List<Map<String, dynamic>> paymentOptions = [
-      {'value': 0, 'title': 'Debit / Credit Card', 'icon': ImageAssets.cardIcon},
-      {'value': 1, 'title': 'Wallet', 'icon': ImageAssets.walletIcon},
+      {'value': 0, 'title': context.l10n.debitCreditCard, 'icon': ImageAssets.cardIcon},
+      {'value': 1, 'title': context.l10n.wallet, 'icon': ImageAssets.walletIcon},
     ];
 
     // Define summary items
@@ -174,14 +175,14 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  "Payment Method",
+                  context.l10n.paymentMethodTitle,
                   style: GoogleFonts.poppins(color: AppColors.grayTextColor, fontWeight: FontWeight.w500, fontSize: 14),
                 ),
               ],
             ),
             const SizedBox(height: 22),
             Text(
-              "Payment Method",
+              context.l10n.paymentMethodTitle,
               style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.secondTextColor),
             ),
             const SizedBox(height: 10),
@@ -223,16 +224,16 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                   const Padding(padding: EdgeInsets.symmetric(vertical: 10), child: Divider()),
                   const SizedBox(height: 10),
                   Text(
-                    "Card details",
+                    context.l10n.cardDetails,
                     style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.primaryColor),
                   ),
                   const SizedBox(height: 20),
 
                   // Card Number
                   InputFieldWidget(
-                    label: "Card Number",
+                    label: context.l10n.cardNumber,
                     controller: _cardNumberController,
-                    hint: "0000 0000 0000 0000",
+                    hint: context.l10n.cardNumberHint,
                     keyboardType: TextInputType.number,
                     maxLength: 19,
                     onChanged:
@@ -250,9 +251,9 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
                   // Card Name
                   InputFieldWidget(
-                    label: "Card Name",
+                    label: context.l10n.cardName,
                     controller: _cardNameController,
-                    hint: "Cardholder Name",
+                    hint: context.l10n.cardholderName,
                     keyboardType: TextInputType.text,
                     maxLength: 50,
                     onChanged: (value) => setState(() => _isCardNameValid = value.trim().length > 2),
@@ -266,9 +267,9 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                     children: [
                       Expanded(
                         child: InputFieldWidget(
-                          label: "Expiration Date",
+                          label: context.l10n.expirationDate,
                           controller: _expirationController,
-                          hint: "MM/YY",
+                          hint: context.l10n.expirationHint,
                           keyboardType: TextInputType.number,
                           maxLength: 5,
                           onChanged: (value) => handleExpirationInput(value),
@@ -278,7 +279,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: InputFieldWidget(
-                          label: "CVV",
+                          label: context.l10n.cvv,
                           controller: _cvvController,
                           hint: "***",
                           keyboardType: TextInputType.number,
@@ -303,7 +304,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                 : SvgPicture.asset(ImageAssets.cracalWhite),
                       ),
                       Text(
-                        "  Save data when paying later",
+                        "  ${context.l10n.saveDataWhenPayLater}",
                         style: GoogleFonts.poppins(
                           color: AppColors.secondTextColor,
                           fontSize: 14,
@@ -314,10 +315,10 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                   ),
                   const SizedBox(height: 20),
                   ActionButtonWidget(
-                    text: 'Add',
+                    text: context.l10n.addLabel,
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Card details added successfully"), backgroundColor: Colors.green),
+                        SnackBar(content: Text(context.l10n.cardDetailsAddedSuccessfully), backgroundColor: Colors.green),
                       );
                     },
                     isEnabled: isFormValid(),
@@ -327,7 +328,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                 ],
               ),
             Text(
-              'Summary',
+              context.l10n.summaryTitle,
               style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.secondTextColor),
             ),
             const SizedBox(height: 10),
@@ -336,25 +337,25 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
             PromoCodeInputWidget(
               isApplied: true,
               controller: _promoCodeController,
-              buttonText: "Apply",
-              hintText: "MD1234",
+              buttonText: context.l10n.commonApply,
+              hintText: context.l10n.promoCodePlaceholder,
               onApplyPressed: () {
                 // Apply promo code logic
               },
             ),
             const SizedBox(height: 10),
-            const SummaryRowWidget(title: "Total", value: "1000 SAR"),
+            SummaryRowWidget(title: context.l10n.commonTotal, value: "1000 SAR"),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "After Discount",
+                    context.l10n.afterDiscount,
                     style: GoogleFonts.poppins(color: AppColors.primaryColor, fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                   Text(
-                    "(You Saved 100 SAR)",
+                    context.l10n.youSavedAmount('100 SAR'),
                     style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 12, fontWeight: FontWeight.w600),
                   ),
                   const Spacer(),
@@ -367,7 +368,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
             ),
             const SizedBox(height: 20),
             ActionButtonWidget(
-              text: "Confirm Payment",
+              text: context.l10n.confirmPayment,
               fontSize: 16,
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedPaymentScreen(vendorId: vendorId)));

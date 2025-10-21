@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/widget/helper.dart';
+import '../../../../../core/localization/l10n_ext.dart';
 import '../../../models/activity.dart';
 import 'reservation_dialog.dart';
 
@@ -34,8 +35,8 @@ class _ActivityCardeReserveState extends State<ActivityCardeReserve> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const TextWidget(
-                    text: 'Date',
+                  TextWidget(
+                    text: context.l10n.dateLabel.trim(),
                     color: AppColors.secondTextColor,
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -50,7 +51,7 @@ class _ActivityCardeReserveState extends State<ActivityCardeReserve> {
                       decoration: InputDecoration(
                         enabledBorder: buildOutlineInputBorder(5),
                         focusedBorder: buildOutlineInputBorder(5),
-                        hintText: 'DD/MM/YYYY',
+                        hintText: context.l10n.enterDateInDdMmYyyy,
                         hintStyle: const TextStyle(
                           color: AppColors.grayTextColor,
                           fontSize: 14,
@@ -67,8 +68,8 @@ class _ActivityCardeReserveState extends State<ActivityCardeReserve> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const TextWidget(
-                    text: 'Guests No.',
+                  TextWidget(
+                    text: context.l10n.guestsNoLabel,
                     color: AppColors.secondTextColor,
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -85,7 +86,7 @@ class _ActivityCardeReserveState extends State<ActivityCardeReserve> {
                       decoration: InputDecoration(
                         enabledBorder: buildOutlineInputBorder(5),
                         focusedBorder: buildOutlineInputBorder(5),
-                        hintText: '2 Guests',
+                        hintText: context.l10n.guestCountHint,
                         hintStyle: const TextStyle(
                           color: AppColors.grayTextColor,
                           fontSize: 14,
@@ -112,7 +113,12 @@ class _ActivityCardeReserveState extends State<ActivityCardeReserve> {
               //padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             ),
-            child: const TextWidget(text: 'Reserve', color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),
+            child: TextWidget(
+              text: context.l10n.reserveLabel,
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+            ),
           ),
         ),
       ],

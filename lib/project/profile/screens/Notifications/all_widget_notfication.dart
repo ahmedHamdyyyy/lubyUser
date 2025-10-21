@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:luby2/locator.dart';
+import 'package:luby2/project/Home/cubit/home_cubit.dart';
 
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/images/image_assets.dart';
 import '../../../../../../config/widget/helper.dart';
+import '../../../../../core/localization/l10n_ext.dart';
+import '../../../../../core/utils/utile.dart';
+import '../../../models/notification.dart';
 import '../../../reservation/view/screens/reservations_screen.dart';
-import 'notification_detail_screen.dart';
-import 'notification_details_reservation_screen.dart';
 
 class NotificationDetailContent extends StatelessWidget {
   final Map<String, dynamic> notification;
@@ -16,6 +20,14 @@ class NotificationDetailContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String _formatDate(String? raw) {
+      if (raw == null || raw.isEmpty) return '';
+      final DateTime? parsed = Utils.parseDate(raw) ?? DateTime.tryParse(raw);
+      if (parsed == null) return raw;
+      final locale = Localizations.localeOf(context).toLanguageTag();
+      return DateFormat.yMMMd(locale).format(parsed);
+    }
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -23,16 +35,16 @@ class NotificationDetailContent extends StatelessWidget {
         children: [
           // Notification title
           Text(
-            'Notification Name',
+            context.l10n.notificationNameLabel,
             style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.primary),
           ),
           SizedBox(height: 25),
           Text(
-            'Hello Ahmed Hamdy',
+            context.l10n.helloName('Ahmed Hamdy'),
             style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400, color: AppColors.secondTextColor),
           ),
           const SizedBox(height: 10),
-          Text('24/07/2024', style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor)),
+          Text(_formatDate(notification['date']), style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor)),
           const SizedBox(height: 25),
 
           // Notification content
@@ -75,6 +87,14 @@ class NotificationReservationContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String _formatDate(String? raw) {
+      if (raw == null || raw.isEmpty) return '';
+      final DateTime? parsed = Utils.parseDate(raw) ?? DateTime.tryParse(raw);
+      if (parsed == null) return raw;
+      final locale = Localizations.localeOf(context).toLanguageTag();
+      return DateFormat.yMMMd(locale).format(parsed);
+    }
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -82,21 +102,21 @@ class NotificationReservationContent extends StatelessWidget {
         children: [
           // Notification title
           Text(
-            'Notification Name',
+            context.l10n.notificationNameLabel,
             style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.primary),
           ),
           SizedBox(height: 25),
           Text(
-            'Hello Ahmed Hamdy',
+            context.l10n.helloName('Ahmed Hamdy'),
             style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400, color: AppColors.secondTextColor),
           ),
           const SizedBox(height: 10),
-          Text('24/07/2024', style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor)),
+          Text(_formatDate(notification['date']), style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor)),
           const SizedBox(height: 25),
 
           // Reservation confirmation message
           Text(
-            'Your studio reservation has been successfully completed!',
+            context.l10n.reservationCompletedShort,
             style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.w400,
@@ -128,7 +148,7 @@ class NotificationReservationContent extends StatelessWidget {
           Navigator.push(context, MaterialPageRoute(builder: (context) => ReservationsScreen()));
         },
         child: Text(
-          'Show reservation details',
+          context.l10n.viewReservationDetails,
           style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
         ),
       ),
@@ -138,12 +158,12 @@ class NotificationReservationContent extends StatelessWidget {
 
 // Common app bar for notification screens
 PreferredSizeWidget notificationAppBar(BuildContext context) {
-  return appBarPop(context, "Notification", AppColors.secondTextColor);
+  return appBarPop(context, context.l10n.notificationAppBarTitle, AppColors.secondTextColor);
 }
 
 // App bar for the main notifications list screen
 PreferredSizeWidget notificationsListAppBar(BuildContext context) {
-  return appBarPop(context, "Notifications", AppColors.primaryColor);
+  return appBarPop(context, context.l10n.notificationsListAppBarTitle, AppColors.primaryColor);
 }
 
 // Widget for the notifications list title
@@ -159,7 +179,7 @@ class NotificationsListTitle extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Text(
-          "Your Notifications",
+          context.l10n.yourNotifications,
           style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500, color: AppColors.primary),
         ),
       ),
@@ -184,7 +204,7 @@ class EmptyNotificationsState extends StatelessWidget {
           const SizedBox(height: 20),
           // Empty notifications message
           Text(
-            'You don\'t have any notifications\nright now',
+            context.l10n.noNotificationsRightNow,
             textAlign: TextAlign.center,
             style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 16, fontWeight: FontWeight.w500),
           ),
@@ -196,7 +216,7 @@ class EmptyNotificationsState extends StatelessWidget {
 
 // Widget for a single notification item
 class NotificationItem extends StatelessWidget {
-  final Map<String, dynamic> notification;
+  final NotificationModel notification;
 
   const NotificationItem({super.key, required this.notification});
 
@@ -204,73 +224,47 @@ class NotificationItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigate to the appropriate detail screen based on notification type
-        if (notification['type'] == 'studio') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => NotificationDetailsReservationScreen(notification: notification)),
-          );
-        } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => NotificationDetailScreen(notification: notification)),
-          );
-        }
+        if (!notification.isRead) getIt<HomeCubit>().readNotification(notification.id);
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: notification.isRead ? AppColors.primary.withOpacity(0.1) : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: AppColors.primary),
         ),
         child: Row(
           children: [
-            if (notification['image'] != null)
-              Image.asset(height: 100, width: 100, notification['image'], fit: BoxFit.cover),
-
-            if (notification['image'] != null) const SizedBox(width: 12),
-
-            // Notification content
+            Image.asset(height: 100, width: 100, 'assets/images/image6.png', fit: BoxFit.cover),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    notification['title'],
+                    notification.title,
                     style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500, color: AppColors.primary),
                   ),
                   const SizedBox(height: 4),
-                  Text(notification['subtitle'], style: GoogleFonts.poppins(fontSize: 12, color: AppColors.secondTextColor)),
+                  Text(notification.body, style: GoogleFonts.poppins(fontSize: 12, color: AppColors.secondTextColor)),
                   const SizedBox(height: 4),
-                  Text(notification['date'], style: TextStyle(fontSize: 14, color: AppColors.grayTextColor)),
+                  Text(
+                    (() {
+                      final String raw = notification.createdAt;
+                      if (raw.isEmpty) return '';
+                      final DateTime? parsed = Utils.parseDate(raw) ?? DateTime.tryParse(raw);
+                      if (parsed == null) return raw;
+                      final locale = Localizations.localeOf(context).toLanguageTag();
+                      return DateFormat.yMMMd(locale).format(parsed);
+                    })(),
+                    style: TextStyle(fontSize: 14, color: AppColors.grayTextColor),
+                  ),
                 ],
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-// Widget for the notifications list
-class NotificationsList extends StatelessWidget {
-  final List<Map<String, dynamic>> notifications;
-
-  const NotificationsList({super.key, required this.notifications});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.all(16),
-      itemCount: notifications.length,
-      itemBuilder: (context, index) {
-        final notification = notifications[index];
-        return NotificationItem(notification: notification);
-      },
     );
   }
 }

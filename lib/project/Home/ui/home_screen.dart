@@ -40,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return Scaffold(
             body: screen[currentScreenIndex],
             bottomNavigationBar: buildBottomNavigationBar(
+              context,
               currentIndex: currentScreenIndex,
               onTap: getIt<HomeCubit>().updateCurrentScreenIndex,
             ),

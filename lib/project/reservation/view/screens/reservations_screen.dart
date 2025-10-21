@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../../config/colors/colors.dart';
 import '../../../../../config/constants/constance.dart';
 import '../../../../../locator.dart';
+import '../../../../core/localization/l10n_ext.dart';
 import '../../../models/activity.dart';
 import '../../../models/property.dart';
 import '../../../models/reversation.dart';
@@ -52,7 +53,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
         Padding(
           padding: const EdgeInsets.only(left: 24, top: 66, bottom: 8),
           child: Text(
-            'Reservation',
+            context.l10n.reservationsTitle,
             style: GoogleFonts.poppins(color: AppColors.primaryColor, fontSize: 16, fontWeight: FontWeight.w600),
           ),
         ),
@@ -62,7 +63,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
             children: [
               Expanded(
                 child: buildTabButton(
-                  text: 'Pending',
+                  text: context.l10n.tabPending,
                   isSelected: _filterType == ReservationsFilterType.draft,
                   onTap: () => _setFilter(ReservationsFilterType.draft),
                 ),
@@ -70,7 +71,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
               const SizedBox(width: 8),
               Expanded(
                 child: buildTabButton(
-                  text: 'Current',
+                  text: context.l10n.tabCurrent,
                   isSelected: _filterType == ReservationsFilterType.current,
                   onTap: () => _setFilter(ReservationsFilterType.current),
                 ),
@@ -78,7 +79,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
               const SizedBox(width: 8),
               Expanded(
                 child: buildTabButton(
-                  text: 'Last',
+                  text: context.l10n.tabLast,
                   isSelected: _filterType == ReservationsFilterType.last,
                   onTap: () => _setFilter(ReservationsFilterType.last),
                 ),
@@ -104,13 +105,13 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Properties'),
+                      Text(context.l10n.propertiesSection),
                       SizedBox(height: 8),
                       if (properties.isEmpty)
                         _buildEmptyState(
                           icon: Icons.home_outlined,
-                          title: 'No Property Reservations',
-                          subtitle: 'You don\'t have any current property reservations.',
+                          title: context.l10n.noPropertyReservations,
+                          subtitle: context.l10n.noCurrentPropertyReservations,
                           isCurrent: _filterType == ReservationsFilterType.current,
                         )
                       else
@@ -242,7 +243,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                                       minimumSize: Size(double.infinity, 35),
                                     ),
-                                    child: const Text('View Reservation Details'),
+                                    child: Text(context.l10n.viewReservationDetails),
                                   ),
                                 ],
                               ),
@@ -250,13 +251,13 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                           },
                         ),
                       SizedBox(height: 16),
-                      Text('Activities'),
+                      Text(context.l10n.activitiesSection),
                       SizedBox(height: 8),
                       if (activities.isEmpty)
                         _buildEmptyState(
                           icon: Icons.sports_soccer_outlined,
-                          title: 'No Activity Reservations',
-                          subtitle: 'You don\'t have any current activity reservations.',
+                          title: context.l10n.noActivityReservations,
+                          subtitle: context.l10n.noCurrentActivityReservations,
                           isCurrent: _filterType == ReservationsFilterType.current,
                         )
                       else
@@ -365,7 +366,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                                       minimumSize: Size(double.infinity, 35),
                                     ),
-                                    child: const Text('View Reservation Details'),
+                                    child: Text(context.l10n.viewReservationDetails),
                                   ),
                                 ],
                               ),

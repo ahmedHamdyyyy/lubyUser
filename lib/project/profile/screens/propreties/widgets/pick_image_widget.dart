@@ -57,7 +57,7 @@
 //                       height: 40,
 //                     )),
 //                 const SizedBox(height: 4),
-//                 Text(  'Upload studio photos or video',
+//                 Text(  context.l10n.uploadStudioPhotosOrVideo,
 //                     style: GoogleFonts.poppins(
 //                         fontSize: 14,
 //                         fontWeight: FontWeight.w400,

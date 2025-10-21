@@ -1,6 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+import 'package:luby2/l10n/app_localizations.dart';
 
 import '../auth/sign_in.dart';
 import 'all_widget_onporsing.dart';
@@ -15,35 +16,39 @@ class SplashScreens extends StatefulWidget {
 class _SplashScreensState extends State<SplashScreens> {
   final PageController _pageController = PageController();
 
-  final List<Map<String, String>> splashData = [
-    {
-      "image": "assets/images/image2.png",
-      "title": "Explore Saudi Arabia",
-      "description":
-          "Lorem ipsum dolor sit amet, consecr adipiscing elit. Ut hendrerit triueasdwfa prm gravida felis, sociis in felis.",
-    },
-    {
-      "image": "assets/images/image3.png",
-      "title": "Explore Saudi Arabia",
-      "description":
-          "Lorem ipsum dolor sit amet, consecr adipiscing elit. Ut hendrerit triueasdwfa prm gravida felis, sociis in felis.",
-    },
-    {
-      "image": "assets/images/image4.png",
-      "title": "Explore Saudi Arabia",
-      "description":
-          "Lorem ipsum dolor sit amet, consecr adipiscing elit. Ut hendrerit triueasdwfa prm gravida felis, sociis in felis.",
-    },
-  ];
+  List<Map<String, String>> _buildSplashData(BuildContext context) {
+    final t = AppLocalizations.of(context);
+    return [
+      {
+        "image": "assets/images/image2.png",
+        "title": t.onboardingExploreSaudiTitle,
+        "description": t.onboardingExploreSaudiDescription,
+      },
+      {
+        "image": "assets/images/image3.png",
+        "title": t.onboardingExploreSaudiTitle,
+        "description": t.onboardingExploreSaudiDescription,
+      },
+      {
+        "image": "assets/images/image4.png",
+        "title": t.onboardingExploreSaudiTitle,
+        "description": t.onboardingExploreSaudiDescription,
+      },
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SplashScreensContent(
         pageController: _pageController,
-        splashData: splashData,
+        splashData: _buildSplashData(context),
         onSkip: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const SignInScreen()));
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const SignInScreen()),
+            (route) => false,
+          );
         },
       ),
     );

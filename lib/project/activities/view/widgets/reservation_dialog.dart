@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/widget/helper.dart';
 import '../../../../../../core/utils/utile.dart';
+import '../../../../../core/localization/l10n_ext.dart';
 import '../../../models/activity.dart';
 import '../../../models/reversation.dart';
 import '../../../profile/screens/Complete reservation and payment/summary_screen.dart';
@@ -46,8 +47,8 @@ Future<dynamic> showActivityReserveDialoge(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const TextWidget(
-                                text: 'Date',
+                              TextWidget(
+                                text: context.l10n.dateLabel.trim(),
                                 color: Color(0xFF414141),
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
@@ -59,11 +60,11 @@ Future<dynamic> showActivityReserveDialoge(
                                 child: TextFormField(
                                   controller: dateController,
                                   validator: (value) {
-                                    if (value == null || value.isEmpty) return 'Please enter date';
+                                    if (value == null || value.isEmpty) return context.l10n.pleaseEnterDate;
                                     final date = Utils.parseDate(value);
-                                    if (date == null) return 'Invalid date format';
+                                    if (date == null) return context.l10n.invalidDateFormat;
                                     final now = DateTime.now();
-                                    if (date.isBefore(now)) return 'date must be in the future';
+                                    if (date.isBefore(now)) return context.l10n.dateMustBeInFuture;
                                     return null;
                                   },
                                   keyboardType: TextInputType.datetime,
@@ -71,7 +72,7 @@ Future<dynamic> showActivityReserveDialoge(
                                   decoration: InputDecoration(
                                     enabledBorder: buildOutlineInputBorder(5),
                                     focusedBorder: buildOutlineInputBorder(5),
-                                    hintText: 'dd/mm/yyyy',
+                                    hintText: context.l10n.enterDateInDdMmYyyy,
                                     hintStyle: const TextStyle(
                                       color: Color(0xFF757575),
                                       fontSize: 14,
@@ -88,8 +89,8 @@ Future<dynamic> showActivityReserveDialoge(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const TextWidget(
-                                text: 'Guests No.',
+                              TextWidget(
+                                text: context.l10n.guestsNoLabel,
                                 color: Color(0xFF414141),
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
@@ -101,9 +102,9 @@ Future<dynamic> showActivityReserveDialoge(
                                 child: TextFormField(
                                   controller: guestController,
                                   validator: (value) {
-                                    if (value == null || value.isEmpty) return 'invalid guest number';
+                                    if (value == null || value.isEmpty) return context.l10n.invalidGuestNumber;
                                     final guests = int.tryParse(value);
-                                    if (guests == null || guests < 1) return 'invalid guest number';
+                                    if (guests == null || guests < 1) return context.l10n.invalidGuestNumber;
                                     return null;
                                   },
                                   keyboardType: TextInputType.number,
@@ -112,7 +113,7 @@ Future<dynamic> showActivityReserveDialoge(
                                   decoration: InputDecoration(
                                     enabledBorder: buildOutlineInputBorder(5),
                                     focusedBorder: buildOutlineInputBorder(5),
-                                    hintText: '1 Guests',
+                                    hintText: context.l10n.guestCountHint,
                                     hintStyle: const TextStyle(
                                       color: Color(0xFF757575),
                                       fontSize: 14,
@@ -132,14 +133,19 @@ Future<dynamic> showActivityReserveDialoge(
                         Row(
                           children: [
                             TextWidget(
-                              text: '${activity.price} x ${guestController.text.trim()} person',
+                              text: context.l10n.priceTimesGuests(
+                                activity.price,
+                                int.tryParse(guestController.text.trim()) ?? 1,
+                              ),
                               color: Color(0xFF414141),
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
                             ),
                             Spacer(),
                             TextWidget(
-                              text: '${activity.price * (int.tryParse(guestController.text.trim()) ?? 1)} SAR',
+                              text: context.l10n.sarAmount(
+                                activity.price * (int.tryParse(guestController.text.trim()) ?? 1),
+                              ),
                               color: Color(0xFF414141),
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
@@ -150,13 +156,18 @@ Future<dynamic> showActivityReserveDialoge(
                         Row(
                           children: [
                             TextWidget(
-                              text: 'Service Fees',
+                              text: context.l10n.serviceFees,
                               color: Color(0xFF414141),
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
                             ),
                             Spacer(),
-                            TextWidget(text: '20 SAR', color: Color(0xFF414141), fontSize: 16, fontWeight: FontWeight.w400),
+                            TextWidget(
+                              text: context.l10n.sarAmount(20),
+                              color: Color(0xFF414141),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ],
                         ),
                         SizedBox(height: 24),
@@ -165,10 +176,18 @@ Future<dynamic> showActivityReserveDialoge(
                           padding: EdgeInsets.symmetric(vertical: 16.0),
                           child: Row(
                             children: [
-                              TextWidget(text: 'Total', color: Color(0xFF414141), fontSize: 16, fontWeight: FontWeight.w600),
+                              TextWidget(
+                                text: context.l10n.commonTotal,
+                                color: Color(0xFF414141),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
                               Spacer(),
                               TextWidget(
-                                text: '${calculateTotalPrice() ?? '---'} SAR',
+                                text:
+                                    calculateTotalPrice() == null
+                                        ? '---'
+                                        : context.l10n.sarAmount(calculateTotalPrice()!.toInt()),
                                 color: Color(0xFF414141),
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,
@@ -178,8 +197,8 @@ Future<dynamic> showActivityReserveDialoge(
                         ),
                       ],
                     ),
-                    const TextWidget(
-                      text: 'You won\'t be charged yet',
+                    TextWidget(
+                      text: context.l10n.notChargedYet,
                       color: Color(0xFF757575),
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
@@ -222,9 +241,9 @@ Future<dynamic> showActivityReserveDialoge(
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                                   padding: EdgeInsets.zero,
                                 ),
-                                child: const Center(
+                                child: Center(
                                   child: TextWidget(
-                                    text: 'Reserve',
+                                    text: context.l10n.reserveLabel,
                                     color: Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w400,
@@ -246,9 +265,9 @@ Future<dynamic> showActivityReserveDialoge(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(5),
                                 ),
-                                child: const Center(
+                                child: Center(
                                   child: TextWidget(
-                                    text: 'Cancel',
+                                    text: context.l10n.commonCancel,
                                     color: Color(0xFF262626),
                                     fontSize: 16,
                                     fontWeight: FontWeight.w400,

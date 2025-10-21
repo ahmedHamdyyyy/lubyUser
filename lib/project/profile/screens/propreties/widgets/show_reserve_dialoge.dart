@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:luby2/config/widget/widget.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 import 'package:luby2/project/models/property.dart';
 
 import '../../../../../../config/colors/colors.dart';
@@ -53,8 +54,8 @@ Future<dynamic> showReseverDialoge(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const TextWidget(
-                                  text: 'Check in',
+                                TextWidget(
+                                  text: context.l10n.checkIn.trim(),
                                   color: Color(0xFF414141),
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
@@ -63,21 +64,22 @@ Future<dynamic> showReseverDialoge(
                                 TextFormField(
                                   controller: checkInController,
                                   validator: (value) {
-                                    if (value == null || value.isEmpty) return 'Please enter check-in date';
+                                    if (value == null || value.isEmpty) return context.l10n.pleaseEnterCheckInDate;
                                     if (!RegExp(r'^\d{1,2}/\d{1,2}/\d{4}$').hasMatch(value)) {
-                                      return 'Enter date in DD/MM/YYYY format';
+                                      return context.l10n.enterDateInDdMmYyyy;
                                     }
                                     final dateParts = value.split('/');
                                     final day = int.tryParse(dateParts[0]);
                                     final month = int.tryParse(dateParts[1]);
                                     final year = int.tryParse(dateParts[2]);
-                                    if (day == null || month == null || year == null) return 'Invalid date components';
+                                    if (day == null || month == null || year == null)
+                                      return context.l10n.invalidDateComponents;
                                     final date = DateTime(year, month, day);
-                                    if (date.isBefore(DateTime.now())) return 'Check-in date must be in the future';
+                                    if (date.isBefore(DateTime.now())) return context.l10n.checkInDateMustBeInFuture;
                                     final startDate = DateTime.tryParse(property.startDate) ?? DateTime.now();
                                     final endDate = DateTime.tryParse(property.endDate) ?? DateTime.now();
                                     if (date.isBefore(startDate) || date.isAfter(endDate)) {
-                                      return 'Date must be within property availability';
+                                      return context.l10n.dateMustBeWithinAvailability;
                                     }
                                     return null;
                                   },
@@ -108,8 +110,8 @@ Future<dynamic> showReseverDialoge(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const TextWidget(
-                                  text: 'Check out',
+                                TextWidget(
+                                  text: context.l10n.checkOut.trim(),
                                   color: Color(0xFF414141),
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
@@ -118,21 +120,22 @@ Future<dynamic> showReseverDialoge(
                                 TextFormField(
                                   controller: checkOutController,
                                   validator: (value) {
-                                    if (value == null || value.isEmpty) return 'Please enter check-in date';
+                                    if (value == null || value.isEmpty) return context.l10n.pleaseEnterCheckInDate;
                                     if (!RegExp(r'^\d{1,2}/\d{1,2}/\d{4}$').hasMatch(value)) {
-                                      return 'Enter date in DD/MM/YYYY format';
+                                      return context.l10n.enterDateInDdMmYyyy;
                                     }
                                     final dateParts = value.split('/');
                                     final day = int.tryParse(dateParts[0]);
                                     final month = int.tryParse(dateParts[1]);
                                     final year = int.tryParse(dateParts[2]);
-                                    if (day == null || month == null || year == null) return 'Invalid date components';
+                                    if (day == null || month == null || year == null)
+                                      return context.l10n.invalidDateComponents;
                                     final date = DateTime(year, month, day);
-                                    if (date.isBefore(DateTime.now())) return 'Check-in date must be in the future';
+                                    if (date.isBefore(DateTime.now())) return context.l10n.checkInDateMustBeInFuture;
                                     final startDate = DateTime.tryParse(property.startDate) ?? DateTime.now();
                                     final endDate = DateTime.tryParse(property.endDate) ?? DateTime.now();
                                     if (date.isBefore(startDate) || date.isAfter(endDate)) {
-                                      return 'Date must be within property availability';
+                                      return context.l10n.dateMustBeWithinAvailability;
                                     }
                                     if (checkInController.text.isNotEmpty) {
                                       final checkInParts = checkInController.text.split('/');
@@ -141,7 +144,7 @@ Future<dynamic> showReseverDialoge(
                                       final checkInYear = int.tryParse(checkInParts[2]);
                                       if (checkInDay != null && checkInMonth != null && checkInYear != null) {
                                         final checkInDate = DateTime(checkInYear, checkInMonth, checkInDay);
-                                        if (!date.isAfter(checkInDate)) return 'Check-out must be after check-in';
+                                        if (!date.isAfter(checkInDate)) return context.l10n.checkOutMustBeAfterCheckIn;
                                       }
                                     }
                                     return null;
@@ -175,8 +178,8 @@ Future<dynamic> showReseverDialoge(
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const TextWidget(
-                          text: 'Guests No.',
+                        TextWidget(
+                          text: context.l10n.guestsNoLabel,
                           color: Color(0xFF414141),
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
@@ -185,9 +188,9 @@ Future<dynamic> showReseverDialoge(
                         TextFormField(
                           controller: guestController,
                           validator: (value) {
-                            if (value == null || value.isEmpty) return 'invalid guest number';
+                            if (value == null || value.isEmpty) return context.l10n.invalidGuestNumber;
                             final guests = int.tryParse(value);
-                            if (guests == null || guests < 1) return 'invalid guest number';
+                            if (guests == null || guests < 1) return context.l10n.invalidGuestNumber;
                             return null;
                           },
                           keyboardType: TextInputType.number,
@@ -196,7 +199,7 @@ Future<dynamic> showReseverDialoge(
                           decoration: InputDecoration(
                             enabledBorder: buildOutlineInputBorder(5),
                             focusedBorder: buildOutlineInputBorder(5),
-                            hintText: '1 Guests',
+                            hintText: context.l10n.guestCountHint,
                             hintStyle: const TextStyle(color: Color(0xFF757575), fontSize: 14, fontWeight: FontWeight.w400),
                           ),
                         ),
@@ -208,14 +211,16 @@ Future<dynamic> showReseverDialoge(
                         Row(
                           children: [
                             TextWidget(
-                              text: '${property.pricePerNight} x ${guestController.text.trim()} person',
+                              text: '${property.pricePerNight} x ${guestController.text.trim()} ${context.l10n.guests}',
                               color: Color(0xFF414141),
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
                             ),
                             Spacer(),
                             TextWidget(
-                              text: '${property.pricePerNight * (int.tryParse(guestController.text.trim()) ?? 1)} SAR',
+                              text: context.l10n.sarAmount(
+                                property.pricePerNight * (int.tryParse(guestController.text.trim()) ?? 1),
+                              ),
                               color: Color(0xFF414141),
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
@@ -226,13 +231,18 @@ Future<dynamic> showReseverDialoge(
                         Row(
                           children: [
                             TextWidget(
-                              text: 'Service Fees',
+                              text: context.l10n.serviceFees,
                               color: Color(0xFF414141),
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
                             ),
                             Spacer(),
-                            TextWidget(text: '20 SAR', color: Color(0xFF414141), fontSize: 16, fontWeight: FontWeight.w400),
+                            TextWidget(
+                              text: context.l10n.sarAmount(20),
+                              color: Color(0xFF414141),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ],
                         ),
                         SizedBox(height: 24),
@@ -241,10 +251,18 @@ Future<dynamic> showReseverDialoge(
                           padding: EdgeInsets.symmetric(vertical: 16.0),
                           child: Row(
                             children: [
-                              TextWidget(text: 'Total', color: Color(0xFF414141), fontSize: 16, fontWeight: FontWeight.w600),
+                              TextWidget(
+                                text: context.l10n.commonTotal,
+                                color: Color(0xFF414141),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
                               Spacer(),
                               TextWidget(
-                                text: '${calculateTotalPrice() ?? '---'} SAR',
+                                text:
+                                    calculateTotalPrice() == null
+                                        ? '---'
+                                        : context.l10n.sarAmount(calculateTotalPrice()!.toInt()),
                                 color: Color(0xFF414141),
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,
@@ -254,8 +272,8 @@ Future<dynamic> showReseverDialoge(
                         ),
                       ],
                     ),
-                    const TextWidget(
-                      text: 'You won\'t be charged yet',
+                    TextWidget(
+                      text: context.l10n.notChargedYet,
                       color: Color(0xFF757575),
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
@@ -276,10 +294,7 @@ Future<dynamic> showReseverDialoge(
                                   final checkoutDate = Utils.parseDate(checkOutController.text.trim());
                                   final guests = int.parse(guestController.text.trim());
                                   if (checkinDate!.isAfter(checkoutDate!)) {
-                                    return showToast(
-                                      text: 'check in Date must be before check out date',
-                                      stute: ToustStute.worning,
-                                    );
+                                    return showToast(text: context.l10n.checkInBeforeCheckOut, stute: ToustStute.worning);
                                   }
                                   Navigator.push(
                                     context,
@@ -305,9 +320,9 @@ Future<dynamic> showReseverDialoge(
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                                   padding: EdgeInsets.zero,
                                 ),
-                                child: const Center(
+                                child: Center(
                                   child: TextWidget(
-                                    text: 'Reserve',
+                                    text: context.l10n.reserveLabel,
                                     color: Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w400,
@@ -329,9 +344,9 @@ Future<dynamic> showReseverDialoge(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(5),
                                 ),
-                                child: const Center(
+                                child: Center(
                                   child: TextWidget(
-                                    text: 'Cancel',
+                                    text: context.l10n.commonCancel,
                                     color: Color(0xFF262626),
                                     fontSize: 16,
                                     fontWeight: FontWeight.w400,

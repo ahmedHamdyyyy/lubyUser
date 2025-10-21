@@ -10,6 +10,7 @@ class ApiConstance {
   static const confirmOtpSignUp = "auth/signup/verify";
   static const confirmOtpResetPassword = "auth/confirm-otp-reset-password";
   static const forgetPasswordReset = "auth/forget-password/reset";
+  static const updateFcmToken = "auth/update-fcm-token";
 
   static const userProfile = "users/me";
   static getProperty(String id) => "properties/$id";
@@ -27,4 +28,7 @@ class ApiConstance {
   static updateReview(String id) => "reviews/$id";
   static const reviews = "reviews";
   static addReview(String itemId) => "reviews/$itemId";
+
+  static const notifications = "notifications";
+  static String readNotification(String id) => "notifications/$id";
 }

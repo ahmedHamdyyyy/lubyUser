@@ -1,10 +1,12 @@
 // ignore_for_file: use_key_in_widget_constructors, file_names
 
 import 'package:flutter/material.dart';
-import '../../../../../../config/colors/colors.dart';
-import '../../../auth/view/Screen/auth/sign_in.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/images/image_assets.dart';
+import '../../../../../core/localization/l10n_ext.dart';
+import '../../../auth/view/Screen/auth/sign_in.dart';
 
 class LoginPromptScreen extends StatelessWidget {
   @override
@@ -13,11 +15,10 @@ class LoginPromptScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text ("Summary",style: GoogleFonts.poppins(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: AppColors.grayTextColor,
-        ),),
+        title: Text(
+          context.l10n.summaryTitle,
+          style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.grayTextColor),
+        ),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: AppColors.primary),
@@ -32,35 +33,24 @@ class LoginPromptScreen extends StatelessWidget {
             Image.asset(ImageAssets.loginPromptScreen, height: 130, width: 130),
             SizedBox(height: 20),
             Text(
-              "Please log in or register first to\ncomplete the booking",
+              context.l10n.pleaseLoginToCompleteBooking,
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
-                fontSize: 18,
-                fontWeight: FontWeight.w400,
-              ),
+              style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w400),
             ),
             SizedBox(height: 50),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 backgroundColor: AppColors.primary,
                 minimumSize: Size(double.infinity, 50),
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => SignInScreen()),
-                );
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SignInScreen()));
               },
-              child: Text("Log in or register",
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    color: Colors.white,  
-                    fontWeight: FontWeight.w400,
-                  )),
+              child: Text(
+                context.l10n.loginOrRegister,
+                style: GoogleFonts.poppins(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w400),
+              ),
             ),
           ],
         ),

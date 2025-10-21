@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../config/constants/constance.dart';
 import '../../../../../../config/widget/widget.dart';
@@ -65,7 +66,7 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
     _errorText = null;
     setState(() => _isLoading = true);
     if (_otpController.text.isEmpty || _otpController.text.length < 4) {
-      _errorText = 'Please enter a valid 4-character code';
+      _errorText = context.l10n.invalidOtpCode;
       setState(() => _isLoading = false);
       return;
     }
@@ -181,8 +182,8 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                             const SizedBox(height: 32),
 
                             // Title
-                            const Text(
-                              'Enter 6-Character Code',
+                            Text(
+                              context.l10n.verifyEmailTitle,
                               style: TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
@@ -199,7 +200,7 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                               text: TextSpan(
                                 style: const TextStyle(fontSize: 16, color: Color(0xFF64748B), height: 1.5),
                                 children: [
-                                  const TextSpan(text: 'We\'ve sent a 6-character code to\n'),
+                                  TextSpan(text: context.l10n.sendVerificationEmail + '\n'),
                                   TextSpan(
                                     text: widget.email,
                                     style: const TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF1E293B)),
@@ -245,7 +246,7 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                                   letterSpacing: 8,
                                 ),
                                 decoration: InputDecoration(
-                                  labelText: 'Enter 6-character code',
+                                  labelText: context.l10n.verifyEmailTitle,
                                   labelStyle: const TextStyle(color: Color(0xFF94A3B8), fontSize: 16),
                                   hintText: 'ABC123',
                                   hintStyle: const TextStyle(color: Color(0xFFCBD5E1), fontSize: 24, letterSpacing: 8),
@@ -289,8 +290,8 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                                           height: 24,
                                           child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                                         )
-                                        : const Text(
-                                          'Verify Code',
+                                        : Text(
+                                          context.l10n.verifyEmailTitle,
                                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, letterSpacing: 0.5),
                                         ),
                               ),
@@ -312,7 +313,7 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: Text(
-                                      'The code will expire in 2 minutes. Check your spam folder if you don\'t receive it.',
+                                      context.l10n.dismiss,
                                       style: TextStyle(fontSize: 14, color: const Color(0xFF64748B), height: 1.4),
                                     ),
                                   ),
@@ -327,16 +328,16 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Didn\'t receive the code? ',
+                                  context.l10n.retry + ' ',
                                   style: TextStyle(fontSize: 14, color: const Color(0xFF64748B)),
                                 ),
                                 GestureDetector(
                                   onTap: () {
                                     // Add resend logic here
-                                    showToast(text: 'Resend functionality coming soon', stute: ToustStute.success);
+                                    showToast(text: context.l10n.resendComingSoon, stute: ToustStute.success);
                                   },
                                   child: Text(
-                                    'Resend',
+                                    context.l10n.retry,
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../config/colors/colors.dart';
 import '../../../../config/constants/constance.dart';
@@ -55,7 +56,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProvid
           Padding(
             padding: const EdgeInsets.only(left: 20, top: 20),
             child: Text(
-              'Your favorite',
+              context.l10n.yourFavorites,
               style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.primaryTextColor),
             ),
           ),
@@ -73,14 +74,17 @@ class _FavoriteScreenState extends State<FavoriteScreen> with SingleTickerProvid
                   } else if (state.getFavoritesStatus == Status.error) {
                     return Center(
                       child: Text(
-                        state.message.isNotEmpty ? state.message : 'Failed to load favorites',
+                        state.message.isNotEmpty ? state.message : context.l10n.errorLabel,
                         style: TextStyle(color: Colors.red),
                       ),
                     );
                   }
                   if (state.favorites.isEmpty) {
                     return Center(
-                      child: Text('No favorites found', style: TextStyle(color: AppColors.grayTextColor, fontSize: 16)),
+                      child: Text(
+                        context.l10n.noFavoritesFound,
+                        style: TextStyle(color: AppColors.grayTextColor, fontSize: 16),
+                      ),
                     );
                   }
                   return SingleChildScrollView(

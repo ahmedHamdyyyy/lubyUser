@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:luby2/l10n/app_localizations.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../../../../config/colors/colors.dart';
@@ -18,10 +19,7 @@ class TextWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: GoogleFonts.poppins(color: color, fontSize: fontSize, fontWeight: fontWeight),
-    );
+    return Text(text, style: GoogleFonts.poppins(color: color, fontSize: fontSize, fontWeight: fontWeight));
   }
 }
 
@@ -51,18 +49,17 @@ class FirstSplashScreenContent extends StatelessWidget {
           right: 20,
           child: Column(
             children: [
-              const TextWidget(
-                text: "Welcome to LOBY",
+              TextWidget(
+                text: AppLocalizations.of(context).welcomeToLobyTitle,
                 color: AppColors.primaryWhite,
                 fontSize: 24,
                 fontWeight: FontWeight.w700,
               ),
               const SizedBox(height: 10),
-              const SizedBox(
+              SizedBox(
                 width: 335,
                 child: TextWidget(
-                  text:
-                      "LLorem ipsum dolor sit amet, consecr adipiscing elit. Ut hendrerit triueasdwfa prm gravida felis, sociis in felis.",
+                  text: AppLocalizations.of(context).welcomeToLobyDescription,
                   color: AppColors.primaryWhite,
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
@@ -95,8 +92,8 @@ class StartedButton extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         elevation: 0,
       ),
-      child: const TextWidget(
-        text: "Let's Started",
+      child: TextWidget(
+        text: AppLocalizations.of(context).letsStarted,
         color: AppColors.primaryWhite,
         fontSize: 16,
         fontWeight: FontWeight.w400,
@@ -147,18 +144,16 @@ class LanguageSelectionContainer extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const TextWidget(
-              text: "Select your Language",
+            TextWidget(
+              text: AppLocalizations.of(context).selectYourLanguageArabicTitle,
               color: AppColors.secondTextColor,
               fontSize: 20,
               fontWeight: FontWeight.w500,
             ),
-            SizedBox(height: 8.h),
-            const TextWidget(text: "اختر لغتك", color: AppColors.secondTextColor, fontSize: 20, fontWeight: FontWeight.w500),
             SizedBox(height: 32.h),
-            LanguageButton(language: "English", isPrimary: true, onPressed: onSelectEnglish),
+            LanguageButton(language: AppLocalizations.of(context).english, isPrimary: true, onPressed: onSelectEnglish),
             SizedBox(height: 16.h),
-            LanguageButton(language: "العربية", isPrimary: false, onPressed: onSelectArabic),
+            LanguageButton(language: AppLocalizations.of(context).arabic, isPrimary: false, onPressed: onSelectArabic),
           ],
         ),
       ),
@@ -185,10 +180,7 @@ class LanguageButton extends StatelessWidget {
           backgroundColor: AppColors.primary,
           minimumSize: Size(double.infinity, 50.h),
         ),
-        child: Text(
-          language,
-          style: GoogleFonts.poppins(color: Colors.white, fontSize: 16.sp),
-        ),
+        child: Text(language, style: GoogleFonts.poppins(color: Colors.white, fontSize: 16.sp)),
       );
     } else {
       return OutlinedButton(
@@ -199,10 +191,7 @@ class LanguageButton extends StatelessWidget {
           side: const BorderSide(color: AppColors.primary),
           minimumSize: Size(double.infinity, 50.h),
         ),
-        child: Text(
-          language,
-          style: GoogleFonts.poppins(fontSize: 16.sp, color: AppColors.primary),
-        ),
+        child: Text(language, style: GoogleFonts.poppins(fontSize: 16.sp, color: AppColors.primary)),
       );
     }
   }
@@ -256,10 +245,7 @@ class SplashPageItem extends StatelessWidget {
             width: 335,
             child: Column(
               children: [
-                Text(
-                  title,
-                  style: GoogleFonts.poppins(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
-                ),
+                Text(title, style: GoogleFonts.poppins(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white)),
                 const SizedBox(height: 24),
                 Text(
                   description,
@@ -317,7 +303,7 @@ class SkipButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: onPressed,
-      child: Text("Skip", style: GoogleFonts.poppins(color: Colors.white, fontSize: 16)),
+      child: Text(AppLocalizations.of(context).skip, style: GoogleFonts.poppins(color: Colors.white, fontSize: 16)),
     );
   }
 }

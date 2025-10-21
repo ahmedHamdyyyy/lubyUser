@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../../config/colors/colors.dart';
 import '../../../../config/images/image_assets.dart';
+import '../../../../core/localization/l10n_ext.dart';
 import '../../../../core/utils/utile.dart';
 import '../../../../locator.dart';
 import '../../../models/activity.dart';
@@ -81,14 +82,14 @@ class _ReservationScreenState extends State<ReservationScreen> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  "Summary",
+                  context.l10n.summaryTitle,
                   style: GoogleFonts.poppins(color: AppColors.grayTextColor, fontWeight: FontWeight.w500, fontSize: 14),
                 ),
               ],
             ),
             const SizedBox(height: 22),
             Text(
-              'Reservation Number ${widget.reservation.registrationNumber}',
+              context.l10n.reservationNumber(widget.reservation.registrationNumber),
               style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.primaryColor),
             ),
             SizedBox(height: 16),
@@ -138,7 +139,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                                     ),
                                   ),
                                   Text(
-                                    '$_price SAR',
+                                    context.l10n.sarAmount(_price),
                                     style: GoogleFonts.poppins(
                                       color: AppColors.secondTextColor,
                                       fontSize: 14,
@@ -159,8 +160,8 @@ class _ReservationScreenState extends State<ReservationScreen> {
                               const SizedBox(height: 10),
                               Text(
                                 widget.reservation.type == ReservationType.property
-                                    ? "Check-in  $_checkIn\nCheck-out  $_checkOut"
-                                    : "Date  $_checkIn",
+                                    ? "${context.l10n.checkIn} $_checkIn\n${context.l10n.checkOut} $_checkOut"
+                                    : "${context.l10n.dateLabel} $_checkIn",
                                 style: GoogleFonts.poppins(
                                   color: AppColors.grayTextColor,
                                   fontSize: 14,
@@ -179,7 +180,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                     children: [
                       Expanded(
                         child: Text(
-                          "Free cancellation before $_checkIn October",
+                          context.l10n.freeCancellationBefore(_checkIn),
                           style: GoogleFonts.poppins(
                             color: AppColors.secondTextColor,
                             fontSize: 12,
@@ -233,7 +234,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                         ),
                       ),
                       Text(
-                        'Hosted by',
+                        context.l10n.hostedBy,
                         style: GoogleFonts.poppins(
                           color: AppColors.secondTextColor,
                           fontWeight: FontWeight.w600,
@@ -256,19 +257,19 @@ class _ReservationScreenState extends State<ReservationScreen> {
             ),
             Divider(height: 32, thickness: 1),
             Text(
-              'Summary',
+              context.l10n.summaryTitle,
               style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.primaryTextColor),
             ),
             SizedBox(height: 8),
             SummaryRow(
               title:
                   widget.reservation.type == ReservationType.property
-                      ? '$_nights nights × ${widget.reservation.guestNumber} Guests × $_price'
-                      : '${widget.reservation.guestNumber} Guests × $_price',
-              price: '${_nights * widget.reservation.guestNumber * _price} SAR',
+                      ? '$_nights ${context.l10n.nights} × ${widget.reservation.guestNumber} ${context.l10n.guests} × ${context.l10n.sarAmount(_price)}'
+                      : '${widget.reservation.guestNumber} ${context.l10n.guests} × ${context.l10n.sarAmount(_price)}',
+              price: context.l10n.sarAmount(_nights * widget.reservation.guestNumber * _price),
             ),
-            SummaryRow(title: 'Vat', price: '0 SAR'),
-            SummaryRow(title: 'Discount', price: '-200 SAR'),
+            SummaryRow(title: context.l10n.commonVat, price: context.l10n.sarAmount(0)),
+            SummaryRow(title: context.l10n.commonDiscount, price: '-${context.l10n.sarAmount(200)}'),
             SizedBox(height: 16),
             Divider(height: 32, thickness: 1),
             if (widget.reservation.status == ReservationStatus.completed)
@@ -278,7 +279,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                   SizedBox(width: 14),
                   Expanded(
                     child: Text(
-                      'View reservation summary',
+                      context.l10n.viewReservationSummary,
                       style: GoogleFonts.poppins(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
@@ -308,7 +309,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                     );
                   }
                   return ActionButtonWidget(
-                    text: "Pay Now",
+                    text: context.l10n.payNow,
                     fontSize: 18,
                     onPressed: () async {
                       print('Payment is already in progress or being checked. $_paymentStatus');
@@ -334,7 +335,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                           Navigator.pop(context);
                           Navigator.push(context, MaterialPageRoute(builder: (context) => ThankYouScreen()));
                         } else {
-                          Utils.errorDialog(context, 'Payment not completed yet. Please complete the payment.');
+                          Utils.errorDialog(context, context.l10n.paymentNotCompleted);
                         }
                       }
                     },
@@ -343,7 +344,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
               )
             else
               Text(
-                'Canceled...',
+                context.l10n.canceledLabel,
                 style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400, color: AppColors.secondTextColor),
               ),
             SizedBox(height: 24),

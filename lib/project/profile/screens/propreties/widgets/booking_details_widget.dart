@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../../config/colors/colors.dart';
+import '../../../../../../core/localization/l10n_ext.dart';
 import '../../../../models/property.dart';
 
 class BookingDetailsWidget extends StatelessWidget {
@@ -61,7 +62,7 @@ class BookingDetailsWidget extends StatelessWidget {
               const SizedBox(width: 8),
               Flexible(
                 child: Text(
-                  'Free cancellation before ${property.startDate.split('T').first.replaceAll('-', '/')}',
+                  context.l10n.freeCancellationBefore(property.startDate.split('T').first.replaceAll('-', '/')),
                   style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 16, fontWeight: FontWeight.w500),
                 ),
               ),

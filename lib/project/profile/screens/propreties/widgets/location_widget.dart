@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/widget/helper.dart';
@@ -73,9 +74,9 @@ class LocationWidget extends StatelessWidget {
                   width: 24,
                 ),
                 const SizedBox(width: 8),
-                const TextWidget(
-                  text: 'View Location on Map',
-                  color: Color(0xFF262626),
+                TextWidget(
+                  text: context.l10n.viewLocationOnMap,
+                  color: const Color(0xFF262626),
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),

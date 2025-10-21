@@ -1,60 +1,32 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../config/constants/constance.dart';
+import '../../../../core/utils/utile.dart';
+import '../../../../locator.dart';
+import '../../../Home/cubit/home_cubit.dart';
 import 'all_widget_notfication.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
-
   @override
   _NotificationsScreenState createState() => _NotificationsScreenState();
 }
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
-  // Used to simulate presence or absence of notifications
-  bool hasNotifications = true;
-  int currentIndex = 0; // Track current bottom navigation bar index
-  void updateCurrentIndex(int index) {
-    setState(() {
-      currentIndex = index;
-    });
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => getIt<HomeCubit>().loadNotifications());
   }
 
-  // List of notifications to display
-  final List<Map<String, dynamic>> notifications = [
-    {
-      'id': 1,
-      'type': 'studio',
-      'title': 'Studio - 5 Nights',
-      'subtitle': 'Reservation has been done',
-      'date': '30/06/2024',
-      'image': 'assets/images/image6.png',
-    },
-    {
-      'id': 2,
-      'type': 'activity',
-      'title': 'Activity Name',
-      'subtitle': 'Reservation has been done',
-      'date': '4/06/2024',
-      'image': 'assets/images/image7.png',
-    },
-    {
-      'id': 3,
-      'type': 'notification',
-      'title': 'Notification Name',
-      'subtitle': 'Lorem ipsum dolor sit amet',
-      'date': '4/05/2024',
-      'image': "assets/images/Layer_1.png",
-    },
-    {
-      'id': 4,
-      'type': 'studio',
-      'title': 'Studio - 5 Nights',
-      'subtitle': 'Reservation has been done',
-      'date': '27/04/2024',
-      'image': 'assets/images/image6.png',
-    },
-  ];
+  @override
+  void dispose() {
+    getIt<HomeCubit>().initNotifications();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,24 +34,46 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       backgroundColor: Colors.white,
       appBar: notificationsListAppBar(context),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            NotificationsListTitle(
-              onTap: () {
-                setState(() {
-                  hasNotifications = !hasNotifications;
-                });
-              },
-            ),
-            hasNotifications 
-                ? NotificationsList(notifications: notifications) 
-                : const EmptyNotificationsState(),
-          ],
+        child: BlocConsumer<HomeCubit, HomeState>(
+          listener: (context, state) {
+            if (state.loadNotificationsStatus == Status.loading || state.readNotificationStatus == Status.loading) {
+              Utils.loadingDialog(context);
+            } else if (state.loadNotificationsStatus == Status.success || state.readNotificationStatus == Status.success) {
+              Navigator.pop(context);
+            } else if (state.loadNotificationsStatus == Status.error || state.readNotificationStatus == Status.error) {
+              Navigator.pop(context);
+              Utils.errorDialog(context, state.msg);
+            }
+          },
+          builder: (context, state) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                NotificationsListTitle(
+                  onTap: () {
+                    // setState(() {
+                    //   hasNotifications = !hasNotifications;
+                    // });
+                  },
+                ),
+                state.notifications.isNotEmpty
+                    ? ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: const EdgeInsets.all(16),
+                      itemCount: state.notifications.length,
+                      itemBuilder: (context, index) {
+                        final notification = state.notifications[index];
+                        return NotificationItem(notification: notification);
+                      },
+                    )
+                    : const EmptyNotificationsState(),
+              ],
+            );
+          },
         ),
       ),
-     
     );
   }
 }

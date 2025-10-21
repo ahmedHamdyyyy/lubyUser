@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/constants/constance.dart';
@@ -45,7 +46,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (!agreeToTerms) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('يرجى الموافقة على الشروط والأحكام'), backgroundColor: Colors.red));
+      ).showSnackBar(SnackBar(content: Text(context.l10n.agreeToTerms), backgroundColor: Colors.red));
       return;
     }
     if (firstNameController.text.isEmpty ||
@@ -56,14 +57,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
         confirmPasswordController.text.isEmpty) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('يرجى ملء جميع الحقول'), backgroundColor: Colors.red));
+      ).showSnackBar(SnackBar(content: Text(context.l10n.fillAllFields), backgroundColor: Colors.red));
       return;
     }
 
     if (passwordController.text != confirmPasswordController.text) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('كلمات المرور غير متطابقة'), backgroundColor: Colors.red));
+      ).showSnackBar(SnackBar(content: Text(context.l10n.passwordsDoNotMatch), backgroundColor: Colors.red));
       return;
     }
 
@@ -123,23 +124,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     const SizedBox(height: 15),
                     EditableProfileImage(onImageSelected: _handleImageSelected),
                     const SizedBox(height: 30),
-                    RegistrationTextField(hintText: "First Name", controller: firstNameController, isError: false),
-                    RegistrationTextField(hintText: "Last Name", controller: lastNameController),
+                    RegistrationTextField(
+                      hintText: context.l10n.firstNameLabel,
+                      controller: firstNameController,
+                      isError: false,
+                    ),
+                    RegistrationTextField(hintText: context.l10n.lastNameLabel, controller: lastNameController),
                     RegistrationTextField(
                       //validator: (value) => InputValidation.phoneValidation(value),
                       keyboardType: TextInputType.phone,
-                      hintText: "Phone Number",
+                      hintText: context.l10n.phoneNumberLabel,
                       controller: phoneController,
                       isNumber: true,
                     ),
                     RegistrationTextField(
                       keyboardType: TextInputType.emailAddress,
-                      hintText: "Email",
+                      hintText: context.l10n.emailLabel,
                       controller: emailController,
                     ),
-                    RegistrationTextField(hintText: "Password", controller: passwordController, isPassword: true),
                     RegistrationTextField(
-                      hintText: "Confirm Password",
+                      hintText: context.l10n.passwordLabel,
+                      controller: passwordController,
+                      isPassword: true,
+                    ),
+                    RegistrationTextField(
+                      hintText: context.l10n.confirmPasswordLabel,
                       controller: confirmPasswordController,
                       isPassword: true,
                     ),
@@ -152,7 +161,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Already have an account?",
+                          context.l10n.alreadyHaveAccount,
                           style: GoogleFonts.poppins(
                             color: AppColors.grayTextColor,
                             fontSize: 14,
@@ -172,7 +181,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
                           child: Text(
-                            "Login",
+                            context.l10n.signIn,
                             style: GoogleFonts.poppins(color: AppColors.primary, fontSize: 14, fontWeight: FontWeight.w600),
                           ),
                         ),

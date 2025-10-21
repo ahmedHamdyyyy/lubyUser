@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/images/image_assets.dart';
@@ -44,7 +45,7 @@ class ReservationItemWidget extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "Hosted by\n",
+                          text: context.l10n.hostedBy + '\n',
                           style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: AppColors.secondTextColor),
                         ),
                         TextSpan(
@@ -121,7 +122,7 @@ class WelcomeTitleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      "Welcome !",
+      context.l10n.welcomeToOurApp,
       style: GoogleFonts.poppins(fontSize: fontSize, fontWeight: FontWeight.w500, color: AppColors.primary),
     );
   }
@@ -136,7 +137,7 @@ class WelcomeSubtitleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      "Please enter your mobile number to create an account or log in.",
+      context.l10n.mobileLoginPrompt,
       textAlign: TextAlign.start,
       style: GoogleFonts.poppins(fontSize: fontSize, color: Colors.black54, fontWeight: FontWeight.w400),
     );
@@ -205,7 +206,7 @@ class ContinueButtonWidget extends StatelessWidget {
         ),
         onPressed: onPressed,
         child: Text(
-          "Continue",
+          context.l10n.commonContinue,
           style: GoogleFonts.poppins(fontSize: fontSize, color: Colors.white, fontWeight: FontWeight.w400),
         ),
       ),
@@ -306,23 +307,23 @@ class LoginScreenContent extends StatelessWidget {
             const SizedBox(height: 20),
 
             // "Or" text
-            Center(child: Text("or", style: GoogleFonts.poppins(color: Colors.black54, fontSize: 16))),
+            Center(child: Text(context.l10n.commonOr, style: GoogleFonts.poppins(color: Colors.black54, fontSize: 16))),
             const SizedBox(height: 10),
 
             // Social login buttons
             SocialButtonWidget(
               imagePath: 'assets/images/mail_flag.png',
-              text: "Continue with E-mail",
+              text: context.l10n.continueWithEmail,
               onPressed: onEmailPressed,
             ),
             SocialButtonWidget(
               imagePath: 'assets/images/google_flag.png',
-              text: "Continue with Google",
+              text: context.l10n.continueWithGoogle,
               onPressed: onGooglePressed,
             ),
             SocialButtonWidget(
               imagePath: 'assets/images/facebook_flag.png',
-              text: "Continue with Facebook",
+              text: context.l10n.continueWithFacebook,
               onPressed: onFacebookPressed,
             ),
           ],
@@ -585,12 +586,15 @@ class ReservedItemCardWidget extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("$guestNumber Guests", style: GoogleFonts.poppins(color: AppColors.grayTextColor)),
-                          Text("$nights Nights", style: GoogleFonts.poppins(color: AppColors.grayTextColor)),
+                          Text(
+                            "$guestNumber ${context.l10n.guests}",
+                            style: GoogleFonts.poppins(color: AppColors.grayTextColor),
+                          ),
+                          Text("$nights ${context.l10n.nights}", style: GoogleFonts.poppins(color: AppColors.grayTextColor)),
                         ],
                       ),
                       Text(
-                        "Total Price: $totalPrice",
+                        '${context.l10n.commonTotal}: $totalPrice',
                         style: GoogleFonts.poppins(
                           color: AppColors.secondTextColor,
                           fontSize: 14,
@@ -608,7 +612,9 @@ class ReservedItemCardWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  "Free cancellation before ${startDate.split('T').first.replaceAll('-', '/').split('/').reversed.join('/')}",
+                  context.l10n.freeCancellationBefore(
+                    startDate.split('T').first.replaceAll('-', '/').split('/').reversed.join('/'),
+                  ),
                   style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 14, fontWeight: FontWeight.w400),
                 ),
               ),
@@ -632,7 +638,7 @@ class ReservedItemCardWidget extends StatelessWidget {
 
 // Promo Code Success Message Widget
 class PromoCodeSuccessMessageWidget extends StatelessWidget {
-  const PromoCodeSuccessMessageWidget({super.key, this.message = "The promo code has been applied successfully"});
+  const PromoCodeSuccessMessageWidget({super.key, this.message = ''});
   final String message;
 
   @override
@@ -640,7 +646,7 @@ class PromoCodeSuccessMessageWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: Text(
-        message,
+        message.isNotEmpty ? message : context.l10n.commonApply,
         style: GoogleFonts.poppins(color: AppColors.primaryColor, fontSize: 14, fontWeight: FontWeight.w400),
       ),
     );

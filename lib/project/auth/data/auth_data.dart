@@ -1,5 +1,6 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../../../../../config/constants/api_constance.dart';
 import '../../../../../config/constants/constance.dart';
@@ -36,6 +37,14 @@ class AuthData {
 
   Future<UserModel> signin({required String email, required String password}) async {
     final loginData = {AppConst.email: email, AppConst.password: password, 'app-type': 'user'};
+    try {
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      if (fcmToken != null && fcmToken.isNotEmpty) {
+        loginData['fcmToken'] = fcmToken;
+      }
+    } catch (_) {
+      // ignore token failures silently for login
+    }
     final response = await _apiServices.dio.post(ApiConstance.signin, data: loginData);
     final data = response.data['data'];
     if (data == null || data['user'] == null) throw _responseException(response);

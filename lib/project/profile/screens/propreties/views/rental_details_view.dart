@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../../../config/constants/constance.dart';
 import '../../../../../../config/widget/helper.dart';
 import '../../../../../../locator.dart';
+import '../../../../../core/localization/l10n_ext.dart';
 import '../../../../Home/cubit/home_cubit.dart';
 import '../../../../favorites/cubit/cubit.dart';
 import '../../../../models/favorite.dart';
@@ -166,7 +167,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                               ),
                               child: TextWidget(
-                                text: isExpanded ? 'Read Less' : 'Read More',
+                                text: isExpanded ? context.l10n.readLess : context.l10n.readMore,
                                 color: const Color(0xFFFFFFFF),
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../../../../../config/colors/colors.dart';
@@ -148,7 +149,7 @@ Row iconImageTaxt(HomeState state, BuildContext context) {
             style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
           ),
           Text(
-            "Welcome to our App",
+            context.l10n.welcomeToOurApp,
             style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
           ),
         ],
@@ -159,7 +160,7 @@ Row iconImageTaxt(HomeState state, BuildContext context) {
   );
 }
 
-Widget buildBottomNavigationBar({int currentIndex = 0, Function(int)? onTap}) {
+Widget buildBottomNavigationBar(BuildContext context, {int currentIndex = 0, Function(int)? onTap}) {
   return BottomNavigationBar(
     backgroundColor: Colors.white,
     selectedItemColor: Colors.red,
@@ -186,7 +187,7 @@ Widget buildBottomNavigationBar({int currentIndex = 0, Function(int)? onTap}) {
           height: 24,
           colorFilter: ColorFilter.mode(Colors.red, BlendMode.srcIn),
         ),
-        label: "Home",
+        label: context.l10n.navHome,
       ),
       BottomNavigationBarItem(
         icon: SvgPicture.asset(
@@ -201,7 +202,7 @@ Widget buildBottomNavigationBar({int currentIndex = 0, Function(int)? onTap}) {
           height: 24,
           colorFilter: ColorFilter.mode(Colors.red, BlendMode.srcIn),
         ),
-        label: "Favorites",
+        label: context.l10n.navFavorites,
       ),
       BottomNavigationBarItem(
         icon: SvgPicture.asset(
@@ -216,7 +217,7 @@ Widget buildBottomNavigationBar({int currentIndex = 0, Function(int)? onTap}) {
           height: 24,
           colorFilter: ColorFilter.mode(Colors.red, BlendMode.srcIn),
         ),
-        label: "Bookings",
+        label: context.l10n.navBookings,
       ),
       BottomNavigationBarItem(
         icon: SvgPicture.asset(
@@ -231,7 +232,7 @@ Widget buildBottomNavigationBar({int currentIndex = 0, Function(int)? onTap}) {
           height: 24,
           colorFilter: ColorFilter.mode(Colors.red, BlendMode.srcIn),
         ),
-        label: "Messages",
+        label: context.l10n.navMessages,
       ),
       BottomNavigationBarItem(
         icon: SvgPicture.asset(
@@ -246,7 +247,7 @@ Widget buildBottomNavigationBar({int currentIndex = 0, Function(int)? onTap}) {
           height: 24,
           colorFilter: ColorFilter.mode(Colors.red, BlendMode.srcIn),
         ),
-        label: "Profile",
+        label: context.l10n.navProfile,
       ),
     ],
   );
@@ -298,7 +299,7 @@ Widget buildSliderItem(String imagePath, String text) {
   );
 }
 
-Widget buildImageSlider(PageController pageController) {
+Widget buildImageSlider(BuildContext context, PageController pageController) {
   return Column(
     children: [
       Padding(
@@ -312,9 +313,9 @@ Widget buildImageSlider(PageController pageController) {
                 PageView(
                   controller: pageController,
                   children: [
-                    buildSliderItem("assets/images/pageview.png", "BOOK YOUR\nAPARTMENT NOW"),
-                    buildSliderItem("assets/images/pageview.png", "FIND YOUR DREAM HOME"),
-                    buildSliderItem("assets/images/pageview.png", "EXPERIENCE LUXURY LIVING"),
+                    buildSliderItem("assets/images/pageview.png", context.l10n.sliderBookApartmentNow),
+                    buildSliderItem("assets/images/pageview.png", context.l10n.sliderFindDreamHome),
+                    buildSliderItem("assets/images/pageview.png", context.l10n.sliderExperienceLuxury),
                   ],
                 ),
                 Positioned(
@@ -353,13 +354,17 @@ Widget buildPropertyList({
   String? selectedPropertyType, selectedPriceRange, selectedRatingRange;
 
   // قائمة أنواع العقارات
-  final List<String> propertyTypes = ['Apartment - Studios', 'Camps', 'Villas'];
+  final List<String> propertyTypes = [
+    context.l10n.propertyTypeApartmentStudios,
+    context.l10n.propertyTypeCamps,
+    context.l10n.propertyTypeVillas,
+  ];
 
   // قائمة نطاقات الأسعار
-  final List<String> priceRanges = ['From high to low', 'From low to high'];
+  final List<String> priceRanges = [context.l10n.priceHighToLow, context.l10n.priceLowToHigh];
 
   // قائمة نطاقات التقييم
-  final List<String> ratingRanges = ['From high to low rated', 'default'];
+  final List<String> ratingRanges = [context.l10n.ratingHighToLow, context.l10n.ratingDefault];
 
   return Container(
     margin: const EdgeInsets.only(bottom: 4),
@@ -411,7 +416,9 @@ Widget buildPropertyList({
                   Icon(Icons.search_off, size: 64, color: Colors.grey[400]),
                   SizedBox(height: 16),
                   Text(
-                    "No ${selectedPropertyCategory ?? 'properties'} found",
+                    selectedPropertyCategory == null
+                        ? context.l10n.noPropertiesFound
+                        : '${context.l10n.noPropertiesFound.replaceFirst('properties', selectedPropertyCategory)}',
                     style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[600], fontWeight: FontWeight.w500),
                   ),
                 ],
@@ -520,14 +527,14 @@ Widget buildPropertyCard(BuildContext context, CustomPropertyModel property) {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "${property.guestNumber} Guests",
+                      "${property.guestNumber} ${context.l10n.guests}",
                       style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor, fontWeight: FontWeight.w400),
                     ),
                     Row(
                       children: [
                         Flexible(
                           child: Text(
-                            "${property.pricePerNight} SAR",
+                            context.l10n.sarAmount(property.pricePerNight),
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
@@ -538,7 +545,7 @@ Widget buildPropertyCard(BuildContext context, CustomPropertyModel property) {
                         ),
                         SizedBox(width: 4),
                         Text(
-                          "Per Night",
+                          context.l10n.perNightLabel,
                           style: GoogleFonts.poppins(
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
@@ -646,7 +653,7 @@ void showFilterOptions(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Filter",
+                        context.l10n.filterTitle,
                         style: GoogleFonts.poppins(
                           fontSize: 16,
                           color: AppColors.secondTextColor,
@@ -658,7 +665,7 @@ void showFilterOptions(
                           Navigator.pop(context);
                         },
                         child: Text(
-                          "Cancel",
+                          context.l10n.commonCancel,
                           style: GoogleFonts.poppins(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
@@ -697,7 +704,7 @@ void showFilterOptions(
 
                       // Price section
                       Text(
-                        "Price",
+                        context.l10n.priceLabel,
                         style: GoogleFonts.poppins(
                           fontSize: 16,
                           color: AppColors.primaryTextColor,
@@ -719,7 +726,7 @@ void showFilterOptions(
 
                       // Rate section
                       Text(
-                        "Rate",
+                        context.l10n.rateLabel,
                         style: GoogleFonts.poppins(
                           fontSize: 16,
                           color: AppColors.secondGrayTextColor,
@@ -763,7 +770,7 @@ void showFilterOptions(
                         print('- Price Range: $selectedPriceRange');
                         print('- Rating Range: $selectedRatingRange');
                       },
-                      child: Text("Search", style: GoogleFonts.poppins(fontSize: 16, color: Colors.white)),
+                      child: Text(context.l10n.commonSearch, style: GoogleFonts.poppins(fontSize: 16, color: Colors.white)),
                     ),
                   ),
                 ),
@@ -804,16 +811,16 @@ class _HomeSearchSectionState extends State<HomeSearchSection> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CityDropdown(
-          title: 'City',
-          hint: 'City',
+          title: context.l10n.cityLabel,
+          hint: context.l10n.cityLabel,
           list: cities,
           selectedCity: selectedCity,
           onChanged: (value) => selectedCity = value,
         ),
         SizedBox(height: 12),
         CityDropdown(
-          title: 'District (optional)',
-          hint: 'District',
+          title: context.l10n.districtOptionalLabel,
+          hint: context.l10n.districtLabel,
           list: district,
           selectedCity: selectedDistrict,
           onChanged: (value) => selectedDistrict = value,
@@ -826,7 +833,7 @@ class _HomeSearchSectionState extends State<HomeSearchSection> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Check in",
+                    context.l10n.checkIn.trim(),
                     style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.secondTextColor),
                   ),
                   SizedBox(height: 6),
@@ -834,7 +841,7 @@ class _HomeSearchSectionState extends State<HomeSearchSection> {
                     text:
                         checkInDate != null
                             ? "${checkInDate!.day}/${checkInDate!.month}/${checkInDate!.year}"
-                            : "Select date",
+                            : context.l10n.selectDateLabel,
                     onPressed: () => _selectDate(context, checkInDate, (date) => setState(() => checkInDate = date)),
                   ),
                 ],
@@ -846,7 +853,7 @@ class _HomeSearchSectionState extends State<HomeSearchSection> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Check out",
+                    context.l10n.checkOut.trim(),
                     style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.secondTextColor),
                   ),
                   SizedBox(height: 6),
@@ -854,7 +861,7 @@ class _HomeSearchSectionState extends State<HomeSearchSection> {
                     text:
                         checkOutDate != null
                             ? "${checkOutDate!.day}/${checkOutDate!.month}/${checkOutDate!.year}"
-                            : "Select date",
+                            : context.l10n.selectDateLabel,
                     onPressed: () {
                       _selectDate(
                         context,
@@ -874,7 +881,7 @@ class _HomeSearchSectionState extends State<HomeSearchSection> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Guests No.",
+              context.l10n.guestsNoLabel,
               style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.secondTextColor),
             ),
             SizedBox(height: 6),
@@ -901,7 +908,7 @@ class _HomeSearchSectionState extends State<HomeSearchSection> {
                   });
                 },
                 child: Text(
-                  "Search",
+                  context.l10n.commonSearch,
                   style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white),
                 ),
               ),
@@ -1002,7 +1009,7 @@ class _HomeGuestsSelectorState extends State<HomeGuestsSelector> {
       children: [
         Expanded(
           child: Text(
-            "Guests",
+            context.l10n.guests,
             style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.grayTextColor),
           ),
         ),
@@ -1039,8 +1046,8 @@ class HomeCategoryButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ValueNotifier<String> selectedMainCategory = ValueNotifier<String>("Rental Services");
-    ValueNotifier<String> selectedSubCategory = ValueNotifier<String>("Properties");
+    ValueNotifier<String> selectedMainCategory = ValueNotifier<String>(context.l10n.rentalService);
+    ValueNotifier<String> selectedSubCategory = ValueNotifier<String>(context.l10n.propertiesSection);
 
     return ValueListenableBuilder<String>(
       valueListenable: selectedMainCategory,
@@ -1053,7 +1060,7 @@ class HomeCategoryButtons extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
-                  child: categoryButton("Rental Services", mainCategory, (value) {
+                  child: categoryButton(context.l10n.rentalService, mainCategory, (value) {
                     selectedMainCategory.value = value;
                     if (onMainCategoryChanged != null) {
                       onMainCategoryChanged!(value);
@@ -1064,13 +1071,13 @@ class HomeCategoryButtons extends StatelessWidget {
                 Flexible(
                   child: Padding(
                     padding: const EdgeInsets.only(right: 15),
-                    child: categoryButton("Tourist Activities", mainCategory, (value) {
+                    child: categoryButton(context.l10n.touristActivities, mainCategory, (value) {
                       selectedMainCategory.value = value;
 
                       if (onMainCategoryChanged != null) {
                         onMainCategoryChanged!(value);
                       }
-                      if (value == "Tourist Activities") {
+                      if (value == context.l10n.touristActivities) {
                         context.read<ActivitiesCubit>().getActivities();
                       }
                     }),
@@ -1079,28 +1086,28 @@ class HomeCategoryButtons extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 6),
-            if (mainCategory == "Rental Services")
+            if (mainCategory == context.l10n.rentalService)
               ValueListenableBuilder<String>(
                 valueListenable: selectedSubCategory,
                 builder: (context, subCategory, _) {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      categoryButton("Properties", subCategory, (value) {
+                      categoryButton(context.l10n.propertiesSection, subCategory, (value) {
                         selectedSubCategory.value = value;
                         if (onCategoryChanged != null) {
                           onCategoryChanged!(value);
                         }
                       }, isMain: false),
                       const SizedBox(width: 8),
-                      categoryButton("Yacht", subCategory, (value) {
+                      categoryButton(context.l10n.categoryYacht, subCategory, (value) {
                         selectedSubCategory.value = value;
                         if (onCategoryChanged != null) {
                           onCategoryChanged!(value);
                         }
                       }, isMain: false),
                       const SizedBox(width: 8),
-                      categoryButton("Cruise", subCategory, (value) {
+                      categoryButton(context.l10n.categoryCruise, subCategory, (value) {
                         selectedSubCategory.value = value;
                         if (onCategoryChanged != null) {
                           onCategoryChanged!(value);
@@ -1146,7 +1153,7 @@ Widget buildActivitiesList({required String title, required BuildContext context
                   Icon(Icons.search_off, size: 64, color: Colors.grey[400]),
                   SizedBox(height: 16),
                   Text(
-                    "No activities found",
+                    context.l10n.noActivitiesFound,
                     style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[600], fontWeight: FontWeight.w500),
                   ),
                 ],
@@ -1267,7 +1274,7 @@ Widget buildActivityCard(BuildContext context, List<CustomActivityModel> activit
 
                 // Activity type or location
                 Text(
-                  "Tourist Activity",
+                  context.l10n.touristActivity,
                   style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor, fontWeight: FontWeight.w400),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -1279,14 +1286,14 @@ Widget buildActivityCard(BuildContext context, List<CustomActivityModel> activit
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Full Day Experience",
+                      context.l10n.fullDayExperience,
                       style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor, fontWeight: FontWeight.w400),
                     ),
                     Row(
                       children: [
                         Flexible(
                           child: Text(
-                            "From 299 SAR",
+                            context.l10n.fromSarPrice('299'),
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
@@ -1297,7 +1304,7 @@ Widget buildActivityCard(BuildContext context, List<CustomActivityModel> activit
                         ),
                         SizedBox(width: 4),
                         Text(
-                          "Per Person",
+                          context.l10n.perPersonLabel,
                           style: GoogleFonts.poppins(
                             fontSize: 12,
                             fontWeight: FontWeight.w400,

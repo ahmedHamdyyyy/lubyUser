@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../config/colors/colors.dart';
 import '../../../../../config/images/image_assets.dart';
@@ -26,9 +27,14 @@ class AccountInfoAppBar extends StatelessWidget implements PreferredSizeWidget {
         icon: const Icon(Icons.arrow_back_ios, color: AppColors.grayColorIcon),
         onPressed: () => Navigator.pop(context),
       ),
-      title: const Text(
-        "Account info",
-        style: TextStyle(color: AppColors.grayTextColor, fontSize: 16, fontFamily: 'Poppins', fontWeight: FontWeight.w400),
+      title: Text(
+        context.l10n.accountInfoTitle,
+        style: const TextStyle(
+          color: AppColors.grayTextColor,
+          fontSize: 16,
+          fontFamily: 'Poppins',
+          fontWeight: FontWeight.w400,
+        ),
       ),
       centerTitle: false,
       actions: [if (!isEditing) IconButton(icon: SvgPicture.asset(ImageAssets.editIcon), onPressed: onEditPressed)],
@@ -62,10 +68,7 @@ class ProfileHeaderWidget extends StatelessWidget {
             fontFamily: 'Poppins',
           ),
         ),
-        Text(
-          email,
-          style: const TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.w400),
-        ),
+        Text(email, style: const TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.w400)),
         const SizedBox(height: 20),
       ],
     );
@@ -141,7 +144,7 @@ class ActionButton extends StatelessWidget {
         decoration: BoxDecoration(color: AppColors.primaryColor, borderRadius: BorderRadius.circular(10)),
         child: Center(
           child: Text(
-            isEditing ? "Save" : "Delete Account",
+            isEditing ? context.l10n.saveLabel : context.l10n.deleteAccount,
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white, fontFamily: 'Poppins'),
           ),
         ),
@@ -164,9 +167,9 @@ class DeleteAccountDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              "Delete Account",
-              style: TextStyle(
+            Text(
+              context.l10n.deleteAccount,
+              style: const TextStyle(
                 fontSize: 16,
                 color: AppColors.primaryColor,
                 fontWeight: FontWeight.w500,
@@ -179,10 +182,10 @@ class DeleteAccountDialog extends StatelessWidget {
               width: 120,
               color: AppColors.primaryColor,
             ),
-            const Text(
-              "Are you sure about deleting your account?",
+            Text(
+              context.l10n.areYouSureDeleteAccount,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: AppColors.secondTextColor,
@@ -202,9 +205,9 @@ class DeleteAccountDialog extends StatelessWidget {
                       backgroundColor: AppColors.primaryColor,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
-                    child: const Text(
-                      "Yes",
-                      style: TextStyle(
+                    child: Text(
+                      context.l10n.commonYes,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w400,
                         fontSize: 16,
@@ -221,9 +224,9 @@ class DeleteAccountDialog extends StatelessWidget {
                       side: const BorderSide(color: AppColors.primaryColor),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
-                    child: const Text(
-                      "Cancel",
-                      style: TextStyle(
+                    child: Text(
+                      context.l10n.commonCancel,
+                      style: const TextStyle(
                         color: AppColors.primaryTextColor,
                         fontWeight: FontWeight.w400,
                         fontSize: 16,
@@ -345,10 +348,7 @@ class AccountProfileCardWidget extends StatelessWidget {
             fontFamily: 'Poppins',
           ),
         ),
-        const Text(
-          "info@gmail.com",
-          style: TextStyle(fontSize: 14, color: Colors.grey, fontFamily: 'Poppins'),
-        ),
+        const Text("info@gmail.com", style: TextStyle(fontSize: 14, color: Colors.grey, fontFamily: 'Poppins')),
         const SizedBox(height: 20),
       ],
     );
@@ -418,10 +418,10 @@ class PlaceholderScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarPop(context, title, AppColors.grayTextColor),
-      body: const Center(
+      body: Center(
         child: Text(
-          "Coming Soon...",
-          style: TextStyle(fontSize: 20, color: Colors.grey, fontFamily: 'Poppins'),
+          context.l10n.comingSoon,
+          style: const TextStyle(fontSize: 20, color: Colors.grey, fontFamily: 'Poppins'),
         ),
       ),
     );
@@ -434,7 +434,7 @@ class RateLubycreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const PlaceholderScreenWidget(title: "Rate App");
+    return PlaceholderScreenWidget(title: context.l10n.rateAppTitle);
   }
 }
 
@@ -443,7 +443,7 @@ class InviteFriendsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const PlaceholderScreenWidget(title: "Invite Friends");
+    return PlaceholderScreenWidget(title: context.l10n.inviteFriendsTitle);
   }
 }
 
@@ -466,9 +466,9 @@ class SignUpHeader extends StatelessWidget {
               child: const Icon(Icons.arrow_back_ios, color: AppColors.grayColorIcon),
             ),
             const SizedBox(width: 8),
-            const Text(
-              "Sign Up",
-              style: TextStyle(
+            Text(
+              context.l10n.signUp,
+              style: const TextStyle(
                 fontFamily: 'Poppins',
                 color: AppColors.grayTextColor,
                 fontWeight: FontWeight.w500,
@@ -478,10 +478,14 @@ class SignUpHeader extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 10),
-        const Text(
-          "Create your account to continue using the app ",
-          // textAlign: TextAlign.center,
-          style: TextStyle(fontFamily: 'Poppins', color: AppColors.primaryColor, fontSize: 16, fontWeight: FontWeight.w400),
+        Text(
+          context.l10n.signUpInstruction,
+          style: const TextStyle(
+            fontFamily: 'Poppins',
+            color: AppColors.primaryColor,
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+          ),
         ),
       ],
     );
@@ -515,9 +519,9 @@ class _EditableProfileImageState extends State<EditableProfileImage> {
         final String extension = image.path.split('.').last.toLowerCase();
         if (!['jpg', 'jpeg', 'png'].contains(extension)) {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('يرجى اختيار صورة بصيغة JPG أو PNG فقط'), backgroundColor: Colors.red),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(context.l10n.selectOnlyJpgOrPng), backgroundColor: Colors.red));
           }
           return;
         }
@@ -527,12 +531,9 @@ class _EditableProfileImageState extends State<EditableProfileImage> {
         if (fileSize > 2 * 1024 * 1024) {
           // 2MB in bytes
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('حجم الصورة كبير جداً. يجب أن يكون أقل من 2 ميجابايت'),
-                backgroundColor: Colors.red,
-              ),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(context.l10n.imageTooLarge), backgroundColor: Colors.red));
           }
           return;
         }
@@ -547,7 +548,7 @@ class _EditableProfileImageState extends State<EditableProfileImage> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('حدث خطأ أثناء اختيار الصورة'), backgroundColor: Colors.red));
+        ).showSnackBar(SnackBar(content: Text(context.l10n.errorSelectingImage), backgroundColor: Colors.red));
       }
     }
   }
@@ -645,14 +646,15 @@ class TermsCheckbox extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () => onChanged(!value),
-          child: value
-              ? SvgPicture.asset(ImageAssets.cracalBlack, width: 20, height: 20)
-              : SvgPicture.asset(ImageAssets.cracalWhite, width: 20, height: 20),
+          child:
+              value
+                  ? SvgPicture.asset(ImageAssets.cracalBlack, width: 20, height: 20)
+                  : SvgPicture.asset(ImageAssets.cracalWhite, width: 20, height: 20),
         ),
         const SizedBox(width: 10),
-        const Text(
-          "Agree to the terms and conditions",
-          style: TextStyle(
+        Text(
+          context.l10n.agreeToTermsAndConditions,
+          style: const TextStyle(
             fontFamily: 'Poppins',
             fontSize: 16,
             color: AppColors.primaryTextColor,
@@ -681,9 +683,9 @@ class SignUpButton extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onPressed: onPressed,
-        child: const Text(
-          "Sign Up",
-          style: TextStyle(fontFamily: 'Poppins', fontSize: 16, color: Colors.white, fontWeight: FontWeight.w400),
+        child: Text(
+          context.l10n.signUp,
+          style: const TextStyle(fontFamily: 'Poppins', fontSize: 16, color: Colors.white, fontWeight: FontWeight.w400),
         ),
       ),
     );

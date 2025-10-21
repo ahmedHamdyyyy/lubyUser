@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../config/constants/constance.dart';
 import '../../../../Home/cubit/home_cubit.dart';
@@ -73,7 +74,7 @@ class _AccountScreenState extends State<AccountScreen> {
           return Scaffold(
             backgroundColor: Colors.white,
             appBar: AccountInfoAppBar(isEditing: isEditing, onEditPressed: () {}),
-            body: const Center(child: Text("Something went wrong!")),
+            body: Center(child: Text(context.l10n.somethingWentWrong)),
           );
         }
       },

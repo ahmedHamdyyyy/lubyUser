@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../colors/colors.dart';
 import 'responsive.dart';
@@ -10,7 +11,7 @@ class ExampleResponsiveScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Responsive Example')),
+      appBar: AppBar(title: Text(context.l10n.responsiveExampleTitle)),
       body: SafeArea(
         child: Responsive(
           // Define different layouts for different device sizes
@@ -80,11 +81,7 @@ class ExampleResponsiveScreen extends StatelessWidget {
               Expanded(
                 flex: 4,
                 child: Column(
-                  children: [
-                    _buildSummaryCard(context),
-                    SizedBox(height: context.componentSpacing),
-                    _buildButtons(context),
-                  ],
+                  children: [_buildSummaryCard(context), SizedBox(height: context.componentSpacing), _buildButtons(context)],
                 ),
               ),
             ],
@@ -172,29 +169,29 @@ class ExampleResponsiveScreen extends StatelessWidget {
         _buildInfoCard(
           context,
           icon: Icons.hotel,
-          title: 'Hotels',
-          description: 'Find the best hotels',
+          title: context.l10n.hotelsTitle,
+          description: context.l10n.hotelsDescription,
           color: Colors.blue.shade100,
         ),
         _buildInfoCard(
           context,
           icon: Icons.apartment,
-          title: 'Apartments',
-          description: 'Discover amazing apartments',
+          title: context.l10n.apartmentsTitle,
+          description: context.l10n.apartmentsDescription,
           color: Colors.green.shade100,
         ),
         _buildInfoCard(
           context,
           icon: Icons.house,
-          title: 'Villas',
-          description: 'Luxury villas for your vacation',
+          title: context.l10n.villasTitle,
+          description: context.l10n.villasDescription,
           color: Colors.orange.shade100,
         ),
         _buildInfoCard(
           context,
           icon: Icons.cabin,
-          title: 'Cabins',
-          description: 'Cozy cabins in nature',
+          title: context.l10n.cabinsTitle,
+          description: context.l10n.cabinsDescription,
           color: Colors.purple.shade100,
         ),
       ],
@@ -244,12 +241,12 @@ class ExampleResponsiveScreen extends StatelessWidget {
 
   // Form section with responsive inputs
   Widget _buildForm(BuildContext context) {
-    return const ResponsiveCard(
+    return ResponsiveCard(
       child: ResponsiveColumn(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ResponsiveText(
-            'Search for Accommodations',
+            context.l10n.searchForAccommodations,
             mobileSmallSize: 18,
             mobileSize: 20,
             tabletSize: 22,
@@ -257,19 +254,16 @@ class ExampleResponsiveScreen extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
           SizedBox(height: 16),
-          ResponsiveTextField(
-            hintText: 'Location (city, area, or property name)',
-            prefixIcon: Icon(Icons.location_on_outlined),
-          ),
+          ResponsiveTextField(hintText: context.l10n.searchLocationHint, prefixIcon: Icon(Icons.location_on_outlined)),
           SizedBox(height: 12),
           Row(
             children: [
               Expanded(
-                child: ResponsiveTextField(hintText: 'Check-in', prefixIcon: Icon(Icons.calendar_today)),
+                child: ResponsiveTextField(hintText: context.l10n.checkIn.trim(), prefixIcon: Icon(Icons.calendar_today)),
               ),
               SizedBox(width: 12),
               Expanded(
-                child: ResponsiveTextField(hintText: 'Check-out', prefixIcon: Icon(Icons.calendar_today)),
+                child: ResponsiveTextField(hintText: context.l10n.checkOut.trim(), prefixIcon: Icon(Icons.calendar_today)),
               ),
             ],
           ),
@@ -278,7 +272,7 @@ class ExampleResponsiveScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: ResponsiveTextField(
-                  hintText: 'Guests',
+                  hintText: context.l10n.guests,
                   prefixIcon: Icon(Icons.person_outline),
                   keyboardType: TextInputType.number,
                 ),
@@ -286,12 +280,12 @@ class ExampleResponsiveScreen extends StatelessWidget {
               SizedBox(width: 12),
               Expanded(
                 child: ResponsiveDropdownButton<String>(
-                  hint: 'Room type',
+                  hint: context.l10n.roomTypeLabel,
                   items: [
-                    DropdownMenuItem(value: 'single', child: Text('Single')),
-                    DropdownMenuItem(value: 'double', child: Text('Double')),
-                    DropdownMenuItem(value: 'suite', child: Text('Suite')),
-                    DropdownMenuItem(value: 'family', child: Text('Family')),
+                    DropdownMenuItem(value: 'single', child: Text(context.l10n.roomTypeSingle)),
+                    DropdownMenuItem(value: 'double', child: Text(context.l10n.roomTypeDouble)),
+                    DropdownMenuItem(value: 'suite', child: Text(context.l10n.roomTypeSuite)),
+                    DropdownMenuItem(value: 'family', child: Text(context.l10n.roomTypeFamily)),
                   ],
                   isExpanded: true,
                 ),
@@ -299,8 +293,8 @@ class ExampleResponsiveScreen extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16),
-          ResponsiveCheckbox(value: true, label: 'Include breakfast'),
-          ResponsiveCheckbox(value: false, label: 'Pet friendly'),
+          ResponsiveCheckbox(value: true, label: context.l10n.includeBreakfast),
+          ResponsiveCheckbox(value: false, label: context.l10n.petFriendly),
         ],
       ),
     );
@@ -313,8 +307,8 @@ class ExampleResponsiveScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const ResponsiveText(
-            'Your Search',
+          ResponsiveText(
+            context.l10n.yourSearch,
             mobileSmallSize: 18,
             mobileSize: 20,
             tabletSize: 22,
@@ -322,26 +316,26 @@ class ExampleResponsiveScreen extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
           const SizedBox(height: 16),
-          _buildSummaryRow(context, 'Location', 'Dubai, UAE'),
-          _buildSummaryRow(context, 'Check-in', 'Jun 15, 2023'),
-          _buildSummaryRow(context, 'Check-out', 'Jun 20, 2023'),
-          _buildSummaryRow(context, 'Guests', '2 Adults, 1 Child'),
-          _buildSummaryRow(context, 'Room Type', 'Double Room'),
+          _buildSummaryRow(context, context.l10n.locationLabel, 'Dubai, UAE'),
+          _buildSummaryRow(context, context.l10n.checkIn.trim(), 'Jun 15, 2023'),
+          _buildSummaryRow(context, context.l10n.checkOut.trim(), 'Jun 20, 2023'),
+          _buildSummaryRow(context, context.l10n.guests, '2 Adults, 1 Child'),
+          _buildSummaryRow(context, context.l10n.roomTypeLabel, 'Double Room'),
           const SizedBox(height: 16),
           const Divider(),
           const SizedBox(height: 16),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ResponsiveText(
-                'Total',
+                context.l10n.commonTotal,
                 mobileSmallSize: 16,
                 mobileSize: 18,
                 tabletSize: 20,
                 desktopSize: 22,
                 fontWeight: FontWeight.bold,
               ),
-              ResponsiveText(
+              const ResponsiveText(
                 '\$750',
                 mobileSmallSize: 18,
                 mobileSize: 20,
@@ -384,46 +378,46 @@ class ExampleResponsiveScreen extends StatelessWidget {
 
     return isSmallDevice
         ? Column(
-            children: [
-              ResponsiveElevatedButton(
-                text: 'Search Properties',
+          children: [
+            ResponsiveElevatedButton(
+              text: context.l10n.searchProperties,
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              isFullWidth: true,
+              onPressed: () {},
+            ),
+            SizedBox(height: context.itemSpacing),
+            ResponsiveOutlinedButton(
+              text: context.l10n.clearSearch,
+              foregroundColor: AppColors.primary,
+              borderColor: AppColors.primary,
+              isFullWidth: true,
+              onPressed: () {},
+            ),
+          ],
+        )
+        : Row(
+          children: [
+            Expanded(
+              child: ResponsiveElevatedButton(
+                text: context.l10n.searchProperties,
                 backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
                 isFullWidth: true,
                 onPressed: () {},
               ),
-              SizedBox(height: context.itemSpacing),
-              ResponsiveOutlinedButton(
-                text: 'Clear Search',
+            ),
+            SizedBox(width: context.itemSpacing),
+            Expanded(
+              child: ResponsiveOutlinedButton(
+                text: context.l10n.clearSearch,
                 foregroundColor: AppColors.primary,
                 borderColor: AppColors.primary,
                 isFullWidth: true,
                 onPressed: () {},
               ),
-            ],
-          )
-        : Row(
-            children: [
-              Expanded(
-                child: ResponsiveElevatedButton(
-                  text: 'Search Properties',
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  isFullWidth: true,
-                  onPressed: () {},
-                ),
-              ),
-              SizedBox(width: context.itemSpacing),
-              Expanded(
-                child: ResponsiveOutlinedButton(
-                  text: 'Clear Search',
-                  foregroundColor: AppColors.primary,
-                  borderColor: AppColors.primary,
-                  isFullWidth: true,
-                  onPressed: () {},
-                ),
-              ),
-            ],
-          );
+            ),
+          ],
+        );
   }
 }

@@ -4,17 +4,26 @@ class HomeState extends Equatable {
   final int currentScreenIndex;
   final Status getUserStatus, updateUserStatus;
   final UserModel user;
-  final Status propertyStatus, propertiesStatus, signoutStatus, reviewStatus, reviewesStatus;
+  final Status propertyStatus,
+      propertiesStatus,
+      signoutStatus,
+      reviewStatus,
+      reviewesStatus,
+      loadNotificationsStatus,
+      readNotificationStatus;
   final PropertyModel property;
   final List<CustomPropertyModel> properties;
   final String msg;
   final List<ReviewModel> reviews;
+  final List<NotificationModel> notifications;
 
   const HomeState({
     this.currentScreenIndex = 0,
     this.propertiesStatus = Status.initial,
     this.getUserStatus = Status.initial,
+    this.readNotificationStatus = Status.initial,
     this.signoutStatus = Status.initial,
+    this.loadNotificationsStatus = Status.initial,
     this.user = UserModel.initial,
     this.properties = const [],
     this.propertyStatus = Status.initial,
@@ -24,6 +33,7 @@ class HomeState extends Equatable {
     this.reviewesStatus = Status.initial,
     this.reviewStatus = Status.initial,
     this.updateUserStatus = Status.initial,
+    this.notifications = const [],
   });
 
   HomeState copyWith({
@@ -32,14 +42,17 @@ class HomeState extends Equatable {
     Status? getUserStatus,
     UserModel? user,
     Status? propertyStatus,
+    Status? readNotificationStatus,
     PropertyModel? property,
     Status? signoutStatus,
     String? msg,
     List<CustomPropertyModel>? properties,
     List<ReviewModel>? reviews,
     Status? reviewesStatus,
+    Status? loadNotificationsStatus,
     Status? reviewStatus,
     Status? updateUserStatus,
+    List<NotificationModel>? notifications,
   }) => HomeState(
     currentScreenIndex: currentScreenIndex ?? this.currentScreenIndex,
     getUserStatus: getUserStatus ?? this.getUserStatus,
@@ -49,11 +62,14 @@ class HomeState extends Equatable {
     propertiesStatus: propertiesStatus ?? this.propertiesStatus,
     signoutStatus: signoutStatus ?? this.signoutStatus,
     msg: msg ?? this.msg,
+    readNotificationStatus: readNotificationStatus ?? this.readNotificationStatus,
     properties: properties ?? this.properties,
     reviews: reviews ?? this.reviews,
     reviewesStatus: reviewesStatus ?? this.reviewesStatus,
     reviewStatus: reviewStatus ?? this.reviewStatus,
+    loadNotificationsStatus: loadNotificationsStatus ?? this.loadNotificationsStatus,
     updateUserStatus: updateUserStatus ?? this.updateUserStatus,
+    notifications: notifications ?? this.notifications,
   );
 
   @override
@@ -64,12 +80,15 @@ class HomeState extends Equatable {
     propertyStatus,
     property,
     msg,
+    readNotificationStatus,
     properties,
     propertiesStatus,
     signoutStatus,
     reviews,
     reviewesStatus,
     reviewStatus,
+    loadNotificationsStatus,
     updateUserStatus,
+    notifications,
   ];
 }

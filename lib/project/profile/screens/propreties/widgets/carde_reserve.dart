@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/widget/helper.dart';
@@ -70,8 +71,8 @@ class _CardeReserveState extends State<CardeReserve> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const TextWidget(
-                      text: 'Check in',
+                    TextWidget(
+                      text: context.l10n.checkIn.trim(),
                       color: AppColors.secondTextColor,
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
@@ -85,19 +86,19 @@ class _CardeReserveState extends State<CardeReserve> {
                         keyboardType: TextInputType.datetime,
                         controller: checkInController,
                         validator: (value) {
-                          if (value == null || value.isEmpty) return 'Please enter check-in date';
-                          if (!RegExp(r'^\d{1,2}/\d{1,2}/\d{4}$').hasMatch(value)) return 'Enter date in DD/MM/YYYY format';
+                          if (value == null || value.isEmpty) return context.l10n.pleaseEnterCheckInDate;
+                          if (!RegExp(r'^\d{1,2}/\d{1,2}/\d{4}$').hasMatch(value)) return context.l10n.enterDateInDdMmYyyy;
                           final dateParts = value.split('/');
                           final day = int.tryParse(dateParts[0]);
                           final month = int.tryParse(dateParts[1]);
                           final year = int.tryParse(dateParts[2]);
-                          if (day == null || month == null || year == null) return 'Invalid date components';
+                          if (day == null || month == null || year == null) return context.l10n.invalidDateComponents;
                           final date = DateTime(year, month, day);
-                          if (date.isBefore(DateTime.now())) return 'Check-in date must be in the future';
+                          if (date.isBefore(DateTime.now())) return context.l10n.checkInDateMustBeInFuture;
                           final startDate = DateTime.tryParse(widget.property.startDate) ?? DateTime.now();
                           final endDate = DateTime.tryParse(widget.property.endDate) ?? DateTime.now();
                           if (date.isBefore(startDate) || date.isAfter(endDate)) {
-                            return 'Date must be within property availability';
+                            return context.l10n.dateMustBeWithinAvailability;
                           }
                           return null;
                         },
@@ -127,8 +128,8 @@ class _CardeReserveState extends State<CardeReserve> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const TextWidget(
-                      text: 'Check out',
+                    TextWidget(
+                      text: context.l10n.checkOut.trim(),
                       color: AppColors.secondTextColor,
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
@@ -142,19 +143,19 @@ class _CardeReserveState extends State<CardeReserve> {
                         keyboardType: TextInputType.datetime,
                         controller: checkOutController,
                         validator: (value) {
-                          if (value == null || value.isEmpty) return 'Please enter check-in date';
-                          if (!RegExp(r'^\d{1,2}/\d{1,2}/\d{4}$').hasMatch(value)) return 'Enter date in DD/MM/YYYY format';
+                          if (value == null || value.isEmpty) return context.l10n.pleaseEnterCheckInDate;
+                          if (!RegExp(r'^\d{1,2}/\d{1,2}/\d{4}$').hasMatch(value)) return context.l10n.enterDateInDdMmYyyy;
                           final dateParts = value.split('/');
                           final day = int.tryParse(dateParts[0]);
                           final month = int.tryParse(dateParts[1]);
                           final year = int.tryParse(dateParts[2]);
-                          if (day == null || month == null || year == null) return 'Invalid date components';
+                          if (day == null || month == null || year == null) return context.l10n.invalidDateComponents;
                           final date = DateTime(year, month, day);
-                          if (date.isBefore(DateTime.now())) return 'Check-in date must be in the future';
+                          if (date.isBefore(DateTime.now())) return context.l10n.checkInDateMustBeInFuture;
                           final startDate = DateTime.tryParse(widget.property.startDate) ?? DateTime.now();
                           final endDate = DateTime.tryParse(widget.property.endDate) ?? DateTime.now();
                           if (date.isBefore(startDate) || date.isAfter(endDate)) {
-                            return 'Date must be within property availability';
+                            return context.l10n.dateMustBeWithinAvailability;
                           }
                           if (checkInController.text.isNotEmpty) {
                             final checkInParts = checkInController.text.split('/');
@@ -163,7 +164,7 @@ class _CardeReserveState extends State<CardeReserve> {
                             final checkInYear = int.tryParse(checkInParts[2]);
                             if (checkInDay != null && checkInMonth != null && checkInYear != null) {
                               final checkInDate = DateTime(checkInYear, checkInMonth, checkInDay);
-                              if (!date.isAfter(checkInDate)) return 'Check-out must be after check-in';
+                              if (!date.isAfter(checkInDate)) return context.l10n.checkOutMustBeAfterCheckIn;
                             }
                           }
                           return null;
@@ -195,8 +196,8 @@ class _CardeReserveState extends State<CardeReserve> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const TextWidget(
-                text: 'Guests No.',
+              TextWidget(
+                text: context.l10n.guestsNoLabel,
                 color: AppColors.secondTextColor,
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
@@ -211,18 +212,18 @@ class _CardeReserveState extends State<CardeReserve> {
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   validator: (value) {
-                    if (value == null || value.isEmpty) return 'Please enter number of guests';
+                    if (value == null || value.isEmpty) return context.l10n.pleaseEnterNumberOfGuests;
                     final guests = int.tryParse(value);
-                    if (guests == null || guests <= 0) return 'Enter a valid number of guests';
+                    if (guests == null || guests <= 0) return context.l10n.enterValidNumberOfGuests;
                     if (guests > widget.property.guestNumber) {
-                      return 'Max guests is ${widget.property.guestNumber}';
+                      return context.l10n.maxGuestsIs(widget.property.guestNumber.toString());
                     }
                     return null;
                   },
                   decoration: InputDecoration(
                     enabledBorder: buildOutlineInputBorder(5),
                     focusedBorder: buildOutlineInputBorder(5),
-                    hintText: '2 Guests',
+                    hintText: '${2} ${context.l10n.guests}',
                     hintStyle: const TextStyle(color: AppColors.grayTextColor, fontSize: 14, fontWeight: FontWeight.w400),
                   ),
                 ),
@@ -243,7 +244,12 @@ class _CardeReserveState extends State<CardeReserve> {
                 //padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
               ),
-              child: const TextWidget(text: 'Reserve', color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),
+              child: TextWidget(
+                text: context.l10n.reserveLabel,
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
         ],

@@ -5,6 +5,7 @@ import 'package:luby2/project/models/property.dart';
 
 import '../../../../../config/colors/colors.dart';
 import '../../../../../config/constants/constance.dart';
+import '../../../../../core/localization/l10n_ext.dart';
 import '../../../../../core/utils/utile.dart';
 import '../../../../../locator.dart';
 import '../../../Home/cubit/home_cubit.dart';
@@ -60,14 +61,17 @@ class _SummaryScreenState extends State<SummaryScreen> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    "Summary",
+                    context.l10n.summaryTitle,
                     style: GoogleFonts.poppins(color: AppColors.grayTextColor, fontWeight: FontWeight.w500, fontSize: 14),
                   ),
                 ],
               ),
               const SizedBox(height: 22),
               SectionTitleWidget(
-                title: "Reserved ${widget.reservation.type == ReservationType.property ? "Property" : "Activity"}",
+                title:
+                    widget.reservation.type == ReservationType.property
+                        ? context.l10n.reservedProperty
+                        : context.l10n.reservedActivity,
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
               ),
@@ -122,7 +126,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
               const Divider(),
               const SizedBox(height: 20),
               ActionButtonWidget(
-                text: "Save Reservation",
+                text: context.l10n.saveReservation,
                 onPressed: () {
                   if (widget.reservation.id.isEmpty) {
                     getIt<ReservationsCubit>().createReservation(widget.reservation);

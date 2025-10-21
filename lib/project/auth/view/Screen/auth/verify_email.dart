@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../config/constants/constance.dart';
 import '../../../../../../config/widget/widget.dart';
@@ -54,7 +55,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     },
     builder: (context, state) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Verify Email'), centerTitle: true),
+        appBar: AppBar(title: Text(context.l10n.verifyEmailTitle), centerTitle: true),
         body: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Form(
@@ -64,15 +65,15 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
               children: [
                 const Icon(Icons.email_outlined, size: 80, color: Colors.blue),
                 const SizedBox(height: 24),
-                const Text('Enter your email', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                Text(context.l10n.enterYourEmail, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(labelText: 'Email', border: OutlineInputBorder()),
+                  decoration: InputDecoration(labelText: context.l10n.enterYourEmail, border: const OutlineInputBorder()),
                   validator: (value) {
                     if (value == null || value.isEmpty || !value.contains('@')) {
-                      return 'Please enter a valid email';
+                      return context.l10n.pleaseEnterValidEmail;
                     }
                     return null;
                   },
@@ -83,7 +84,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                   child:
                       _isLoading
                           ? const CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
-                          : const Text('Send Verification Email'),
+                          : Text(context.l10n.sendVerificationEmail),
                 ),
               ],
             ),

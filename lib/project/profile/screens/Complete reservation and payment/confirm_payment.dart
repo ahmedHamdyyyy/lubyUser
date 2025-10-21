@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/widget/helper.dart';
+import '../../../../../core/localization/l10n_ext.dart';
 import '../../../../config/images/image_assets.dart';
 import 'all_widget__complete_reservation_and_payment.dart';
 import 'thank_you_screen.dart';
@@ -33,7 +34,7 @@ class ConfirmedPaymentScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: appBarPop(context, "Confirmed reservation", AppColors.primary),
+      appBar: appBarPop(context, context.l10n.confirmedReservationTitle, AppColors.primary),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -41,7 +42,7 @@ class ConfirmedPaymentScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Confirmed reservation number ${1234}",
+              context.l10n.confirmedReservationNumber('1234'),
               style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400, color: AppColors.secondTextColor),
             ),
             const SizedBox(height: 10),
@@ -69,7 +70,7 @@ class ConfirmedPaymentScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              "Summary",
+              context.l10n.summaryTitle,
               style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.primaryColor),
             ),
             const SizedBox(height: 10),
@@ -83,7 +84,7 @@ class ConfirmedPaymentScreen extends StatelessWidget {
                   Image.asset(ImageAssets.pdfIcon, width: 30, height: 30),
                   const SizedBox(width: 10),
                   Text(
-                    "View reservation summary",
+                    context.l10n.viewReservationSummary,
                     style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 16, fontWeight: FontWeight.w400),
                   ),
                   const Spacer(),
@@ -94,7 +95,7 @@ class ConfirmedPaymentScreen extends StatelessWidget {
             const Divider(),
             const SizedBox(height: 10),
             Text(
-              "Lobby disclaims responsibility for any financial\ntransfers outside the platform.\nIf there is a deposit or a balance, it is paid\nbefore you enter.",
+              context.l10n.paymentDisclaimer,
               style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 14, fontWeight: FontWeight.w400),
             ),
             const SizedBox(height: 20),
@@ -110,7 +111,7 @@ class ConfirmedPaymentScreen extends StatelessWidget {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ThankYouScreen()));
                 },
                 child: Text(
-                  "Done",
+                  context.l10n.doneLabel,
                   style: GoogleFonts.poppins(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w400),
                 ),
               ),
