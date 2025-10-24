@@ -35,6 +35,18 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
     super.initState();
   }
 
+  String _localizedPropertyType(BuildContext context, String rawType) {
+    final t = rawType.toLowerCase();
+    if (t == 'apartment') return context.l10n.apartmentsTitle;
+    if (t == 'studio') return context.l10n.propertyTypeApartmentStudios;
+    if (t == 'cabin') return context.l10n.cabinsTitle;
+    if (t == 'house') return context.l10n.villasTitle; // closest available key
+    if (t == 'guest_house' || t == 'guesthouse') return context.l10n.propertiesSection;
+    if (t == 'yacht') return context.l10n.categoryYacht;
+    if (t == 'cruise') return context.l10n.categoryCruise;
+    return context.l10n.propertiesSection;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,7 +132,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                       bottom: 0,
                       left: 23,
                       child: TextWidget(
-                        text: 'Great ${state.property.type.toUpperCase()} with a Great View',
+                        text: _localizedPropertyType(context, state.property.type),
                         color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -132,9 +144,9 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                         const SizedBox(height: 112),
                         CardeReserve(property: state.property),
                         BookingDetailsWidget(property: state.property),
-                        const Driver(),
+                        // const Driver(),
                         RentalUnitWidget(state: state),
-                        const Driver(),
+                        // const Driver(),
                         LocationWidget(state: state),
                         const Driver(),
                         ReviewsWidget(

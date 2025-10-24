@@ -131,33 +131,34 @@ class _ConversationScreenState extends State<ConversationScreen> with SingleTick
                   separatorBuilder: (_, __) => const Padding(padding: EdgeInsets.only(left: 12.0), child: Divider()),
                   itemBuilder: (context, index) {
                     final chat = filtered[index];
+
                     return ListTile(
                       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ChatScreen(chat: chat))),
-                      onLongPress: () async {
-                        final confirmed = await showDialog<bool>(
-                          context: context,
-                          builder:
-                              (context) => AlertDialog(
-                                title: Text(context.l10n.deleteConversationTitle),
-                                content: Text(context.l10n.deleteConversationBody),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context, false),
-                                    child: Text(context.l10n.commonCancel),
-                                  ),
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context, true),
-                                    child: Text(context.l10n.commonDelete),
-                                  ),
-                                ],
-                              ),
-                        );
-                        if (confirmed == true) await FirestoreService().deleteChat(chat.id);
-                      },
+                      // onLongPress: () async {
+                      //   final confirmed = await showDialog<bool>(
+                      //     context: context,
+                      //     builder:
+                      //         (context) => AlertDialog(
+                      //           title: Text(context.l10n.deleteConversationTitle),
+                      //           content: Text(context.l10n.deleteConversationBody),
+                      //           actions: [
+                      //             TextButton(
+                      //               onPressed: () => Navigator.pop(context, false),
+                      //               child: Text(context.l10n.commonCancel),
+                      //             ),
+                      //             TextButton(
+                      //               onPressed: () => Navigator.pop(context, true),
+                      //               child: Text(context.l10n.commonDelete),
+                      //             ),
+                      //           ],
+                      //         ),
+                      //   );
+                      //   if (confirmed == true) await FirestoreService().deleteChat(chat.id);
+                      // },
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
                         child: FadeInImage.assetNetwork(
-                          image: chat.profilePicture,
+                          image: chat.vendorImage,
                           width: 50,
                           height: 50,
                           fit: BoxFit.cover,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../../../../config/images/image_assets.dart';
 import 'all_widget_chats.dart';
 // import 'package:fondok/core/widget/widgets.dart';
@@ -15,14 +16,8 @@ class NoChat extends StatelessWidget {
         backgroundColor: Colors.white,
         body: NoChatScreenContent(
           iconAsset: ImageAssets.chat,
-          message: "You don't have any conversation \n yet",
           onTitleTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const ConversationScreen(),
-              ),
-            );
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const ConversationScreen()));
           },
         ),
       ),

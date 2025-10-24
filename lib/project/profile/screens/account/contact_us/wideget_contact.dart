@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../config/widget/helper.dart';
 import '../../propreties/widgets/custom_text_filed.dart';
@@ -23,13 +24,13 @@ class ContactUsHeader extends StatelessWidget {
               icon: const Icon(Icons.arrow_back_ios_new, size: 24),
               color: const Color(0xFF757575),
             ),
-            const TextWidget(text: 'Contact Us', color: Color(0xFF757575), fontSize: 14, fontWeight: FontWeight.w500),
+            TextWidget(text: context.l10n.contactUsTitle, color: const Color(0xFF757575), fontSize: 14, fontWeight: FontWeight.w500),
           ],
         ),
         const SizedBox(height: 14),
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 16, bottom: 16),
-          child: TextWidget(text: 'Contact Us', color: Color(0xFF1C1C1C), fontSize: 16, fontWeight: FontWeight.w600),
+          child: TextWidget(text: context.l10n.contactUsTitle, color: const Color(0xFF1C1C1C), fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ],
     );
@@ -69,14 +70,14 @@ class MessageFormWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.0),
+  padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextWidget(text: 'How can we help you ?', color: Color(0xFF636363), fontSize: 16, fontWeight: FontWeight.w400),
-          SizedBox(height: 16),
+          TextWidget(text: context.l10n.howCanWeHelp, color: const Color(0xFF636363), fontSize: 16, fontWeight: FontWeight.w400),
+          const SizedBox(height: 16),
           CustomTextField(
-            text: 'You can add your message here',
+            text: context.l10n.messageInputHint,
             maxLines: 7,
             height: 235,
             width: 335,
@@ -97,7 +98,7 @@ class SendButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+  padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: SizedBox(
         width: double.infinity,
         height: 48,
@@ -107,7 +108,7 @@ class SendButtonWidget extends StatelessWidget {
             backgroundColor: const Color(0xFF262626),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           ),
-          child: const TextWidget(text: 'Send', color: Color(0xFFFFFFFF), fontSize: 16, fontWeight: FontWeight.w400),
+          child: TextWidget(text: context.l10n.commonSend, color: const Color(0xFFFFFFFF), fontSize: 16, fontWeight: FontWeight.w400),
         ),
       ),
     );

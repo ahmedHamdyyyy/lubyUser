@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:luby2/config/widget/widget.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../config/constants/constance.dart';
 import '../../../../../../config/widget/helper.dart';
@@ -55,8 +56,8 @@ Future<dynamic> showReviewDialoge(
                     ],
                   ),
                   TextWidget(
-                    text: review.id.isEmpty ? 'Add Review' : 'Edit Review',
-                    color: Color(0xFF262626),
+                    text: review.id.isEmpty ? context.l10n.addReview : context.l10n.editReview,
+                    color: const Color(0xFF262626),
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -69,8 +70,8 @@ Future<dynamic> showReviewDialoge(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const TextWidget(
-                          text: 'Rate Apartment',
+                        TextWidget(
+                          text: context.l10n.rateApartment,
                           color: Color(0xFF414141),
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
@@ -106,7 +107,7 @@ Future<dynamic> showReviewDialoge(
                       Padding(
                         padding: EdgeInsets.only(left: 4.0),
                         child: TextWidget(
-                          text: 'Add Comment',
+                          text: context.l10n.addComment,
                           color: Color(0xFF414141),
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
@@ -117,7 +118,7 @@ Future<dynamic> showReviewDialoge(
                         child: CustomTextField(
                           controller: commentController,
                           maxLines: 4,
-                          text: 'Add your comment here',
+                          text: context.l10n.addYourCommentHere,
                           height: 90,
                           width: 295,
                         ),
@@ -142,7 +143,7 @@ Future<dynamic> showReviewDialoge(
                           } else {
                             getIt<HomeCubit>().updatePropertyReview(state.reviews.last);
                           }
-                          showToast(text: 'review posted successfully', stute: ToustStute.success);
+                          showToast(text: context.l10n.reviewPostedSuccessfully, stute: ToustStute.success);
                           break;
                         default:
                           break;
@@ -171,8 +172,8 @@ Future<dynamic> showReviewDialoge(
                         minimumSize: Size(double.infinity, 48),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),
-                      child: const TextWidget(
-                        text: 'Add',
+                      child: TextWidget(
+                        text: context.l10n.addLabel,
                         color: Color(0xFFFFFFFF),
                         fontSize: 16,
                         fontWeight: FontWeight.w400,

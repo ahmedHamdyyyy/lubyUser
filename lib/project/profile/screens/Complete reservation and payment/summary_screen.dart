@@ -85,21 +85,23 @@ class _SummaryScreenState extends State<SummaryScreen> {
                   if (widget.reservation.type == ReservationType.property) {
                     final item = widget.reservation.item as PropertyModel;
                     return ReservedItemCardWidget(
-                      imagePath: item.medias.first,
+                      imagePath: item.medias.firstWhere((m) => !m.endsWith('mp4')),
                       title: item.type,
                       location: item.address.formattedAddress,
                       details: item.details,
                       price: item.pricePerNight,
-                      totalPrice: widget.reservation.totalPrice.toInt(),
+                      totalPrice: widget.reservation.totalPrice,
                       guestNumber: widget.reservation.guestNumber,
                       startDate: widget.reservation.checkInDate,
                       nights: nights,
                       onEdit: () {
+                        final checkInDate = DateTime.parse(widget.reservation.checkInDate);
+                        final checkOutDate = DateTime.parse(widget.reservation.checkOutDate);
                         showReseverDialoge(
                           context,
                           item,
-                          TextEditingController(text: widget.reservation.checkInDate),
-                          TextEditingController(text: widget.reservation.checkOutDate),
+                          TextEditingController(text: '${checkInDate.day}/${checkInDate.month}/${checkInDate.year}'),
+                          TextEditingController(text: '${checkOutDate.day}/${checkOutDate.month}/${checkOutDate.year}'),
                           TextEditingController(text: widget.reservation.guestNumber.toString()),
                         );
                       },
@@ -115,7 +117,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
                       price: item.price,
                       startDate: widget.reservation.checkInDate,
                       guestNumber: widget.reservation.guestNumber,
-                      totalPrice: widget.reservation.totalPrice.toInt(),
+                      totalPrice: widget.reservation.totalPrice,
                       nights: nights,
                       onEdit: () => Navigator.pop(context),
                       // onDelete: () {},

@@ -810,4 +810,134 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get selectYourLanguageArabicTitle => 'اختر لغتك';
+
+  @override
+  String get contactUsTitle => 'اتصل بنا';
+
+  @override
+  String get howCanWeHelp => 'كيف يمكننا مساعدتك؟';
+
+  @override
+  String get messageInputHint => 'يمكنك إضافة رسالتك هنا';
+
+  @override
+  String get commonSend => 'إرسال';
+
+  @override
+  String get reviewsTitle => 'المراجعات';
+
+  @override
+  String reviewsCount(Object count) {
+    return '($count مراجعة)';
+  }
+
+  @override
+  String get addReview => 'إضافة مراجعة';
+
+  @override
+  String get editReview => 'تعديل المراجعة';
+
+  @override
+  String get chargingWallet => 'شحن المحفظة';
+
+  @override
+  String get availableBalance => 'الرصيد المتاح';
+
+  @override
+  String get enterAmount => 'أدخل المبلغ';
+
+  @override
+  String get enterAmountHint => 'أدخل المبلغ الذي تريد شحنه';
+
+  @override
+  String get chooseTheCard => 'اختر البطاقة';
+
+  @override
+  String get useThisCardToCharge => 'استخدم هذه البطاقة للشحن';
+
+  @override
+  String cardNumberEndingWith(Object last4) {
+    return 'رقم البطاقة ينتهي بـ $last4';
+  }
+
+  @override
+  String get chargeLabel => 'شحن';
+
+  @override
+  String get walletChargedTitle => 'تم شحن المحفظة';
+
+  @override
+  String walletDepositMessage(Object amount) {
+    return 'تم إيداع $amount ريال في المحفظة';
+  }
+
+  @override
+  String get sarCurrency => 'ريال';
+
+  @override
+  String get whatThisPlaceOffers => 'ما الذي يقدمه هذا المكان';
+
+  @override
+  String get showAllAmenities => 'عرض كل المرافق';
+
+  @override
+  String entireRentalUnitIn(Object address) {
+    return 'وحدة إيجار كاملة في $address';
+  }
+
+  @override
+  String availableForRange(
+    Object from,
+    Object nights,
+    Object nightsLabel,
+    Object to,
+  ) {
+    return 'متاح لمدة $nights $nightsLabel من $from إلى $to';
+  }
+
+  @override
+  String get rateApartment => 'تقييم الشقة';
+
+  @override
+  String get addComment => 'إضافة تعليق';
+
+  @override
+  String get addYourCommentHere => 'أضف تعليقك هنا';
+
+  @override
+  String get reviewPostedSuccessfully => 'تم نشر المراجعة بنجاح';
+
+  @override
+  String bedsCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'أسِرّة',
+      one: 'سرير',
+    );
+    return '$count $_temp0';
+  }
+
+  @override
+  String bathroomsCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'حمامات',
+      one: 'حمام',
+    );
+    return '$count $_temp0';
+  }
+
+  @override
+  String get yourBookingDetails => 'تفاصيل حجزك';
+
+  @override
+  String get reservationStatusDraft => 'مسودة';
+
+  @override
+  String get reservationStatusCompleted => 'مكتمل';
+
+  @override
+  String get reservationStatusCanceled => 'ملغى';
 }

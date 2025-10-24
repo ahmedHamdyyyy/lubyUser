@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer' as developer;
 
 import 'package:firebase_core/firebase_core.dart';
@@ -22,6 +23,9 @@ import 'project/auth/cubit/auth_cubit.dart';
 import 'project/auth/view/Screen/splash/luby_screen_splash.dart';
 import 'project/favorites/cubit/cubit.dart';
 import 'project/reservation/cubit/cubit.dart';
+import 'project/activities/view/screens/activity.dart';
+import 'project/profile/screens/propreties/views/rental_details_view.dart';
+import 'project/reservation/view/screens/reservation_loader_screen.dart';
 
 // Must be a top-level or static function.
 @pragma('vm:entry-point')
@@ -62,7 +66,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
         ),
         iOS: const DarwinNotificationDetails(),
       ),
-      payload: message.data.isNotEmpty ? message.data.toString() : null,
+      payload: message.data.isNotEmpty ? jsonEncode(message.data) : null,
     );
   }
 }
@@ -81,7 +85,17 @@ Future<void> _initLocalNotifications() async {
   const androidInit = AndroidInitializationSettings('@mipmap/launcher_icon');
   const iosInit = DarwinInitializationSettings();
   const initSettings = InitializationSettings(android: androidInit, iOS: iosInit);
-  await _flutterLocalNotificationsPlugin.initialize(initSettings);
+  await _flutterLocalNotificationsPlugin.initialize(
+    initSettings,
+    onDidReceiveNotificationResponse: (NotificationResponse response) {
+      final payload = response.payload;
+      if (payload == null || payload.isEmpty) return;
+      try {
+        final Map<String, dynamic> data = jsonDecode(payload) as Map<String, dynamic>;
+        _handleNotificationNavigation(data);
+      } catch (_) {}
+    },
+  );
 
   // Create Android channel
   final android =
@@ -165,22 +179,26 @@ Future<void> main() async {
           ),
           iOS: const DarwinNotificationDetails(),
         ),
-        payload: message.data.isNotEmpty ? message.data.toString() : null,
+        payload: message.data.isNotEmpty ? jsonEncode(message.data) : null,
       );
+    }
+    // Optionally navigate immediately on foreground message
+    if (message.data.isNotEmpty) {
+      _handleNotificationNavigation(message.data);
     }
   });
 
   // When the user taps a notification and the app opens
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     developer.log('Notification clicked. Data: ${message.data}', name: 'FCM');
-    // Navigate based on message.data if needed
+    _handleNotificationNavigation(message.data);
   });
 
   // If the app was launched by tapping a notification (terminated state)
   final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
   if (initialMessage != null) {
     developer.log('App opened from terminated by notification: ${initialMessage.data}', name: 'FCM');
-    // Handle deep-link/navigation based on initialMessage.data
+    _handleNotificationNavigation(initialMessage.data);
   }
 
   setup();
@@ -210,7 +228,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => LocalizationCubit()..loadSaved()),
+        BlocProvider.value(value: getIt<LocalizationCubit>()..loadSaved()),
         BlocProvider(create: (context) => getIt<AuthCubit>()),
         BlocProvider(create: (context) => getIt<HomeCubit>()),
         BlocProvider(create: (context) => getIt<ActivitiesCubit>()),
@@ -227,6 +245,7 @@ class MyApp extends StatelessWidget {
               return MaterialApp(
                 debugShowCheckedModeBanner: false,
                 theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+                navigatorKey: navigatorKey,
                 locale: locale,
                 localizationsDelegates: const [
                   AppLocalizations.delegate,
@@ -243,5 +262,51 @@ class MyApp extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+// Global navigator key to allow navigation from notification callbacks
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+void _handleNotificationNavigation(Map<String, dynamic> data) {
+  try {
+    final type = (data['type'] ?? '').toString();
+    final activityId = (data['activityId'] ?? '').toString();
+    final propertyId = (data['propertyId'] ?? '').toString();
+    final registrationId = (data['registrationId'] ?? '').toString();
+
+    Widget? target;
+    switch (type) {
+      case 'new_registration':
+      case 'confirm_payment':
+      case 'refund':
+        if (registrationId.isNotEmpty) {
+          target = ReservationLoaderScreen(reservationId: registrationId);
+        }
+        break;
+      case 'new_activity':
+      case 'activity_verification':
+        if (activityId.isNotEmpty) {
+          target = ActivityScreen(id: activityId);
+        }
+        break;
+      case 'new_property':
+      case 'property_verification':
+        if (propertyId.isNotEmpty) {
+          target = RentalDetailScreen(id: propertyId);
+        }
+        break;
+      default:
+        break;
+    }
+
+    if (target != null) {
+      final nav = navigatorKey.currentState;
+      if (nav != null) {
+        nav.push(MaterialPageRoute(builder: (_) => target!));
+      }
+    }
+  } catch (e) {
+    developer.log('Failed to handle notification navigation: $e', name: 'FCM');
   }
 }

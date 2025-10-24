@@ -10,8 +10,11 @@ import '../../../../../../config/images/image_assets.dart';
 import '../../../../../../config/widget/helper.dart';
 import '../../../../../core/localization/l10n_ext.dart';
 import '../../../../../core/utils/utile.dart';
+import '../../../activities/view/screens/activity.dart';
 import '../../../models/notification.dart';
+import '../../../reservation/view/screens/reservation_loader_screen.dart';
 import '../../../reservation/view/screens/reservations_screen.dart';
+import '../propreties/views/rental_details_view.dart';
 
 class NotificationDetailContent extends StatelessWidget {
   final Map<String, dynamic> notification;
@@ -225,6 +228,30 @@ class NotificationItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (!notification.isRead) getIt<HomeCubit>().readNotification(notification.id);
+        final type = notification.type;
+        final id = notification.entityId;
+        if (id.isEmpty) return;
+        Widget? target;
+        switch (type) {
+          case NotificationTypes.newRegistration:
+          case NotificationTypes.confirmPayment:
+          case NotificationTypes.refund:
+            target = ReservationLoaderScreen(reservationId: id);
+            break;
+          case NotificationTypes.newActivity:
+          case NotificationTypes.activityVerification:
+            target = ActivityScreen(id: id);
+            break;
+          case NotificationTypes.newProperty:
+          case NotificationTypes.propertyVerification:
+            target = RentalDetailScreen(id: id);
+            break;
+          default:
+            target = null;
+        }
+        if (target != null) {
+          Navigator.push(context, MaterialPageRoute(builder: (_) => target!));
+        }
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),

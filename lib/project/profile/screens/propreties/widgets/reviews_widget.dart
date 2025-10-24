@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // import 'package:go_router/go_router.dart';
 // import '../../../../../core/app_router.dart';
 import '../../../../../../config/colors/colors.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 import '../../../../../../config/widget/helper.dart';
 import '../../../../models/review.dart';
 import '../views/review_view.dart';
@@ -71,8 +72,8 @@ class ReviewsWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              TextWidget(
-                text: '$commentsCount Reviews',
+                    TextWidget(
+                      text: context.l10n.reviewsCount(commentsCount),
                 color: AppColors.primaryColor,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,

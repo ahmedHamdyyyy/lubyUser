@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 import 'package:luby2/project/profile/screens/propreties/widgets/list_tile_item.dart';
 
 import '../../../../../../config/widget/helper.dart';
@@ -26,7 +27,7 @@ class PlaceOffersView extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 TextWidget(
-                  text: 'What this place offers',
+                  text: context.l10n.whatThisPlaceOffers,
                   color: Color(0xFF414141),
                   fontSize: 16,
                   fontWeight: FontWeight.w600,

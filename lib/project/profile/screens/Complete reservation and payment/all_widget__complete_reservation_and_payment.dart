@@ -499,8 +499,8 @@ class ReservedItemCardWidget extends StatelessWidget {
   final String location;
   final String details;
   final String startDate;
-  final int guestNumber, nights, totalPrice;
-  final double price;
+  final int guestNumber, nights;
+  final double price, totalPrice;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
 
@@ -547,6 +547,7 @@ class ReservedItemCardWidget extends StatelessWidget {
                   ],
                 ),
               ),
+              const SizedBox(width: 10),
               Expanded(
                 flex: 5,
                 child: Padding(
@@ -594,7 +595,7 @@ class ReservedItemCardWidget extends StatelessWidget {
                         ],
                       ),
                       Text(
-                        '${context.l10n.commonTotal}: $totalPrice',
+                        '${context.l10n.commonTotal}: ${totalPrice.toStringAsFixed(2)}',
                         style: GoogleFonts.poppins(
                           color: AppColors.secondTextColor,
                           fontSize: 14,

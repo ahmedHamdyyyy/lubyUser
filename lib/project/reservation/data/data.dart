@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 
 import '../../../../core/services/api_services.dart';
@@ -38,26 +40,25 @@ class ReservationsData {
   Future<ReservationModel> createReservation(ReservationModel reservation) async {
     final response = await _apiService.dio.post('registrations', data: reservation.toMap());
     if (response.statusCode != 200) throw DioException(requestOptions: response.requestOptions, response: response);
-    print(response.data);
+    log(response.data.toString());
     return ReservationModel.fromMap(response.data['data'], item: reservation.item);
   }
 
   Future<ReservationModel> updateReservation(ReservationModel reservation) async {
     final response = await _apiService.dio.put('/registrations/${reservation.id}', data: reservation.toMap());
-    print(response.data);
+    if (response.statusCode != 200) throw DioException(requestOptions: response.requestOptions, response: response);
     return ReservationModel.fromMap(response.data['data'], item: reservation.item);
   }
 
   Future<void> removeReservation(String id) async {
     final response = await _apiService.dio.delete('/registrations/$id');
-    print(response.data);
     if (response.statusCode != 200) throw Exception('Failed to delete reservation');
   }
 
   Future<String> payment(String reservationId) async {
     final response = await _apiService.dio.post('/payments/initiate', data: {'registrationId': reservationId});
-    print(response.data);
     if (response.statusCode != 200) throw Exception('Failed to initiate payment');
+    log(response.data.toString());
     return response.data['data']['redirect_url'] as String;
   }
 }

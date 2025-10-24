@@ -291,14 +291,14 @@ class AccountHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         SizedBox(height: 52),
         Row(
           children: [
             SizedBox(width: 20),
             Text(
-              "Account",
+              context.l10n.accountInfoTitle,
               style: TextStyle(
                 color: AppColors.grayTextColor,
                 fontWeight: FontWeight.w500,
@@ -642,7 +642,7 @@ class TermsCheckbox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
         GestureDetector(
           onTap: () => onChanged(!value),

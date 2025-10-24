@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class ChatModel extends Equatable {
-  final String id, vendorId, userId, vendorName, profilePicture, userName, userImageUrl, lastMessage;
+  final String id, vendorId, userId, vendorName, vendorImage, userName, userImageUrl, lastMessage;
   final DateTime lastTimestamp;
 
   const ChatModel({
@@ -12,7 +12,7 @@ class ChatModel extends Equatable {
     required this.lastMessage,
     required this.lastTimestamp,
     required this.vendorName,
-    required this.profilePicture,
+    required this.vendorImage,
     required this.userName,
     required this.userImageUrl,
   });
@@ -23,7 +23,8 @@ class ChatModel extends Equatable {
     userId: map['userId'] ?? '',
     lastMessage: map['lastMessage'] ?? '',
     vendorName: map['vendorName'] ?? '',
-    profilePicture: map['profilePicture'] ?? '',
+    // Align with vendor app schema: use 'vendorImageUrl' for the vendor image field
+    vendorImage: map['vendorImageUrl'] ?? '',
     userName: map['userName'] ?? '',
     userImageUrl: map['userImageUrl'] ?? '',
     lastTimestamp: (map['lastTimestamp'] as Timestamp).toDate(),
@@ -35,7 +36,8 @@ class ChatModel extends Equatable {
     'userId': userId,
     'lastMessage': lastMessage,
     'vendorName': vendorName,
-    'profilePicture': profilePicture,
+    // Persist using 'vendorImageUrl' to match both apps
+    'vendorImageUrl': vendorImage,
     'userName': userName,
     'userImageUrl': userImageUrl,
     'lastTimestamp': Timestamp.fromDate(lastTimestamp),
@@ -49,7 +51,7 @@ class ChatModel extends Equatable {
     lastMessage,
     lastTimestamp,
     vendorName,
-    profilePicture,
+    vendorImage,
     userName,
     userImageUrl,
   ];

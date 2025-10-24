@@ -1621,6 +1621,209 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'اختر لغتك'**
   String get selectYourLanguageArabicTitle;
+
+  /// No description provided for @contactUsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Us'**
+  String get contactUsTitle;
+
+  /// No description provided for @howCanWeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'How can we help you?'**
+  String get howCanWeHelp;
+
+  /// No description provided for @messageInputHint.
+  ///
+  /// In en, this message translates to:
+  /// **'You can add your message here'**
+  String get messageInputHint;
+
+  /// No description provided for @commonSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get commonSend;
+
+  /// No description provided for @reviewsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviews'**
+  String get reviewsTitle;
+
+  /// No description provided for @reviewsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'({count} Reviews)'**
+  String reviewsCount(Object count);
+
+  /// No description provided for @addReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Review'**
+  String get addReview;
+
+  /// No description provided for @editReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Review'**
+  String get editReview;
+
+  /// No description provided for @chargingWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Charging Wallet'**
+  String get chargingWallet;
+
+  /// No description provided for @availableBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Available balance'**
+  String get availableBalance;
+
+  /// No description provided for @enterAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Amount'**
+  String get enterAmount;
+
+  /// No description provided for @enterAmountHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter amount you want to charge'**
+  String get enterAmountHint;
+
+  /// No description provided for @chooseTheCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the card'**
+  String get chooseTheCard;
+
+  /// No description provided for @useThisCardToCharge.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this card to Charge'**
+  String get useThisCardToCharge;
+
+  /// No description provided for @cardNumberEndingWith.
+  ///
+  /// In en, this message translates to:
+  /// **'Card number ending with {last4}'**
+  String cardNumberEndingWith(Object last4);
+
+  /// No description provided for @chargeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Charge'**
+  String get chargeLabel;
+
+  /// No description provided for @walletChargedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet Charged'**
+  String get walletChargedTitle;
+
+  /// No description provided for @walletDepositMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} SAR were deposited into the wallet'**
+  String walletDepositMessage(Object amount);
+
+  /// No description provided for @sarCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'SAR'**
+  String get sarCurrency;
+
+  /// No description provided for @whatThisPlaceOffers.
+  ///
+  /// In en, this message translates to:
+  /// **'What this place offers'**
+  String get whatThisPlaceOffers;
+
+  /// No description provided for @showAllAmenities.
+  ///
+  /// In en, this message translates to:
+  /// **'Show All Amenities'**
+  String get showAllAmenities;
+
+  /// No description provided for @entireRentalUnitIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Entire rental unit in {address}'**
+  String entireRentalUnitIn(Object address);
+
+  /// No description provided for @availableForRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Available for {nights} {nightsLabel} from {from} to {to}'**
+  String availableForRange(
+    Object from,
+    Object nights,
+    Object nightsLabel,
+    Object to,
+  );
+
+  /// No description provided for @rateApartment.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate Apartment'**
+  String get rateApartment;
+
+  /// No description provided for @addComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Comment'**
+  String get addComment;
+
+  /// No description provided for @addYourCommentHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your comment here'**
+  String get addYourCommentHere;
+
+  /// No description provided for @reviewPostedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Review posted successfully'**
+  String get reviewPostedSuccessfully;
+
+  /// No description provided for @bedsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} {count, plural, one {Bed} other {Beds}}'**
+  String bedsCount(num count);
+
+  /// No description provided for @bathroomsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} {count, plural, one {Bathroom} other {Bathrooms}}'**
+  String bathroomsCount(num count);
+
+  /// No description provided for @yourBookingDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Booking Details'**
+  String get yourBookingDetails;
+
+  /// No description provided for @reservationStatusDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get reservationStatusDraft;
+
+  /// No description provided for @reservationStatusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get reservationStatusCompleted;
+
+  /// No description provided for @reservationStatusCanceled.
+  ///
+  /// In en, this message translates to:
+  /// **'Canceled'**
+  String get reservationStatusCanceled;
 }
 
 class _AppLocalizationsDelegate

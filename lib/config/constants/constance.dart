@@ -1,6 +1,8 @@
 enum Status { initial, loading, success, error }
 
 class AppConst {
+  // static double serviceFees(double price) =>
+  //     (price * 4 / 100) % 0.01 == 0 ? (price * 4 / 100) : ((price * 4 / 100).ceilToDouble());
   //variables
   static const id = '_id';
   static const email = 'email';

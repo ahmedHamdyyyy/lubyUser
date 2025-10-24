@@ -134,7 +134,12 @@ class PropertyModel extends Equatable {
     vendor: Vendor.initial,
   );
 
-  factory PropertyModel.fromJson(Map<String, dynamic> json, {Map<String, dynamic>? review, int? reviewsCount}) {
+  factory PropertyModel.fromJson(
+    Map<String, dynamic> json, {
+    Map<String, dynamic>? review,
+    int? reviewsCount,
+    Map<String, dynamic>? reservation,
+  }) {
     List<String> parseStringOrList(dynamic value) {
       if (value == null) return [];
       if (value is List) return List<String>.from(value);
@@ -164,16 +169,16 @@ class PropertyModel extends Equatable {
       totalRate: (json['averageRating'] ?? 0.0).toDouble(),
       vendor: json[AppConst.vendorId] is String ? Vendor.initial : Vendor.fromJson(json[AppConst.vendorId] ?? {}),
       review: ReviewModel.fromJson(review ?? {}, ReviewType.property),
-      reservationId: json['registration']?['_id'] ?? '',
-      reservationCheckInDate: json['registration']?['checkInDate'] ?? '',
-      reservationCheckOutDate: json['registration']?['checkOutDate'] ?? '',
+      reservationId: reservation?['_id'] ?? '',
+      reservationCheckInDate: reservation?['checkInDate'] ?? '',
+      reservationCheckOutDate: reservation?['checkOutDate'] ?? '',
       reservationStatus: ReservationStatus.values.firstWhere(
-        (status) => json['registration']?['status'] == status,
+        (status) => reservation?['status'] == status,
         orElse: () => ReservationStatus.draft,
       ),
-      reservationGuestNumber: json['registration']?['guestNumber'] ?? 1,
-      reservationNumber: json['registration']?['registrationNumber'] ?? 0,
-      reservationTotalPrice: (json['registration']?['totalPrice'] as num?)?.toDouble() ?? 0.0,
+      reservationGuestNumber: reservation?['guestNumber'] ?? 1,
+      reservationNumber: reservation?['registrationNumber'] ?? 0,
+      reservationTotalPrice: (reservation?['totalPrice'] as num?)?.toDouble() ?? 0.0,
     );
   }
 

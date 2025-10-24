@@ -72,8 +72,9 @@ Future<dynamic> showReseverDialoge(
                                     final day = int.tryParse(dateParts[0]);
                                     final month = int.tryParse(dateParts[1]);
                                     final year = int.tryParse(dateParts[2]);
-                                    if (day == null || month == null || year == null)
+                                    if (day == null || month == null || year == null) {
                                       return context.l10n.invalidDateComponents;
+                                    }
                                     final date = DateTime(year, month, day);
                                     if (date.isBefore(DateTime.now())) return context.l10n.checkInDateMustBeInFuture;
                                     final startDate = DateTime.tryParse(property.startDate) ?? DateTime.now();
@@ -120,7 +121,7 @@ Future<dynamic> showReseverDialoge(
                                 TextFormField(
                                   controller: checkOutController,
                                   validator: (value) {
-                                    if (value == null || value.isEmpty) return context.l10n.pleaseEnterCheckInDate;
+                                    if (value == null || value.isEmpty) return context.l10n.pleaseEnterDate;
                                     if (!RegExp(r'^\d{1,2}/\d{1,2}/\d{4}$').hasMatch(value)) {
                                       return context.l10n.enterDateInDdMmYyyy;
                                     }
@@ -128,8 +129,9 @@ Future<dynamic> showReseverDialoge(
                                     final day = int.tryParse(dateParts[0]);
                                     final month = int.tryParse(dateParts[1]);
                                     final year = int.tryParse(dateParts[2]);
-                                    if (day == null || month == null || year == null)
+                                    if (day == null || month == null || year == null) {
                                       return context.l10n.invalidDateComponents;
+                                    }
                                     final date = DateTime(year, month, day);
                                     if (date.isBefore(DateTime.now())) return context.l10n.checkInDateMustBeInFuture;
                                     final startDate = DateTime.tryParse(property.startDate) ?? DateTime.now();
@@ -210,16 +212,20 @@ Future<dynamic> showReseverDialoge(
                         SizedBox(height: 16),
                         Row(
                           children: [
-                            TextWidget(
-                              text: '${property.pricePerNight} x ${guestController.text.trim()} ${context.l10n.guests}',
-                              color: Color(0xFF414141),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
+                            Expanded(
+                              child: TextWidget(
+                                text:
+                                    '${context.l10n.priceTimesGuests((int.tryParse(guestController.text.trim()) ?? 1), context.l10n.sarAmount(property.pricePerNight))} × ${Utils.calculateDaysDifference(checkInController.text, checkOutController.text)} ${context.l10n.nights}',
+                                color: Color(0xFF414141),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
-                            Spacer(),
                             TextWidget(
                               text: context.l10n.sarAmount(
-                                property.pricePerNight * (int.tryParse(guestController.text.trim()) ?? 1),
+                                property.pricePerNight *
+                                    (int.tryParse(guestController.text.trim()) ?? 1) *
+                                    Utils.calculateDaysDifference(checkInController.text, checkOutController.text),
                               ),
                               color: Color(0xFF414141),
                               fontSize: 16,
@@ -238,7 +244,7 @@ Future<dynamic> showReseverDialoge(
                             ),
                             Spacer(),
                             TextWidget(
-                              text: context.l10n.sarAmount(20),
+                              text: '${context.l10n.sarAmount(4)}%',
                               color: Color(0xFF414141),
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
@@ -246,30 +252,6 @@ Future<dynamic> showReseverDialoge(
                           ],
                         ),
                         SizedBox(height: 24),
-                        Driver(),
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 16.0),
-                          child: Row(
-                            children: [
-                              TextWidget(
-                                text: context.l10n.commonTotal,
-                                color: Color(0xFF414141),
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              Spacer(),
-                              TextWidget(
-                                text:
-                                    calculateTotalPrice() == null
-                                        ? '---'
-                                        : context.l10n.sarAmount(calculateTotalPrice()!.toInt()),
-                                color: Color(0xFF414141),
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ],
-                          ),
-                        ),
                       ],
                     ),
                     TextWidget(

@@ -20,13 +20,39 @@ class HomeScreenMain extends StatefulWidget {
   _HomeScreenMainState createState() => _HomeScreenMainState();
 }
 
+enum MainCategory { rentalServices, touristActivities }
+
 class _HomeScreenMainState extends State<HomeScreenMain> {
   Map<String, dynamic> _filters = {};
   final _scrollController = ScrollController();
   bool _isLoadingMore = false;
   final _pageController = PageController();
   PropertyType? selectedPropertyCategory;
-  String selectedMainCategory = "Rental Services";
+  MainCategory selectedMainCategory = MainCategory.rentalServices;
+
+  String _localizedPropertyType(BuildContext context, PropertyType type) {
+    // Prefer specific localization keys when available; otherwise, provide a sensible fallback.
+    switch (type) {
+      case PropertyType.apartment:
+        // Apartments plural used as a category title
+        return context.l10n.apartmentsTitle;
+      case PropertyType.studio:
+        // Group key that mentions Apartment - Studios
+        return context.l10n.propertyTypeApartmentStudios;
+      case PropertyType.cabin:
+        return context.l10n.cabinsTitle;
+      case PropertyType.house:
+        // Approximate with villas if dedicated key is not available
+        return context.l10n.villasTitle;
+      case PropertyType.guest_house:
+        // Missing explicit key in l10n; fallback to a readable label for now
+        return context.l10n.propertiesSection;
+      case PropertyType.yacht:
+        return context.l10n.categoryYacht;
+      case PropertyType.cruise:
+        return context.l10n.categoryCruise;
+    }
+  }
 
   @override
   void initState() {
@@ -38,7 +64,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
   void _handleFetchModeItems() {
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
-        if (selectedMainCategory == "Activities") {
+        if (selectedMainCategory == MainCategory.touristActivities) {
           getIt<ActivitiesCubit>().getActivities(fetchNext: true, filters: _filters);
         } else {
           getIt<HomeCubit>().getProperties(fetchNext: true, filters: _filters);
@@ -56,7 +82,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
       return Scaffold(
         body: RefreshIndicator(
           onRefresh: () async {
-            if (selectedMainCategory == "Rental Services") {
+            if (selectedMainCategory == MainCategory.rentalServices) {
               getIt<HomeCubit>().getProperties(filters: _filters);
             } else {
               getIt<ActivitiesCubit>().getActivities(filters: _filters);
@@ -105,7 +131,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                         HomeSearchSection(
                           onSearch: (filters) {
                             _filters = filters;
-                            if (selectedMainCategory == "Rental Services") {
+                            if (selectedMainCategory == MainCategory.rentalServices) {
                               getIt<HomeCubit>().getProperties(filters: _filters);
                             } else {
                               getIt<ActivitiesCubit>().getActivities(filters: _filters);
@@ -121,7 +147,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                               Expanded(
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    if (selectedMainCategory == "Rental Services") {
+                                    if (selectedMainCategory == MainCategory.rentalServices) {
                                       if (selectedPropertyCategory != null) {
                                         _filters.remove('filter[type]');
                                         setState(() => selectedPropertyCategory = null);
@@ -129,15 +155,19 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                                       }
                                     } else {
                                       selectedPropertyCategory = null;
-                                      setState(() => selectedMainCategory = "Rental Services");
+                                      setState(() => selectedMainCategory = MainCategory.rentalServices);
                                       getIt<HomeCubit>().getProperties(filters: _filters);
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor:
-                                        selectedMainCategory == "Rental Services" ? AppColors.primaryColor : Colors.white,
+                                        selectedMainCategory == MainCategory.rentalServices
+                                            ? AppColors.primaryColor
+                                            : Colors.white,
                                     foregroundColor:
-                                        selectedMainCategory == "Rental Services" ? Colors.white : AppColors.primaryColor,
+                                        selectedMainCategory == MainCategory.rentalServices
+                                            ? Colors.white
+                                            : AppColors.primaryColor,
                                     side: BorderSide(color: AppColors.primaryColor),
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                   ),
@@ -148,16 +178,20 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                               Expanded(
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    if (selectedMainCategory == "Tourist Activities") return;
-                                    setState(() => selectedMainCategory = "Tourist Activities");
+                                    if (selectedMainCategory == MainCategory.touristActivities) return;
+                                    setState(() => selectedMainCategory = MainCategory.touristActivities);
                                     _filters.remove('filter[type]');
                                     getIt<ActivitiesCubit>().getActivities(filters: _filters);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor:
-                                        selectedMainCategory == "Tourist Activities" ? AppColors.primaryColor : Colors.white,
+                                        selectedMainCategory == MainCategory.touristActivities
+                                            ? AppColors.primaryColor
+                                            : Colors.white,
                                     foregroundColor:
-                                        selectedMainCategory == "Tourist Activities" ? Colors.white : AppColors.primaryColor,
+                                        selectedMainCategory == MainCategory.touristActivities
+                                            ? Colors.white
+                                            : AppColors.primaryColor,
                                     side: BorderSide(color: AppColors.primaryColor),
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                   ),
@@ -167,7 +201,7 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                             ],
                           ),
                         ),
-                        if (selectedMainCategory == "Rental Services")
+                        if (selectedMainCategory == MainCategory.rentalServices)
                           Padding(
                             padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
                             child: SingleChildScrollView(
@@ -192,26 +226,38 @@ class _HomeScreenMainState extends State<HomeScreenMain> {
                                             side: BorderSide(color: AppColors.primaryColor),
                                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                           ),
-                                          child: Text(type.name.toUpperCase()),
+                                          child: Text(_localizedPropertyType(context, type)),
                                         ),
                                       );
                                     }).toList(),
                               ),
                             ),
                           ),
-                        if (selectedMainCategory == "Rental Services")
-                          buildPropertyList(title: context.l10n.mostViewed, context: context, state: state)
-                        else if (selectedMainCategory == "Tourist Activities")
+                        if (selectedMainCategory == MainCategory.rentalServices)
+                          buildPropertyList(
+                            title: context.l10n.mostViewed,
+                            context: context,
+                            state: state,
+                            onApplyFilters: (newFilters) {
+                              // Clear previous sort params before applying new ones
+                              _filters.removeWhere((key, value) => key.startsWith('sort['));
+                              _filters = {..._filters, ...newFilters};
+                              getIt<HomeCubit>().getProperties(filters: _filters);
+                            },
+                          )
+                        else if (selectedMainCategory == MainCategory.touristActivities)
                           BlocBuilder<ActivitiesCubit, ActivitiesState>(
                             builder: (context, state) {
-                              return buildActivitiesList(title: '', context: context, state: state);
-                              // return Column(
-                              //   children: [
-                              //     buildActivitiesList(title: "Popular Activities", context: context, state: state),
-                              //     const SizedBox(height: 16),
-                              //     buildActivitiesList(title: "Recommended Activities", context: context, state: state),
-                              //   ],
-                              // );
+                              return buildActivitiesList(
+                                title: '',
+                                context: context,
+                                state: state,
+                                onApplyFilters: (newFilters) {
+                                  _filters.removeWhere((key, value) => key.startsWith('sort['));
+                                  _filters = {..._filters, ...newFilters};
+                                  getIt<ActivitiesCubit>().getActivities(filters: _filters);
+                                },
+                              );
                             },
                           ),
                         const SizedBox(height: 16),

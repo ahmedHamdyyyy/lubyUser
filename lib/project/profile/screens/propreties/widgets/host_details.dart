@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../../../config/widget/helper.dart';
 import '../../../../../config/images/assets.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 import '../../../../../locator.dart';
 import '../../../../Home/cubit/home_cubit.dart';
 import '../../../../models/chat.dart';
@@ -29,10 +30,15 @@ class HostDetailsWidget extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextWidget(text: 'Hosted by', color: Color(0xFF414141), fontSize: 16, fontWeight: FontWeight.w600),
+              TextWidget(
+                text: context.l10n.hostedBy,
+                color: const Color(0xFF414141),
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
               TextWidget(
                 text: '${vendor.firstName} ${vendor.lastName}',
-                color: Color(0xFF757575),
+                color: const Color(0xFF757575),
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
               ),
@@ -51,7 +57,7 @@ class HostDetailsWidget extends StatelessWidget {
                         id: '${vendor.id}_${user.id}',
                         vendorId: vendor.id,
                         vendorName: '${vendor.firstName} ${vendor.lastName}',
-                        profilePicture: vendor.profilePicture,
+                        vendorImage: vendor.profilePicture,
                         lastMessage: '',
                         lastTimestamp: DateTime.now(),
                         userId: user.id,

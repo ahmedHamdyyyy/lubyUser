@@ -16,13 +16,6 @@ Future<dynamic> showActivityReserveDialoge(
   TextEditingController guestController,
 ) {
   final formKey = GlobalKey<FormState>();
-  double? calculateTotalPrice() {
-    final checkInDate = Utils.parseDate(dateController.text);
-    final guestCount = int.tryParse(guestController.text) ?? 1;
-    if (checkInDate != null) return activity.price * guestCount;
-    return null;
-  }
-
   return showDialog(
     context: context,
     barrierDismissible: true,
@@ -56,7 +49,6 @@ Future<dynamic> showActivityReserveDialoge(
                               const SizedBox(height: 4),
                               SizedBox(
                                 height: 40,
-                                width: 144,
                                 child: TextFormField(
                                   controller: dateController,
                                   validator: (value) {
@@ -134,8 +126,8 @@ Future<dynamic> showActivityReserveDialoge(
                           children: [
                             TextWidget(
                               text: context.l10n.priceTimesGuests(
-                                activity.price,
                                 int.tryParse(guestController.text.trim()) ?? 1,
+                                activity.price,
                               ),
                               color: Color(0xFF414141),
                               fontSize: 16,
@@ -144,7 +136,7 @@ Future<dynamic> showActivityReserveDialoge(
                             Spacer(),
                             TextWidget(
                               text: context.l10n.sarAmount(
-                                activity.price * (int.tryParse(guestController.text.trim()) ?? 1),
+                                _total(activity, guestController)?.toStringAsFixed(2) ?? '---.--',
                               ),
                               color: Color(0xFF414141),
                               fontSize: 16,
@@ -163,7 +155,7 @@ Future<dynamic> showActivityReserveDialoge(
                             ),
                             Spacer(),
                             TextWidget(
-                              text: context.l10n.sarAmount(20),
+                              text: context.l10n.sarAmount('4%'),
                               color: Color(0xFF414141),
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
@@ -185,9 +177,9 @@ Future<dynamic> showActivityReserveDialoge(
                               Spacer(),
                               TextWidget(
                                 text:
-                                    calculateTotalPrice() == null
+                                    _total(activity, guestController) == null
                                         ? '---'
-                                        : context.l10n.sarAmount(calculateTotalPrice()!.toInt()),
+                                        : context.l10n.sarAmount(_total(activity, guestController)!.toStringAsFixed(2)),
                                 color: Color(0xFF414141),
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,
@@ -216,7 +208,8 @@ Future<dynamic> showActivityReserveDialoge(
                                 onPressed: () {
                                   if (!formKey.currentState!.validate()) return;
                                   final date = Utils.parseDate(dateController.text.trim());
-                                  final guests = int.parse(guestController.text.trim());
+                                  final guests = int.tryParse(guestController.text.trim());
+                                  if (date == null || guests == null || guests <= 0) return;
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -226,9 +219,9 @@ Future<dynamic> showActivityReserveDialoge(
                                             item: activity,
                                             guestNumber: guests,
                                             type: ReservationType.activity,
-                                            checkInDate: date!.toIso8601String(),
+                                            checkInDate: date.toIso8601String(),
                                             checkOutDate: date.toIso8601String(),
-                                            totalPrice: (calculateTotalPrice() ?? 0).toDouble(),
+                                            totalPrice: (_total(activity, guestController) ?? 0).toDouble(),
                                           ),
                                         );
                                       },
@@ -289,4 +282,10 @@ Future<dynamic> showActivityReserveDialoge(
       );
     },
   );
+}
+
+double? _total(ActivityModel activity, TextEditingController guestController) {
+  final guests = int.tryParse(guestController.text.trim());
+  if (guests == null || guests <= 0) return null;
+  return activity.price * guests;
 }

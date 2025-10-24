@@ -25,6 +25,14 @@ class Utils {
         ),
   );
 
+  static int calculateDaysDifference(String? startDate, String? endDate) {
+    if (startDate == null || endDate == null) return 0;
+    final start = parseDate(startDate);
+    final end = parseDate(endDate);
+    if (start == null || end == null) return 0;
+    return end.difference(start).inDays;
+  }
+
   static Future<T?> loadingDialog<T>(
     BuildContext context, {
     String message = 'Loading...',

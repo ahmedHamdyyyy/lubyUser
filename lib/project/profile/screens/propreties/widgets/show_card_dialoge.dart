@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../config/widget/helper.dart';
 
@@ -23,9 +24,9 @@ Future<dynamic> showCardDialoge(BuildContext context) {
                 mainAxisAlignment: MainAxisAlignment.center,
 
                 children: [
-                  const TextWidget(
-                    text: 'Wallet Charged',
-                    color: Color(0xFF262626),
+                  TextWidget(
+                    text: context.l10n.walletChargedTitle,
+                    color: const Color(0xFF262626),
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -35,9 +36,9 @@ Future<dynamic> showCardDialoge(BuildContext context) {
                   SizedBox(height: 130, width: 130, child: SvgPicture.asset('assets/images/component.svg')),
                   Padding(
                     padding: const EdgeInsets.only(left: 20, right: 20),
-                    child: const TextWidget(
-                      text: '500 SAR were deposited into the wallet',
-                      color: Color(0xFF262626),
+                    child: TextWidget(
+                      text: context.l10n.walletDepositMessage(500),
+                      color: const Color(0xFF262626),
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
                     ),
@@ -47,14 +48,14 @@ Future<dynamic> showCardDialoge(BuildContext context) {
                     height: 136,
                     margin: const EdgeInsets.symmetric(horizontal: 0),
                     decoration: BoxDecoration(color: const Color(0xFF262626), borderRadius: BorderRadius.circular(12)),
-                    child: const Padding(
+                    child: Padding(
                       padding: EdgeInsets.all(16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextWidget(
-                            text: 'Available balance',
-                            color: Color(0xFFFFFFFF),
+                            text: context.l10n.availableBalance,
+                            color: const Color(0xFFFFFFFF),
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                           ),
@@ -64,13 +65,13 @@ Future<dynamic> showCardDialoge(BuildContext context) {
                             crossAxisAlignment: CrossAxisAlignment.baseline,
                             textBaseline: TextBaseline.alphabetic,
                             children: [
-                              TextWidget(
+                              const TextWidget(
                                 text: '15,000',
                                 color: Color(0xFFFFFFFF),
                                 fontSize: 32,
                                 fontWeight: FontWeight.w400,
                               ),
-                              TextWidget(text: 'SAR', color: Color(0xFFFFFFFF), fontSize: 16, fontWeight: FontWeight.w400),
+                              TextWidget(text: context.l10n.sarCurrency, color: const Color(0xFFFFFFFF), fontSize: 16, fontWeight: FontWeight.w400),
                             ],
                           ),
                         ],
@@ -95,9 +96,9 @@ Future<dynamic> showCardDialoge(BuildContext context) {
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                               side: const BorderSide(color: Color(0xFF262626), width: 1.0, style: BorderStyle.solid),
                             ),
-                            child: const TextWidget(
-                              text: 'Done',
-                              color: Color(0xFF262626),
+                            child: TextWidget(
+                              text: context.l10n.doneLabel,
+                              color: const Color(0xFF262626),
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
                             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../config/widget/helper.dart';
 import '../views/place_offers_view.dart';
@@ -13,12 +14,12 @@ class AmenitiesWidget extends StatelessWidget {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const TextWidget(
-          text: 'What this place offers',
-          color: Color(0xFF414141),
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
+            TextWidget(
+              text: context.l10n.whatThisPlaceOffers,
+              color: const Color(0xFF414141),
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
         const SizedBox(height: 16),
         TileItemList(tags: tags),
         const SizedBox(height: 16),
@@ -38,12 +39,12 @@ class AmenitiesWidget extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 2),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                 ),
-                child: const TextWidget(
-                  text: 'Show All Amenities',
-                  color: Color(0xFFFFFFFF),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
+                    child: TextWidget(
+                      text: context.l10n.showAllAmenities,
+                      color: Color(0xFFFFFFFF),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
               ),
             ),
           ],

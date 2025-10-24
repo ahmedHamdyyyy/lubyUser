@@ -52,6 +52,7 @@ class HomeData {
       response.data['data']['property'],
       review: response.data['data']['review'],
       reviewsCount: response.data['data']?['reviewsCount'],
+      reservation: response.data['data']?['registration'],
     );
   }
 

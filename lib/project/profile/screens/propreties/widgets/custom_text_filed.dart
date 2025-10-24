@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart' show GoogleFonts;
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
@@ -24,7 +25,7 @@ class CustomTextField extends StatelessWidget {
       child: TextFormField(
         validator: (value) {
           if (value?.isEmpty ?? true) {
-            return 'Filed is Empty';
+            return context.l10n.fillAllFields;
           } else {
             return null;
           }

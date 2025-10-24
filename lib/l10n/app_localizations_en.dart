@@ -815,4 +815,134 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectYourLanguageArabicTitle => 'اختر لغتك';
+
+  @override
+  String get contactUsTitle => 'Contact Us';
+
+  @override
+  String get howCanWeHelp => 'How can we help you?';
+
+  @override
+  String get messageInputHint => 'You can add your message here';
+
+  @override
+  String get commonSend => 'Send';
+
+  @override
+  String get reviewsTitle => 'Reviews';
+
+  @override
+  String reviewsCount(Object count) {
+    return '($count Reviews)';
+  }
+
+  @override
+  String get addReview => 'Add Review';
+
+  @override
+  String get editReview => 'Edit Review';
+
+  @override
+  String get chargingWallet => 'Charging Wallet';
+
+  @override
+  String get availableBalance => 'Available balance';
+
+  @override
+  String get enterAmount => 'Enter Amount';
+
+  @override
+  String get enterAmountHint => 'Enter amount you want to charge';
+
+  @override
+  String get chooseTheCard => 'Choose the card';
+
+  @override
+  String get useThisCardToCharge => 'Use this card to Charge';
+
+  @override
+  String cardNumberEndingWith(Object last4) {
+    return 'Card number ending with $last4';
+  }
+
+  @override
+  String get chargeLabel => 'Charge';
+
+  @override
+  String get walletChargedTitle => 'Wallet Charged';
+
+  @override
+  String walletDepositMessage(Object amount) {
+    return '$amount SAR were deposited into the wallet';
+  }
+
+  @override
+  String get sarCurrency => 'SAR';
+
+  @override
+  String get whatThisPlaceOffers => 'What this place offers';
+
+  @override
+  String get showAllAmenities => 'Show All Amenities';
+
+  @override
+  String entireRentalUnitIn(Object address) {
+    return 'Entire rental unit in $address';
+  }
+
+  @override
+  String availableForRange(
+    Object from,
+    Object nights,
+    Object nightsLabel,
+    Object to,
+  ) {
+    return 'Available for $nights $nightsLabel from $from to $to';
+  }
+
+  @override
+  String get rateApartment => 'Rate Apartment';
+
+  @override
+  String get addComment => 'Add Comment';
+
+  @override
+  String get addYourCommentHere => 'Add your comment here';
+
+  @override
+  String get reviewPostedSuccessfully => 'Review posted successfully';
+
+  @override
+  String bedsCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Beds',
+      one: 'Bed',
+    );
+    return '$count $_temp0';
+  }
+
+  @override
+  String bathroomsCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Bathrooms',
+      one: 'Bathroom',
+    );
+    return '$count $_temp0';
+  }
+
+  @override
+  String get yourBookingDetails => 'Your Booking Details';
+
+  @override
+  String get reservationStatusDraft => 'Draft';
+
+  @override
+  String get reservationStatusCompleted => 'Completed';
+
+  @override
+  String get reservationStatusCanceled => 'Canceled';
 }

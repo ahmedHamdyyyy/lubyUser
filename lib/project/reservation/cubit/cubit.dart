@@ -77,6 +77,15 @@ class ReservationsCubit extends Cubit<ReservationsState> {
     }
   }
 
+  void updateReservationStatus(String reservationId, ReservationStatus status) async {
+    try {
+      state.reservations.firstWhere((r) => r.id == reservationId);
+      emit(state.copyWith(reservations: [...state.reservations..removeWhere((r) => r.id == reservationId)]));
+    } catch (e) {
+      emit(state.copyWith(message: e.toString()));
+    }
+  }
+
   Future<bool> checkPaymentStatus(String reservationId) async {
     try {
       final reservation = await _repository.getReservation(reservationId);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/images/image_assets.dart';
@@ -211,9 +212,9 @@ class ChatMessageItemWidget extends StatelessWidget {
 // Empty State Widget
 class NoChatsWidget extends StatelessWidget {
   final String iconAsset;
-  final String message;
+  final String? message;
 
-  const NoChatsWidget({super.key, required this.iconAsset, this.message = "You don't have any conversation \n yet"});
+  const NoChatsWidget({super.key, required this.iconAsset, this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -226,7 +227,7 @@ class NoChatsWidget extends StatelessWidget {
 
           // Empty state message
           Text(
-            message,
+            message ?? context.l10n.noConversationsYet,
             textAlign: TextAlign.center,
             style: GoogleFonts.poppins(
               fontSize: 16,
@@ -265,7 +266,7 @@ class ConversationHeaderWidget extends StatelessWidget {
               ),
             const SizedBox(width: 8),
             Text(
-              "Conversations",
+              context.l10n.yourConversations,
               style: GoogleFonts.poppins(color: AppColors.grayTextColor, fontWeight: FontWeight.w500, fontSize: 14),
             ),
           ],
@@ -307,7 +308,7 @@ class NoChatScreenContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Header
-        ConversationHeaderWidget(title: 'Your Conversations', onTap: onTitleTap, showBackButton: showBackButton),
+        ConversationHeaderWidget(title: context.l10n.yourConversations, onTap: onTitleTap, showBackButton: showBackButton),
 
         // Empty state
         Expanded(child: NoChatsWidget(iconAsset: iconAsset, message: message)),

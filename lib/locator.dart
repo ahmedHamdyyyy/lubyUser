@@ -7,6 +7,7 @@ import 'package:luby2/project/activities/data/repository.dart';
 import 'package:luby2/project/auth/cubit/auth_cubit.dart';
 import 'package:luby2/project/auth/data/auth_data.dart';
 
+import 'core/localization/localization_cubit.dart';
 import 'core/services/api_services.dart';
 import 'core/services/cach_services.dart';
 import 'project/Home/cubit/home_cubit.dart';
@@ -33,4 +34,5 @@ void setup() {
   getIt.registerSingleton<ReservationsCubit>(
     ReservationsCubit(ReservationsRepository(ReservationsData(getIt<ApiService>()))),
   );
+  getIt.registerSingleton<LocalizationCubit>(LocalizationCubit());
 }

@@ -5,50 +5,44 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../core/localization/l10n_ext.dart';
 import '../../../../models/property.dart';
+import '../../../../models/reversation.dart';
 
 class BookingDetailsWidget extends StatelessWidget {
   const BookingDetailsWidget({required this.property, super.key});
   final PropertyModel property;
 
-  int get totalNights {
-    final start = DateTime.tryParse(property.startDate) ?? DateTime.now();
-    final end = DateTime.tryParse(property.endDate) ?? DateTime.now();
-    return end.difference(start).inDays;
-  }
-
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+    padding: const EdgeInsets.symmetric(horizontal: 20),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(right: 8.0, left: 8.0),
-          child: RichText(
-            text: TextSpan(
-              style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 16, fontWeight: FontWeight.w400),
-              children: [
-                const TextSpan(text: 'Available For '),
-                TextSpan(text: '$totalNights Night', style: const TextStyle(fontWeight: FontWeight.w600)),
-                const TextSpan(text: ' from '),
-                TextSpan(
-                  text: property.startDate.split('T').first.replaceAll('-', '/'),
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                ),
-                const TextSpan(text: ' to '),
-                TextSpan(
-                  text: property.endDate.split('T').first.replaceAll('-', '/'),
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                ),
-                const TextSpan(text: ' with price '),
-                TextSpan(text: '${property.pricePerNight}', style: const TextStyle(fontWeight: FontWeight.w600)),
-                const TextSpan(text: ' Per Night'),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 16),
         if (property.reservationId.isNotEmpty) ...[
+          Builder(
+            builder: (context) {
+              final statusText = () {
+                switch (property.reservationStatus) {
+                  case ReservationStatus.draft:
+                    return context.l10n.reservationStatusDraft;
+                  case ReservationStatus.completed:
+                    return context.l10n.reservationStatusCompleted;
+                  case ReservationStatus.canceled:
+                    return context.l10n.reservationStatusCanceled;
+                }
+              }();
+              return Text(
+                '${context.l10n.yourBookingDetails}\n'
+                '$statusText\n'
+                '${context.l10n.checkIn}${property.reservationCheckInDate.split('T').first.replaceAll('-', '/')}\n'
+                '${context.l10n.checkOut}${property.reservationCheckOutDate.split('T').first.replaceAll('-', '/')}\n'
+                '${property.reservationGuestNumber} ${context.l10n.guests}\n'
+                '${context.l10n.reservationNumber(property.reservationNumber)}\n'
+                '${context.l10n.commonTotal}: ${context.l10n.sarAmount(property.reservationTotalPrice)}',
+                style: GoogleFonts.poppins(color: AppColors.secondTextColor, fontSize: 16, fontWeight: FontWeight.w500),
+              );
+            },
+          ),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,

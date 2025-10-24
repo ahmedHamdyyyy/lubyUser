@@ -350,21 +350,22 @@ Widget buildPropertyList({
   required BuildContext context,
   required HomeState state,
   String? selectedPropertyCategory,
+  required ValueChanged<Map<String, dynamic>> onApplyFilters,
 }) {
-  String? selectedPropertyType, selectedPriceRange, selectedRatingRange;
+  // String? selectedPropertyType, selectedPriceRange, selectedRatingRange;
 
-  // قائمة أنواع العقارات
-  final List<String> propertyTypes = [
-    context.l10n.propertyTypeApartmentStudios,
-    context.l10n.propertyTypeCamps,
-    context.l10n.propertyTypeVillas,
-  ];
+  // // قائمة أنواع العقارات
+  // final List<String> propertyTypes = [
+  //   context.l10n.propertyTypeApartmentStudios,
+  //   context.l10n.propertyTypeCamps,
+  //   context.l10n.propertyTypeVillas,
+  // ];
 
-  // قائمة نطاقات الأسعار
-  final List<String> priceRanges = [context.l10n.priceHighToLow, context.l10n.priceLowToHigh];
+  // // قائمة نطاقات الأسعار
+  // final List<String> priceRanges = [context.l10n.priceHighToLow, context.l10n.priceLowToHigh];
 
-  // قائمة نطاقات التقييم
-  final List<String> ratingRanges = [context.l10n.ratingHighToLow, context.l10n.ratingDefault];
+  // // قائمة نطاقات التقييم
+  // final List<String> ratingRanges = [context.l10n.ratingHighToLow, context.l10n.ratingDefault];
 
   return Container(
     margin: const EdgeInsets.only(bottom: 4),
@@ -374,36 +375,60 @@ Widget buildPropertyList({
       children: [
         // Title row - more compact
         Padding(
-          padding: const EdgeInsets.only(bottom: 4.0),
+          padding: const EdgeInsets.only(bottom: 12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 title,
-                style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.secondTextColor),
+                style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.secondTextColor),
               ),
-              InkWell(
-                onTap: () {
-                  showFilterOptions(
-                    context,
-                    propertyTypes,
-                    priceRanges,
-                    ratingRanges,
-                    selectedPropertyType ?? '',
-                    selectedPriceRange ?? '',
-                    selectedRatingRange ?? '',
-                  );
-                },
-                child: Container(
-                  margin: EdgeInsets.only(left: 10),
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryColor,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColors.primaryColor),
-                  ),
-                  child: Image.asset('assets/images/setting-4.png', color: Colors.white, width: 30, height: 30),
-                ),
-              ),
+              // InkWell(
+              //   onTap: () {
+              //     showFilterOptions(
+              //       context,
+              //       propertyTypes,
+              //       priceRanges,
+              //       ratingRanges,
+              //       selectedPropertyType ?? '',
+              //       selectedPriceRange ?? '',
+              //       selectedRatingRange ?? '',
+              //       onApply: (String sType, String sPrice, String sRating) {
+              //         // Build backend-compatible sort filters
+              //         final Map<String, dynamic> filters = {};
+
+              //         // Price sort
+              //         if (sPrice.isNotEmpty) {
+              //           if (sPrice == context.l10n.priceHighToLow) {
+              //             filters['sort[pricePerNight]'] = 'desc';
+              //           } else if (sPrice == context.l10n.priceLowToHigh) {
+              //             filters['sort[pricePerNight]'] = 'asc';
+              //           }
+              //         }
+
+              //         // Rating sort
+              //         if (sRating.isNotEmpty) {
+              //           if (sRating == context.l10n.ratingHighToLow) {
+              //             filters['sort[averageRating]'] = 'desc';
+              //           } else if (sRating == context.l10n.ratingDefault) {
+              //             // No sort for rating
+              //           }
+              //         }
+
+              //         onApplyFilters(filters);
+              //       },
+              //     );
+              //   },
+              //   child: Container(
+              //     margin: EdgeInsets.only(left: 10),
+              //     decoration: BoxDecoration(
+              //       color: AppColors.primaryColor,
+              //       borderRadius: BorderRadius.circular(10),
+              //       border: Border.all(color: AppColors.primaryColor),
+              //     ),
+              //     child: Image.asset('assets/images/setting-4.png', color: Colors.white, width: 30, height: 30),
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -418,7 +443,7 @@ Widget buildPropertyList({
                   Text(
                     selectedPropertyCategory == null
                         ? context.l10n.noPropertiesFound
-                        : '${context.l10n.noPropertiesFound.replaceFirst('properties', selectedPropertyCategory)}',
+                        : context.l10n.noPropertiesFound.replaceFirst('properties', selectedPropertyCategory),
                     style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[600], fontWeight: FontWeight.w500),
                   ),
                 ],
@@ -450,7 +475,7 @@ Widget buildPropertyCard(BuildContext context, CustomPropertyModel property) {
     },
     child: Card(
       color: Colors.white,
-      elevation: 5, // Reduced elevation
+      elevation: 3, // Reduced elevation
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -631,8 +656,9 @@ void showFilterOptions(
   List<String> ratingRanges,
   String selectedPropertyType,
   String selectedPriceRange,
-  String selectedRatingRange,
-) {
+  String selectedRatingRange, {
+  required void Function(String selectedPropertyType, String selectedPriceRange, String selectedRatingRange) onApply,
+}) {
   showModalBottomSheet(
     context: context,
     backgroundColor: Colors.transparent,
@@ -761,14 +787,9 @@ void showFilterOptions(
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),
                       onPressed: () {
-                        // تطبيق الفلتر والعودة للشاشة الرئيسية
+                        // Apply filters back to caller and close
+                        onApply(selectedPropertyType, selectedPriceRange, selectedRatingRange);
                         Navigator.pop(context);
-
-                        // طباعة الفلاتر التي تم اختيارها للتجربة
-                        print('Filter :');
-                        print('- Property Type: $selectedPropertyType');
-                        print('- Price Range: $selectedPriceRange');
-                        print('- Rating Range: $selectedRatingRange');
                       },
                       child: Text(context.l10n.commonSearch, style: GoogleFonts.poppins(fontSize: 16, color: Colors.white)),
                     ),
@@ -791,7 +812,7 @@ class HomeSearchSection extends StatefulWidget {
 }
 
 class _HomeSearchSectionState extends State<HomeSearchSection> {
-  String? selectedCity, selectedDistrict;
+  String? selectedCity, selectedState;
   DateTime? checkInDate, checkOutDate;
   int guestsCount = 0;
 
@@ -822,8 +843,8 @@ class _HomeSearchSectionState extends State<HomeSearchSection> {
           title: context.l10n.districtOptionalLabel,
           hint: context.l10n.districtLabel,
           list: district,
-          selectedCity: selectedDistrict,
-          onChanged: (value) => selectedDistrict = value,
+          selectedCity: selectedState,
+          onChanged: (value) => selectedState = value,
         ),
         SizedBox(height: 12),
         Row(
@@ -899,11 +920,12 @@ class _HomeSearchSectionState extends State<HomeSearchSection> {
                   padding: EdgeInsets.symmetric(vertical: 14),
                 ),
                 onPressed: () {
+                  String? fmt(DateTime? d) => d?.toIso8601String().split('T').first;
                   widget.onSearch({
                     if (selectedCity != null) 'filter[city]': selectedCity,
-                    if (selectedDistrict != null) 'filter[district]': selectedDistrict,
-                    if (checkInDate != null) 'filter[startDate]': checkInDate,
-                    if (checkOutDate != null) 'filter[endDate]': checkOutDate,
+                    if (selectedState != null) 'filter[state]': selectedState,
+                    if (checkInDate != null) 'filter[startDate]': fmt(checkInDate),
+                    if (checkOutDate != null) 'filter[endDate]': fmt(checkOutDate),
                     if (guestsCount > 0) 'filter[guestNumber]': guestsCount,
                   });
                 },
@@ -917,12 +939,12 @@ class _HomeSearchSectionState extends State<HomeSearchSection> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                backgroundColor: AppColors.primaryColor,
                 padding: EdgeInsets.symmetric(vertical: 14),
+                backgroundColor: AppColors.primaryColor,
               ),
               onPressed: () {
                 selectedCity = null;
-                selectedDistrict = null;
+                selectedState = null;
                 checkInDate = null;
                 checkOutDate = null;
                 guestsCount = 0;
@@ -1124,7 +1146,12 @@ class HomeCategoryButtons extends StatelessWidget {
   }
 }
 
-Widget buildActivitiesList({required String title, required BuildContext context, required ActivitiesState state}) {
+Widget buildActivitiesList({
+  required String title,
+  required BuildContext context,
+  required ActivitiesState state,
+  ValueChanged<Map<String, dynamic>>? onApplyFilters,
+}) {
   return Container(
     margin: const EdgeInsets.only(bottom: 4),
     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -1141,6 +1168,47 @@ Widget buildActivitiesList({required String title, required BuildContext context
                 title,
                 style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.secondTextColor),
               ),
+              if (onApplyFilters != null)
+                InkWell(
+                  onTap: () {
+                    // Reuse bottom sheet to apply sorting on activities
+                    showFilterOptions(
+                      context,
+                      const [], // no type radios for now
+                      [context.l10n.priceHighToLow, context.l10n.priceLowToHigh],
+                      [context.l10n.ratingHighToLow, context.l10n.ratingDefault],
+                      '',
+                      '',
+                      '',
+                      onApply: (String sType, String sPrice, String sRating) {
+                        final Map<String, dynamic> filters = {};
+                        // Activities price field is 'price'
+                        if (sPrice.isNotEmpty) {
+                          if (sPrice == context.l10n.priceHighToLow) {
+                            filters['sort[price]'] = 'desc';
+                          } else if (sPrice == context.l10n.priceLowToHigh) {
+                            filters['sort[price]'] = 'asc';
+                          }
+                        }
+                        if (sRating.isNotEmpty) {
+                          if (sRating == context.l10n.ratingHighToLow) {
+                            filters['sort[averageRating]'] = 'desc';
+                          }
+                        }
+                        onApplyFilters(filters);
+                      },
+                    );
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(left: 10),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: AppColors.primaryColor),
+                    ),
+                    child: Image.asset('assets/images/setting-4.png', color: Colors.white, width: 30, height: 30),
+                  ),
+                ),
             ],
           ),
         ),
@@ -1166,12 +1234,12 @@ Widget buildActivitiesList({required String title, required BuildContext context
               physics: NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 1 / 1.7,
+                childAspectRatio: 1 / 1.6,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
               ),
               itemBuilder: (context, index) {
-                return buildActivityCard(context, state.activities, index);
+                return buildActivityCard(context, state.activities[index], index);
               },
             ),
       ],
@@ -1179,15 +1247,15 @@ Widget buildActivitiesList({required String title, required BuildContext context
   );
 }
 
-Widget buildActivityCard(BuildContext context, List<CustomActivityModel> activities, int index) {
-  bool isFavorite = activities[index].isFavorite;
+Widget buildActivityCard(BuildContext context, CustomActivityModel activity, int index) {
+  bool isFavorite = activity.isFavorite;
   return InkWell(
     onTap: () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => ActivityScreen(id: activities[index].id)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ActivityScreen(id: activity.id)));
     },
     child: Card(
       color: Colors.white,
-      elevation: 0,
+      elevation: 3,
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -1195,56 +1263,39 @@ Widget buildActivityCard(BuildContext context, List<CustomActivityModel> activit
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Image with heart icon
-          Stack(
-            children: [
-              Image.network(
-                height: 155,
-                width: 155,
-                activities[index].image.isNotEmpty
-                    ? activities[index].image
-                    : 'https://via.placeholder.com/155x155?text=Activity',
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    height: 155,
-                    width: 155,
-                    color: Colors.grey[300],
-                    child: Icon(Icons.local_activity, size: 50, color: Colors.grey[600]),
-                  );
-                },
-              ),
-              Positioned(
-                top: 10,
-                right: 10,
-                child: StatefulBuilder(
-                  builder: (context, setState) {
-                    return Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: GestureDetector(
-                        onTap: () {
+          // Image with fixed aspect ratio and heart icon
+          Expanded(
+            child: Stack(
+              alignment: AlignmentDirectional.topEnd,
+              children: [
+                FadeInImage.assetNetwork(
+                  image: activity.image,
+                  width: double.infinity,
+                  height: double.infinity,
+                  fit: BoxFit.cover,
+                  placeholder: 'assets/images/IMAG.png',
+                  placeholderFit: BoxFit.cover,
+                ),
+                StatefulBuilder(
+                  builder:
+                      (context, setState) => IconButton(
+                        onPressed: () {
                           if (isFavorite) {
-                            getIt<FavoritesCubit>().removeFromFavorites(activities[index].id, FavoriteType.activity);
+                            getIt<FavoritesCubit>().removeFromFavorites(activity.id, FavoriteType.activity);
                           } else {
-                            getIt<FavoritesCubit>().addToFavorites(activities[index].id, FavoriteType.activity);
+                            getIt<FavoritesCubit>().addToFavorites(activity.id, FavoriteType.activity);
                           }
                           setState(() => isFavorite = !isFavorite);
                         },
-                        child:
-                            isFavorite
-                                ? SvgPicture.asset(ImageAssets.heartBlack, fit: BoxFit.cover, width: 20, height: 20)
-                                : SvgPicture.asset(ImageAssets.heart, fit: BoxFit.cover, width: 20, height: 20),
+                        icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border, size: 24),
                       ),
-                    );
-                  },
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-
           // Content
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 3.0),
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -1253,7 +1304,7 @@ Widget buildActivityCard(BuildContext context, List<CustomActivityModel> activit
                   children: [
                     Expanded(
                       child: Text(
-                        activities[index].name.isNotEmpty ? activities[index].name : "Activity",
+                        activity.name.isNotEmpty ? activity.name : "Activity",
                         style: GoogleFonts.poppins(
                           fontSize: 14,
                           color: AppColors.secondTextColor,
@@ -1266,7 +1317,7 @@ Widget buildActivityCard(BuildContext context, List<CustomActivityModel> activit
                     Icon(Icons.star, color: AppColors.primaryColor, size: 14),
                     SizedBox(width: 1),
                     Text(
-                      activities[index].rate.toString(),
+                      activity.rate.toString(),
                       style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 14, color: AppColors.primaryColor),
                     ),
                   ],

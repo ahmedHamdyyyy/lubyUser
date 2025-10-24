@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/widget/helper.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 
 // Wallet Header Widget
@@ -25,20 +26,20 @@ class WalletHeader extends StatelessWidget {
               ),
               color: const Color(0xFF757575),
             ),
-            const TextWidget(
-              text: 'Wallet',
-              color: Color(0xFF757575),
+            TextWidget(
+              text: context.l10n.wallet,
+              color: const Color(0xFF757575),
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
           ],
         ),
         const SizedBox(height: 14),
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(top: 16, bottom: 24),
           child: TextWidget(
-            text: 'Charging Wallet',
-            color: Color(0xFF1C1C1C),
+            text: context.l10n.chargingWallet,
+            color: const Color(0xFF1C1C1C),
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -61,14 +62,14 @@ class WalletBalanceWidget extends StatelessWidget {
         color: const Color(0xFF262626),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: const Padding(
+      child: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextWidget(
-              text: 'Available balance',
-              color: Color(0xFFFFFFFF),
+              text: context.l10n.availableBalance,
+              color: const Color(0xFFFFFFFF),
               fontSize: 16,
               fontWeight: FontWeight.w400,
             ),
@@ -78,15 +79,15 @@ class WalletBalanceWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
               children: [
-                TextWidget(
+                const TextWidget(
                   text: '15,000',
                   color: Color(0xFFFFFFFF),
                   fontSize: 32,
                   fontWeight: FontWeight.w400,
                 ),
                 TextWidget(
-                  text: 'SAR',
-                  color: Color(0xFFFFFFFF),
+                  text: context.l10n.sarCurrency,
+                  color: const Color(0xFFFFFFFF),
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
                 ),
@@ -109,9 +110,9 @@ class AmountInputWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 16),
-        const TextWidget(
-          text: 'Enter Amount',
-          color: Color(0xFF414141),
+        TextWidget(
+          text: context.l10n.enterAmount,
+          color: const Color(0xFF414141),
           fontSize: 16,
           fontWeight: FontWeight.w400,
         ),
@@ -120,7 +121,7 @@ class AmountInputWidget extends StatelessWidget {
           decoration: InputDecoration(
             enabledBorder: buildOutlineInputBorder(10),
             focusedBorder: buildOutlineInputBorder(10),
-            hintText: 'Enter amount you want to charge',
+            hintText: context.l10n.enterAmountHint,
             hintStyle: const TextStyle(
               color: AppColors.grayTextColor,
               fontSize: 16,
@@ -144,9 +145,9 @@ class CardSelectionTitleWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 16),
-        const TextWidget(
-          text: 'Choose the card',
-          color: Color(0xFF414141),
+        TextWidget(
+          text: context.l10n.chooseTheCard,
+          color: const Color(0xFF414141),
           fontSize: 16,
           fontWeight: FontWeight.w400,
         ),
@@ -209,9 +210,9 @@ class CardSelectionWidget extends StatelessWidget {
                         backgroundColor: Color(0xFF262626),
                         radius: 12,
                       ),
-                label: const TextWidget(
-                  text: 'Use this card to Charge',
-                  color: Color(0xFF414141),
+                label: TextWidget(
+                  text: context.l10n.useThisCardToCharge,
+                  color: const Color(0xFF414141),
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
                 ),
@@ -240,11 +241,11 @@ class CardSelectionWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(left: 16.0),
             child: TextWidget(
-              text: 'Card number ending with 5678',
-              color: Color(0xFF757575),
+              text: context.l10n.cardNumberEndingWith('5678'),
+              color: const Color(0xFF757575),
               fontSize: 16,
               fontWeight: FontWeight.w400,
             ),
@@ -277,9 +278,9 @@ class ChargeButtonWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        child: const TextWidget(
-          text: 'Charge',
-          color: Color(0xFFFFFFFF),
+        child: TextWidget(
+          text: context.l10n.chargeLabel,
+          color: const Color(0xFFFFFFFF),
           fontSize: 16,
           fontWeight: FontWeight.w400,
         ),
@@ -315,9 +316,9 @@ class AddNewCardButtonWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        child: const TextWidget(
-          text: 'Add New Card',
-          color: Color(0xFF262626),
+        child: TextWidget(
+          text: context.l10n.addNewCard,
+          color: const Color(0xFF262626),
           fontSize: 16,
           fontWeight: FontWeight.w400,
         ),
@@ -529,7 +530,7 @@ class WalletScreenContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const WalletScreenHeader(),
+            const WalletScreenHeader(),
         WalletBalanceCard(
           balance: balance,
           currency: currency,

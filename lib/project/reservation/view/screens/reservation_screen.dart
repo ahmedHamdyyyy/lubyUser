@@ -10,11 +10,14 @@ import '../../../../config/images/image_assets.dart';
 import '../../../../core/localization/l10n_ext.dart';
 import '../../../../core/utils/utile.dart';
 import '../../../../locator.dart';
+import '../../../Home/cubit/home_cubit.dart';
 import '../../../models/activity.dart';
+import '../../../models/chat.dart';
 import '../../../models/property.dart';
 import '../../../models/reversation.dart';
 import '../../../profile/screens/Complete reservation and payment/all_widget__complete_reservation_and_payment.dart';
 import '../../../profile/screens/Complete reservation and payment/thank_you_screen.dart';
+import '../../../profile/screens/Conversations/chat_screen.dart';
 import '../../../profile/screens/propreties/widgets/show_reserve_dialoge.dart';
 import '../../cubit/cubit.dart';
 import '../widgets/all_wisget_reservation.dart';
@@ -40,7 +43,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
       final property = widget.reservation.item as PropertyModel;
       _nights =
           DateTime.parse(widget.reservation.checkOutDate).difference(DateTime.parse(widget.reservation.checkInDate)).inDays;
-      _imageUrl = property.medias.first;
+      _imageUrl = property.medias.firstWhere((m) => !m.endsWith('mp4'));
       _title = property.type;
       _checkIn =
           widget.reservation.checkInDate.length > 10
@@ -55,7 +58,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
     } else {
       final activity = widget.reservation.item as ActivityModel;
       _nights = 1;
-      _imageUrl = activity.medias.first;
+      _imageUrl = activity.medias.firstWhere((m) => !m.endsWith('mp4'));
       _title = activity.name;
       _checkIn = activity.date.length > 10 ? activity.date.substring(0, 10) : activity.date;
       _checkOut = activity.date.length > 10 ? activity.date.substring(0, 10) : activity.date;
@@ -108,13 +111,19 @@ class _ReservationScreenState extends State<ReservationScreen> {
                           children: [
                             ClipRRect(
                               borderRadius: BorderRadius.horizontal(left: Radius.circular(10), right: Radius.circular(10)),
-                              child: FadeInImage.assetNetwork(placeholder: 'assets/images/IMAG.png', image: _imageUrl),
+                              child: FadeInImage.assetNetwork(
+                                placeholder: 'assets/images/IMAG.png',
+                                height: 125,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                                image: _imageUrl,
+                              ),
                             ),
                           ],
                         ),
                       ),
 
-                      // Content next to the image
+                      const SizedBox(width: 10),
                       Expanded(
                         flex: 5,
                         child: Padding(
@@ -218,21 +227,24 @@ class _ReservationScreenState extends State<ReservationScreen> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(40),
-                  child: Image.asset('assets/images/saudian_man.png', width: 50, height: 50, fit: BoxFit.cover),
+                  child: FadeInImage.assetNetwork(
+                    placeholder: 'assets/images/saudian_man.png',
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                    imageErrorBuilder:
+                        (context, error, stackTrace) => Image.asset('assets/images/saudian_man.png', width: 50),
+                    image:
+                        widget.reservation.item is PropertyModel
+                            ? (widget.reservation.item as PropertyModel).vendor.profilePicture
+                            : (widget.reservation.item as ActivityModel).vendor.profilePicture,
+                  ),
                 ),
                 SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Activity Name - 2 person',
-                        style: GoogleFonts.poppins(
-                          color: AppColors.secondTextColor,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                        ),
-                      ),
                       Text(
                         context.l10n.hostedBy,
                         style: GoogleFonts.poppins(
@@ -242,7 +254,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
                         ),
                       ),
                       Text(
-                        'Mohamed Abdallah',
+                        widget.reservation.item is PropertyModel
+                            ? (widget.reservation.item as PropertyModel).vendor.firstName
+                            : (widget.reservation.item as ActivityModel).vendor.firstName,
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w400,
                           color: AppColors.grayTextColor,
@@ -252,7 +266,41 @@ class _ReservationScreenState extends State<ReservationScreen> {
                     ],
                   ),
                 ),
-                SvgPicture.asset(ImageAssets.messages2),
+                InkWell(
+                  onTap: () {
+                    final user = getIt<HomeCubit>().state.user;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          final vendor =
+                              widget.reservation.item is PropertyModel
+                                  ? (widget.reservation.item as PropertyModel).vendor
+                                  : (widget.reservation.item as ActivityModel).vendor;
+                          return ChatScreen(
+                            chat: ChatModel(
+                              id: '${vendor.id}_${user.id}',
+                              vendorId: vendor.id,
+                              vendorName: '${vendor.firstName} ${vendor.lastName}',
+                              vendorImage: vendor.profilePicture,
+                              lastMessage: '',
+                              lastTimestamp: DateTime.now(),
+                              userId: user.id,
+                              userImageUrl: user.profilePicture,
+                              userName: '${user.firstName} ${user.lastName}',
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  child: SvgPicture.asset(
+                    'assets/images/message-2.svg',
+                    // ignore: deprecated_member_use
+                    color: const Color(0xFF414141),
+                    height: 24,
+                  ),
+                ),
               ],
             ),
             Divider(height: 32, thickness: 1),
@@ -266,10 +314,16 @@ class _ReservationScreenState extends State<ReservationScreen> {
                   widget.reservation.type == ReservationType.property
                       ? '$_nights ${context.l10n.nights} × ${widget.reservation.guestNumber} ${context.l10n.guests} × ${context.l10n.sarAmount(_price)}'
                       : '${widget.reservation.guestNumber} ${context.l10n.guests} × ${context.l10n.sarAmount(_price)}',
-              price: context.l10n.sarAmount(_nights * widget.reservation.guestNumber * _price),
+              price: context.l10n.sarAmount(widget.reservation.totalPrice),
             ),
-            SummaryRow(title: context.l10n.commonVat, price: context.l10n.sarAmount(0)),
-            SummaryRow(title: context.l10n.commonDiscount, price: '-${context.l10n.sarAmount(200)}'),
+            SummaryRow(
+              title: context.l10n.commonVat,
+              price: context.l10n.sarAmount((widget.reservation.totalPrice - widget.reservation.totalPriceAfterFees).abs()),
+            ),
+            SummaryRow(
+              title: context.l10n.commonTotal,
+              price: context.l10n.sarAmount(widget.reservation.totalPriceAfterFees),
+            ),
             SizedBox(height: 16),
             Divider(height: 32, thickness: 1),
             if (widget.reservation.status == ReservationStatus.completed)
@@ -334,6 +388,10 @@ class _ReservationScreenState extends State<ReservationScreen> {
                         if (isCompleted) {
                           Navigator.pop(context);
                           Navigator.push(context, MaterialPageRoute(builder: (context) => ThankYouScreen()));
+                          getIt.get<ReservationsCubit>().updateReservationStatus(
+                            widget.reservation.id,
+                            ReservationStatus.completed,
+                          );
                         } else {
                           Utils.errorDialog(context, context.l10n.paymentNotCompleted);
                         }

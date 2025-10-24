@@ -4,6 +4,8 @@ import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/widget/helper.dart';
+import '../../../../../locator.dart';
+import '../../../../Home/cubit/home_cubit.dart';
 import '../../../../models/property.dart';
 import 'show_reserve_dialoge.dart';
 
@@ -85,6 +87,7 @@ class _CardeReserveState extends State<CardeReserve> {
                       child: TextFormField(
                         keyboardType: TextInputType.datetime,
                         controller: checkInController,
+                        enabled: widget.property.reservationId.isEmpty,
                         validator: (value) {
                           if (value == null || value.isEmpty) return context.l10n.pleaseEnterCheckInDate;
                           if (!RegExp(r'^\d{1,2}/\d{1,2}/\d{4}$').hasMatch(value)) return context.l10n.enterDateInDdMmYyyy;
@@ -142,8 +145,9 @@ class _CardeReserveState extends State<CardeReserve> {
                       child: TextFormField(
                         keyboardType: TextInputType.datetime,
                         controller: checkOutController,
+                        enabled: widget.property.reservationId.isEmpty,
                         validator: (value) {
-                          if (value == null || value.isEmpty) return context.l10n.pleaseEnterCheckInDate;
+                          if (value == null || value.isEmpty) return context.l10n.pleaseEnterDate;
                           if (!RegExp(r'^\d{1,2}/\d{1,2}/\d{4}$').hasMatch(value)) return context.l10n.enterDateInDdMmYyyy;
                           final dateParts = value.split('/');
                           final day = int.tryParse(dateParts[0]);
@@ -210,6 +214,7 @@ class _CardeReserveState extends State<CardeReserve> {
                 child: TextFormField(
                   controller: guestController,
                   keyboardType: TextInputType.number,
+                  enabled: widget.property.reservationId.isEmpty,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   validator: (value) {
                     if (value == null || value.isEmpty) return context.l10n.pleaseEnterNumberOfGuests;
@@ -223,7 +228,7 @@ class _CardeReserveState extends State<CardeReserve> {
                   decoration: InputDecoration(
                     enabledBorder: buildOutlineInputBorder(5),
                     focusedBorder: buildOutlineInputBorder(5),
-                    hintText: '${2} ${context.l10n.guests}',
+                    hintText: context.l10n.guestCountHint,
                     hintStyle: const TextStyle(color: AppColors.grayTextColor, fontSize: 14, fontWeight: FontWeight.w400),
                   ),
                 ),
@@ -237,7 +242,12 @@ class _CardeReserveState extends State<CardeReserve> {
             child: ElevatedButton(
               onPressed: () {
                 if (!formKey.currentState!.validate()) return;
-                showReseverDialoge(context, widget.property, checkInController, checkOutController, guestController);
+                if (widget.property.reservationId.isEmpty) {
+                  showReseverDialoge(context, widget.property, checkInController, checkOutController, guestController);
+                } else {
+                  Navigator.pop(context);
+                  getIt<HomeCubit>().updateCurrentScreenIndex(2);
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryColor,
@@ -245,7 +255,8 @@ class _CardeReserveState extends State<CardeReserve> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
               ),
               child: TextWidget(
-                text: context.l10n.reserveLabel,
+                text:
+                    widget.property.reservationId.isEmpty ? context.l10n.reserveLabel : context.l10n.viewReservationDetails,
                 color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.w400,

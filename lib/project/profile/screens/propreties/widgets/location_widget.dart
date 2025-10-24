@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../config/colors/colors.dart';
-import '../../../../../../config/widget/helper.dart';
 import '../../../../Home/cubit/home_cubit.dart';
 import '../views/location_view.dart';
 
@@ -50,39 +48,39 @@ class LocationWidget extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 16),
-          InkWell(
-            onTap: () {
-              final addr = state.property.address;
-              if (addr.latitude != 0 && addr.longitude != 0) {
-                Navigator.of(context).push(
-                  PropertyLocationView.route(
-                    latitude: addr.latitude,
-                    longitude: addr.longitude,
-                    address: addr.formattedAddress,
-                  ),
-                );
-              }
-            },
-            child: Row(
-              children: [
-                SvgPicture.asset(
-                  'assets/images/map.svg',
-                  // ignore: deprecated_member_use
-                  color: AppColors.primaryColor,
-                  height: 24,
-                  width: 24,
-                ),
-                const SizedBox(width: 8),
-                TextWidget(
-                  text: context.l10n.viewLocationOnMap,
-                  color: const Color(0xFF262626),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ],
-            ),
-          ),
+          // const SizedBox(height: 16),
+          // InkWell(
+          //   onTap: () {
+          //     final addr = state.property.address;
+          //     if (addr.latitude != 0 && addr.longitude != 0) {
+          //       Navigator.of(context).push(
+          //         PropertyLocationView.route(
+          //           latitude: addr.latitude,
+          //           longitude: addr.longitude,
+          //           address: addr.formattedAddress,
+          //         ),
+          //       );
+          //     }
+          //   },
+          //   child: Row(
+          //     children: [
+          //       SvgPicture.asset(
+          //         'assets/images/map.svg',
+          //         // ignore: deprecated_member_use
+          //         color: AppColors.primaryColor,
+          //         height: 24,
+          //         width: 24,
+          //       ),
+          //       const SizedBox(width: 8),
+          //       TextWidget(
+          //         text: context.l10n.viewLocationOnMap,
+          //         color: const Color(0xFF262626),
+          //         fontSize: 16,
+          //         fontWeight: FontWeight.w500,
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );

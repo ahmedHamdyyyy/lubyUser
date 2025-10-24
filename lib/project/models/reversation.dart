@@ -12,7 +12,7 @@ class ReservationModel extends Equatable {
   final ReservationType type;
   final ReservationStatus status;
   final int guestNumber, registrationNumber;
-  final double totalPrice;
+  final double totalPrice, totalPriceAfterFees;
   final Object item;
 
   const ReservationModel({
@@ -24,6 +24,7 @@ class ReservationModel extends Equatable {
     required this.guestNumber,
     required this.registrationNumber,
     required this.totalPrice,
+    required this.totalPriceAfterFees,
     required this.item,
   });
 
@@ -36,6 +37,7 @@ class ReservationModel extends Equatable {
     guestNumber: 1,
     registrationNumber: 0,
     totalPrice: 0.0,
+    totalPriceAfterFees: 0.0,
     item: '',
   );
 
@@ -48,6 +50,7 @@ class ReservationModel extends Equatable {
     int? guestNumber,
     int? registrationNumber,
     double? totalPrice,
+    double? totalPriceAfterFees,
     Object? item,
   }) => ReservationModel(
     id: id ?? this.id,
@@ -58,6 +61,7 @@ class ReservationModel extends Equatable {
     registrationNumber: registrationNumber ?? this.registrationNumber,
     guestNumber: guestNumber ?? this.guestNumber,
     totalPrice: totalPrice ?? this.totalPrice,
+    totalPriceAfterFees: totalPriceAfterFees ?? this.totalPriceAfterFees,
     item: item ?? this.item,
   );
 
@@ -75,11 +79,14 @@ class ReservationModel extends Equatable {
 
   factory ReservationModel.fromMap(Map<String, dynamic> map, {Object? item}) {
     final type = map['type'] == 'activity' ? ReservationType.activity : ReservationType.property;
+
     return ReservationModel(
       id: map['_id'] ?? '',
       type: type,
       checkInDate:
-          type == ReservationType.property
+          item is ActivityModel
+              ? item.date
+              : type == ReservationType.property
               ? map['checkInDate'] ?? ''
               : (map['activityId']?['date'] ?? (item as ActivityModel?)?.date ?? ''),
       checkOutDate: map['checkOutDate'] ?? '',
@@ -90,6 +97,7 @@ class ReservationModel extends Equatable {
       guestNumber: map['guestNumber'] ?? 1,
       registrationNumber: map['registrationNumber'] ?? 0,
       totalPrice: (map['totalPrice'] as num?)?.toDouble() ?? 0.0,
+      totalPriceAfterFees: (map['totalPriceAfterFees'] as num?)?.toDouble() ?? 0.0,
       item:
           item ??
           (type == ReservationType.property
@@ -108,6 +116,7 @@ class ReservationModel extends Equatable {
     guestNumber,
     registrationNumber,
     totalPrice,
+    totalPriceAfterFees,
     item,
   ];
 }

@@ -19,7 +19,7 @@ class ReservationsScreen extends StatefulWidget {
 }
 
 class _ReservationsScreenState extends State<ReservationsScreen> {
-  ReservationsFilterType _filterType = ReservationsFilterType.current;
+  ReservationsFilterType _filterType = ReservationsFilterType.draft;
   final _scrollController = ScrollController();
   bool _isLoadingMore = false;
   @override
@@ -97,6 +97,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
               }
               final properties = state.reservations.where((r) => r.type == ReservationType.property).toList();
               final activities = state.reservations.where((r) => r.type == ReservationType.activity).toList();
+
               return Padding(
                 padding: const EdgeInsets.all(16),
                 child: SingleChildScrollView(
@@ -139,7 +140,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                                           borderRadius: BorderRadius.circular(5),
                                           child: FadeInImage.assetNetwork(
                                             placeholder: 'assets/images/IMAG.png',
-                                            image: item.medias.first,
+                                            image: item.medias.firstWhere((m) => !m.endsWith('mp4'), orElse: () => ''),
                                             height: 150,
                                             width: double.infinity,
                                             fit: BoxFit.cover,

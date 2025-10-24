@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../config/widget/helper.dart';
 import 'rental_details_view.dart';
@@ -37,20 +38,20 @@ class _ContactHostScreenState extends State<ContactHostScreen> {
                 icon: const Icon(Icons.arrow_back_ios_new, size: 24),
                 color: const Color(0xFF757575),
               ),
-              const TextWidget(
-                text: 'Contact the host',
-                color: Color(0xFF757575),
+              TextWidget(
+                text: context.l10n.contactTheHost,
+                color: const Color(0xFF757575),
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
             ],
           ),
           const SizedBox(height: 14),
-          const Padding(
-            padding: EdgeInsets.only(left: 20, right: 20, top: 16, bottom: 16),
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 16, bottom: 16),
             child: TextWidget(
-              text: 'You can now talk to the host',
-              color: Color(0xFF1C1C1C),
+              text: context.l10n.youCanTalkToHost,
+              color: const Color(0xFF1C1C1C),
               fontSize: 16,
               fontWeight: FontWeight.w400,
             ),
@@ -94,7 +95,7 @@ class _ContactHostScreenState extends State<ContactHostScreen> {
                                       enabledBorder: buildOutlineInputBorder(20),
 
                                       focusedBorder: buildOutlineInputBorder(20),
-                                      hintText: 'message',
+                                      hintText: context.l10n.typeMessageHint,
                                       hintStyle: const TextStyle(
                                         color: Color(0xFFD3D3D3),
                                         fontSize: 14,

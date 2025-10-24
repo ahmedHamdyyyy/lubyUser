@@ -50,7 +50,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                 icon: const Icon(Icons.arrow_back_ios_new, size: 24),
                 color: const Color(0xFF757575),
               ),
-              const TextWidget(text: 'Reviews', color: Color(0xFF757575), fontSize: 14, fontWeight: FontWeight.w500),
+              TextWidget(text: context.l10n.reviewsTitle, color: const Color(0xFF757575), fontSize: 14, fontWeight: FontWeight.w500),
             ],
           ),
           const SizedBox(height: 14),
@@ -72,7 +72,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
             child: Row(
               children: [
-                const TextWidget(text: 'Rate ', color: Color(0xFF414141), fontSize: 16, fontWeight: FontWeight.w400),
+                TextWidget(text: context.l10n.rateLabel, color: const Color(0xFF414141), fontSize: 16, fontWeight: FontWeight.w400),
                 Row(
                   children: List.generate(5, (index) {
                     return Icon(
@@ -87,7 +87,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                     buildWhen: (previous, current) => previous.reviews.length != current.reviews.length,
                     builder: (context, state) {
                       return TextWidget(
-                        text: '( ${state.reviews.length} Reviews )',
+                        text: context.l10n.reviewsCount(state.reviews.length),
                         color: AppColors.grayTextColor,
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
@@ -105,7 +105,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                     );
                   },
                   child: TextWidget(
-                    text: widget.review.id.isEmpty ? 'Add Review' : 'Edit Review',
+                    text: widget.review.id.isEmpty ? context.l10n.addReview : context.l10n.editReview,
                     color: AppColors.primaryColor,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -170,7 +170,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    const TextWidget(text: 'Rate ', color: Color(0xFF414141), fontSize: 16, fontWeight: FontWeight.w400),
+                    TextWidget(text: context.l10n.rateLabel, color: const Color(0xFF414141), fontSize: 16, fontWeight: FontWeight.w400),
                     Row(
                       children: List.generate(
                         review.rating.toInt(),
