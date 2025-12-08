@@ -9,7 +9,9 @@ import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/constants/constance.dart';
 import '../../../../../../config/widget/widget.dart';
 import '../../../../models/user.dart';
+import '../../../../screens/account/terms_condition/terms_services.dart';
 import '../../../cubit/auth_cubit.dart';
+import '../../Widget/phone_field.dart';
 import '../../Widget/wideget_sign_up.dart';
 import 'confirm_otp.dart';
 import 'sign_in.dart';
@@ -23,10 +25,9 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
-  final phoneController = TextEditingController();
   final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+
+  String _phone = '';
 
   bool agreeToTerms = false;
   File? profileImage;
@@ -35,10 +36,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void dispose() {
     firstNameController.dispose();
     lastNameController.dispose();
-    phoneController.dispose();
     emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -51,24 +49,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
     if (firstNameController.text.isEmpty ||
         lastNameController.text.isEmpty ||
-        phoneController.text.isEmpty ||
         emailController.text.isEmpty ||
-        passwordController.text.isEmpty ||
-        confirmPasswordController.text.isEmpty) {
+        _phone.isEmpty) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(context.l10n.fillAllFields), backgroundColor: Colors.red));
       return;
     }
 
-    if (passwordController.text != confirmPasswordController.text) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(context.l10n.passwordsDoNotMatch), backgroundColor: Colors.red));
-      return;
-    }
-
-    context.read<AuthCubit>().verifyEmail(emailController.text.trim());
+    context.read<AuthCubit>().initiateSignup(_phone.trim());
   }
 
   void _handleImageSelected(File image) => setState(() => profileImage = image);
@@ -76,7 +65,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) => BlocConsumer<AuthCubit, AuthState>(
     listener: (context, state) {
-      switch (state.verifyEmailStatus) {
+      switch (state.initiateSignupStatus) {
         case Status.initial:
           break;
         case Status.error:
@@ -88,17 +77,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
             MaterialPageRoute(
               builder: (context) {
                 return ConfirmOtpScreen(
-                  user: UserModel(
-                    id: '',
+                  user: UserModel.initial.copyWith(
                     firstName: firstNameController.text.trim(),
                     lastName: lastNameController.text.trim(),
                     email: emailController.text.trim(),
-                    phone: phoneController.text.trim(),
-                    password: passwordController.text.trim(),
-                    role: AppConst.user,
+                    phone: _phone,
                     profilePicture: profileImage == null ? '' : profileImage!.path,
                   ),
-                  email: emailController.text.trim(),
+                  phone: _phone,
                   willSignup: true,
                 );
               },
@@ -112,89 +98,75 @@ class _SignUpScreenState extends State<SignUpScreen> {
     builder: (context, state) {
       return Scaffold(
         backgroundColor: Colors.white,
-        body: Stack(
-          children: [
-            SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SignUpHeader(),
-                    const SizedBox(height: 15),
-                    EditableProfileImage(onImageSelected: _handleImageSelected),
-                    const SizedBox(height: 30),
-                    RegistrationTextField(
-                      hintText: context.l10n.firstNameLabel,
-                      controller: firstNameController,
-                      isError: false,
-                    ),
-                    RegistrationTextField(hintText: context.l10n.lastNameLabel, controller: lastNameController),
-                    RegistrationTextField(
-                      //validator: (value) => InputValidation.phoneValidation(value),
-                      keyboardType: TextInputType.phone,
-                      hintText: context.l10n.phoneNumberLabel,
-                      controller: phoneController,
-                      isNumber: true,
-                    ),
-                    RegistrationTextField(
-                      keyboardType: TextInputType.emailAddress,
-                      hintText: context.l10n.emailLabel,
-                      controller: emailController,
-                    ),
-                    RegistrationTextField(
-                      hintText: context.l10n.passwordLabel,
-                      controller: passwordController,
-                      isPassword: true,
-                    ),
-                    RegistrationTextField(
-                      hintText: context.l10n.confirmPasswordLabel,
-                      controller: confirmPasswordController,
-                      isPassword: true,
-                    ),
-                    const SizedBox(height: 10),
-                    TermsCheckbox(value: agreeToTerms, onChanged: (value) => setState(() => agreeToTerms = value)),
-                    const SizedBox(height: 20),
-                    SignUpButton(onPressed: _handleSignUp),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          context.l10n.alreadyHaveAccount,
-                          style: GoogleFonts.poppins(
-                            color: AppColors.grayTextColor,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
+        body: SafeArea(
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SignUpHeader(),
+                      const SizedBox(height: 24),
+                      EditableProfileImage(onImageSelected: _handleImageSelected),
+                      const SizedBox(height: 38),
+                      RegistrationTextField(
+                        hintText: context.l10n.firstNameLabel,
+                        controller: firstNameController,
+                        isError: false,
+                      ),
+                      RegistrationTextField(hintText: context.l10n.lastNameLabel, controller: lastNameController),
+                      RegistrationTextField(hintText: context.l10n.emailLabel, controller: emailController),
+                      PhoneField(onChanged: (phone) => _phone = phone),
+                      const SizedBox(height: 16),
+                      TermsConditionsbox(onChanged: (value) => agreeToTerms = value),
+                      const SizedBox(height: 10),
+                      SignUpButton(onPressed: _handleSignUp),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            context.l10n.alreadyHaveAccount,
+                            style: GoogleFonts.poppins(
+                              color: AppColors.grayTextColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => const SignInScreen()),
-                            );
-                          },
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            minimumSize: Size.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => const SignInScreen()),
+                              );
+                            },
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: Text(
+                              context.l10n.signIn,
+                              style: GoogleFonts.poppins(
+                                color: AppColors.primary,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
-                          child: Text(
-                            context.l10n.signIn,
-                            style: GoogleFonts.poppins(color: AppColors.primary, fontSize: 14, fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                  ],
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            if (state.verifyEmailStatus == Status.loading)
-              Container(color: Colors.black26, child: const Center(child: CircularProgressIndicator())),
-          ],
+              if (state.initiateSignupStatus == Status.loading)
+                Container(color: Colors.black26, child: const Center(child: CircularProgressIndicator())),
+            ],
+          ),
         ),
       );
     },

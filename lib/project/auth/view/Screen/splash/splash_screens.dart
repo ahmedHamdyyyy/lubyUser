@@ -1,9 +1,9 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:luby2/l10n/app_localizations.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
+import 'package:luby2/project/Home/ui/home_screen.dart';
 
-import '../auth/sign_in.dart';
 import 'all_widget_onporsing.dart';
 
 class SplashScreens extends StatefulWidget {
@@ -17,7 +17,7 @@ class _SplashScreensState extends State<SplashScreens> {
   final PageController _pageController = PageController();
 
   List<Map<String, String>> _buildSplashData(BuildContext context) {
-    final t = AppLocalizations.of(context);
+    final t = context.l10n;
     return [
       {
         "image": "assets/images/image2.png",
@@ -46,7 +46,7 @@ class _SplashScreensState extends State<SplashScreens> {
         onSkip: () {
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const SignInScreen()),
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
             (route) => false,
           );
         },

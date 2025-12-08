@@ -1,8 +1,10 @@
 class ApiConstance {
   // static const baseUrl = "https://Luby-rafiks-projects-827f7443.vercel.app/api/v1/";
-  static const baseUrl = "https://luby-one.vercel.app/api/v1/";
+  static const baseUrl = "https://dashboard.lubyksa.com/api/v1/";
 
-  static const signin = "auth/signin";
+  static const initiateSignin = "auth/signin";
+  static const verifySignin = "auth/signin/verify";
+  static const initiateSignup = "auth/signup/initiate";
   static const signup = "auth/signup";
   static const logout = "auth/logout";
   static const refreshToken = "auth/refresh-token";
@@ -18,7 +20,6 @@ class ApiConstance {
   static updateProperty(String id) => "properties/$id";
   static const createProperty = "properties";
   static const getActivities = "activities";
-  static const verifyEmail = "auth/signup/initiate";
 
   static const getFavorites = 'favourites/me';
   static const addFavorites = 'favourites/add';

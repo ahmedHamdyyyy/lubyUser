@@ -17,19 +17,36 @@ class HomeCubit extends Cubit<HomeState> {
   bool _hasNextPage = false;
   bool _hasNextNotificationsPage = false;
 
-  void fetchUser() async {
+  void checkSignin() {
+    final isSignedIn = repo.isSignedIn();
+    emit(state.copyWith(isSignedIn: isSignedIn));
+  }
+
+  Future<bool> fetchUser() async {
     emit(state.copyWith(getUserStatus: Status.loading));
     try {
       final user = await repo.fetchUser();
-      emit(state.copyWith(getUserStatus: Status.success, user: user, msg: 'User fetched successfully'));
+      emit(
+        state.copyWith(
+          getUserStatus: Status.success,
+          user: user,
+          isSignedIn: user.id.isNotEmpty,
+          msg: 'User fetched successfully',
+        ),
+      );
+      return true;
     } catch (e) {
       emit(state.copyWith(getUserStatus: Status.error, msg: e.toString()));
+      return false;
     }
   }
 
   void getProperties({bool fetchNext = false, Map<String, dynamic>? filters}) async {
-    if (fetchNext && !_hasNextPage || state.propertiesStatus == Status.loading) return;
-    emit(state.copyWith(propertiesStatus: Status.loading));
+    if ((fetchNext && !_hasNextPage) || state.propertiesStatus == Status.loading) return;
+    // When fetching next page, keep current list to avoid flicker.
+    if (!fetchNext) {
+      emit(state.copyWith(propertiesStatus: Status.loading));
+    }
     try {
       final propertiesData = await repo.getProperties(fetchNext, filters);
       _hasNextPage = propertiesData.hasNextPage;
@@ -94,12 +111,14 @@ class HomeCubit extends Cubit<HomeState> {
       emit(
         state.copyWith(
           reviewStatus: Status.success,
-          reviews: [...state.reviews, newReview],
+          reviews: [newReview, ...state.reviews],
           msg: 'Review added successfully',
         ),
       );
     } catch (e) {
       emit(state.copyWith(reviewStatus: Status.error, msg: e.toString()));
+    } finally {
+      emit(state.copyWith(reviewStatus: Status.initial));
     }
   }
 
@@ -120,10 +139,11 @@ class HomeCubit extends Cubit<HomeState> {
     emit(state.copyWith(reviewStatus: Status.loading));
     try {
       await repo.updateReview(id, comment, rating);
+      final updatedReview = state.reviews.firstWhere((r) => r.id == id).copyWith(comment: comment, rating: rating);
       emit(
         state.copyWith(
           reviewStatus: Status.success,
-          reviews: [...state.reviews.map((r) => r.id == id ? r.copyWith(comment: comment, rating: rating) : r)],
+          reviews: [updatedReview, ...state.reviews.where((r) => r.id != id)],
           msg: 'Review updated successfully',
         ),
       );
@@ -150,15 +170,10 @@ class HomeCubit extends Cubit<HomeState> {
 
   void initReviewStatus() => emit(state.copyWith(reviewStatus: Status.initial));
 
-  void updateUser({
-    required String firstName,
-    required String lastName,
-    required String phone,
-    required String imagePath,
-  }) async {
+  void updateUser({required String firstName, required String lastName, required String imagePath}) async {
     emit(state.copyWith(updateUserStatus: Status.loading));
     try {
-      final user = await repo.updateUser(firstName: firstName, lastName: lastName, phone: phone, imagePath: imagePath);
+      final user = await repo.updateUser(firstName: firstName, lastName: lastName, imagePath: imagePath);
       emit(state.copyWith(updateUserStatus: Status.success, user: user));
     } catch (e) {
       emit(state.copyWith(updateUserStatus: Status.error, msg: e.toString()));
@@ -169,15 +184,23 @@ class HomeCubit extends Cubit<HomeState> {
     if (fetchNext && !_hasNextNotificationsPage || state.loadNotificationsStatus == Status.loading) return;
     emit(state.copyWith(loadNotificationsStatus: Status.loading));
     try {
-      final notifications = await repo.fetchNotifications(fetchNext);
-      _hasNextNotificationsPage = notifications.hasNextPage;
-      emit(state.copyWith(loadNotificationsStatus: Status.success, notifications: notifications.notifications));
+      final notificationsResult = await repo.fetchNotifications(fetchNext);
+      _hasNextNotificationsPage = notificationsResult.hasNextPage;
+      emit(
+        state.copyWith(
+          loadNotificationsStatus: Status.success,
+          notifications: notificationsResult.notifications,
+          unreadNotificationsCount: notificationsResult.unreadNotificationsCount,
+        ),
+      );
     } catch (e) {
       emit(state.copyWith(loadNotificationsStatus: Status.error, msg: e.toString()));
     } finally {
       emit(state.copyWith(loadNotificationsStatus: Status.initial));
     }
   }
+
+  void clearReviews() => emit(state.copyWith(reviews: []));
 
   void readNotification(String id) async {
     emit(state.copyWith(readNotificationStatus: Status.loading));
@@ -204,4 +227,8 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   void initNotifications() => emit(state.copyWith(notifications: []));
+
+  void clearUserData() {
+    emit(state.copyWith(user: UserModel.initial, notifications: [], reviews: []));
+  }
 }

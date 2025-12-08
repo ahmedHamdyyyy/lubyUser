@@ -38,13 +38,13 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   Future<void> addToFavorites(String id, FavoriteType type) async {
     _itemId = id;
     _isProperty = type == FavoriteType.property;
-    emit(state.copyWith(addToFavoritesStatus: Status.loading));
+    emit(state.copyWith(toggleFavoriteStatus: Status.loading));
     try {
       await _favoritesRepository.addToFavorites(id, type);
-      emit(state.copyWith(addToFavoritesStatus: Status.success));
+      emit(state.copyWith(toggleFavoriteStatus: Status.success));
       showToast(text: 'Added to favorites', stute: ToustStute.success);
     } catch (e) {
-      emit(state.copyWith(addToFavoritesStatus: Status.error, message: e.toString()));
+      emit(state.copyWith(toggleFavoriteStatus: Status.error, message: e.toString()));
       showToast(text: 'Failed to add to favorites', stute: ToustStute.error);
     }
   }
@@ -52,18 +52,18 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   Future<void> removeFromFavorites(String id, FavoriteType type) async {
     _itemId = id;
     _isProperty = type == FavoriteType.property;
-    emit(state.copyWith(addToFavoritesStatus: Status.loading));
+    emit(state.copyWith(toggleFavoriteStatus: Status.loading));
     try {
       await _favoritesRepository.removeFromFavorites(id, type);
       emit(
         state.copyWith(
           favorites: state.favorites.where((f) => f.itemId != id).toList(),
-          removeFromFavoritesStatus: Status.success,
+          toggleFavoriteStatus: Status.success,
         ),
       );
       showToast(text: 'Removed from favorites', stute: ToustStute.worning);
     } catch (e) {
-      emit(state.copyWith(removeFromFavoritesStatus: Status.error, message: e.toString()));
+      emit(state.copyWith(toggleFavoriteStatus: Status.error, message: e.toString()));
       showToast(text: 'Failed to remove from favorites', stute: ToustStute.worning);
     }
   }

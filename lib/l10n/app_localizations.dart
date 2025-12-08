@@ -62,17 +62,15 @@ import 'app_localizations_en.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
-  static AppLocalizations of(BuildContext context) {
-    return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
+  static AppLocalizations? of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -84,18 +82,17 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
-        delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('ar'),
-    Locale('en'),
+    Locale('en')
   ];
 
   /// No description provided for @appTitle.
@@ -353,7 +350,7 @@ abstract class AppLocalizations {
   /// No description provided for @tabPending.
   ///
   /// In en, this message translates to:
-  /// **'Pending'**
+  /// **'Draft'**
   String get tabPending;
 
   /// No description provided for @tabCurrent.
@@ -377,7 +374,7 @@ abstract class AppLocalizations {
   /// No description provided for @activitiesSection.
   ///
   /// In en, this message translates to:
-  /// **'Activities'**
+  /// **'Premium Services'**
   String get activitiesSection;
 
   /// No description provided for @noPropertyReservations.
@@ -611,7 +608,7 @@ abstract class AppLocalizations {
   /// No description provided for @paymentDisclaimer.
   ///
   /// In en, this message translates to:
-  /// **'Loby disclaims responsibility for any financial\ntransfers outside the platform.\nIf there is a deposit or a balance, it is paid\nbefore you enter.'**
+  /// **'Luby disclaims responsibility for any financial\ntransfers outside the platform.\nIf there is a deposit or a balance, it is paid\nbefore you enter.'**
   String get paymentDisclaimer;
 
   /// No description provided for @uploadStudioPhotosOrVideo.
@@ -695,7 +692,7 @@ abstract class AppLocalizations {
   /// No description provided for @touristActivities.
   ///
   /// In en, this message translates to:
-  /// **'Tourist Activities'**
+  /// **'Premium Services'**
   String get touristActivities;
 
   /// No description provided for @noFavoritesFound.
@@ -734,11 +731,11 @@ abstract class AppLocalizations {
   /// **'Skip'**
   String get skip;
 
-  /// No description provided for @verifyEmailTitle.
+  /// No description provided for @verifyPhoneTitle.
   ///
   /// In en, this message translates to:
-  /// **'Verify Email'**
-  String get verifyEmailTitle;
+  /// **'Verify Phone'**
+  String get verifyPhoneTitle;
 
   /// No description provided for @enterYourEmail.
   ///
@@ -746,11 +743,11 @@ abstract class AppLocalizations {
   /// **'Enter your email'**
   String get enterYourEmail;
 
-  /// No description provided for @sendVerificationEmail.
+  /// No description provided for @sendVerificationPhone.
   ///
   /// In en, this message translates to:
-  /// **'Send Verification Email'**
-  String get sendVerificationEmail;
+  /// **'Send Verification Phone'**
+  String get sendVerificationPhone;
 
   /// No description provided for @resetPassword.
   ///
@@ -1157,7 +1154,7 @@ abstract class AppLocalizations {
   /// No description provided for @propertyTypeApartmentStudios.
   ///
   /// In en, this message translates to:
-  /// **'Apartment - Studios'**
+  /// **'Studios'**
   String get propertyTypeApartmentStudios;
 
   /// No description provided for @propertyTypeCamps.
@@ -1277,7 +1274,7 @@ abstract class AppLocalizations {
   /// No description provided for @noActivitiesFound.
   ///
   /// In en, this message translates to:
-  /// **'No activities found'**
+  /// **'No Premium Services found'**
   String get noActivitiesFound;
 
   /// No description provided for @noPropertiesFound.
@@ -1595,7 +1592,7 @@ abstract class AppLocalizations {
   /// No description provided for @welcomeToLobyTitle.
   ///
   /// In en, this message translates to:
-  /// **'Welcome to LOBY'**
+  /// **'Welcome to LUBY'**
   String get welcomeToLobyTitle;
 
   /// No description provided for @welcomeToLobyDescription.
@@ -1758,12 +1755,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Available for {nights} {nightsLabel} from {from} to {to}'**
-  String availableForRange(
-    Object from,
-    Object nights,
-    Object nightsLabel,
-    Object to,
-  );
+  String availableForRange(Object from, Object nights, Object nightsLabel, Object to);
 
   /// No description provided for @rateApartment.
   ///
@@ -1824,10 +1816,153 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Canceled'**
   String get reservationStatusCanceled;
+
+  /// No description provided for @reservationStatusConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get reservationStatusConfirmed;
+
+  /// No description provided for @reservationStatusRefund.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund'**
+  String get reservationStatusRefund;
+
+  /// No description provided for @refunded.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunded'**
+  String get refunded;
+
+  /// No description provided for @guestUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest User'**
+  String get guestUser;
+
+  /// No description provided for @loginToGetThisFeature.
+  ///
+  /// In en, this message translates to:
+  /// **'Please log in to use this feature'**
+  String get loginToGetThisFeature;
+
+  /// No description provided for @privacyPolicyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicyTitle;
+
+  /// No description provided for @termsAndConditionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms and Conditions'**
+  String get termsAndConditionsTitle;
+
+  /// No description provided for @hostWithUsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Host With Us'**
+  String get hostWithUsTitle;
+
+  /// No description provided for @aboutLobyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'About Loby'**
+  String get aboutLobyTitle;
+
+  /// No description provided for @registerLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Register'**
+  String get registerLabel;
+
+  /// No description provided for @passwordResetSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset successfully.'**
+  String get passwordResetSuccess;
+
+  /// No description provided for @privacyFirstParagraph.
+  ///
+  /// In en, this message translates to:
+  /// **'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay prm gravida felis, sociis in felis.Diam habitant .'**
+  String get privacyFirstParagraph;
+
+  /// No description provided for @privacyStandardParagraph.
+  ///
+  /// In en, this message translates to:
+  /// **'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay prm gravida felis, sociis in felis.Diam habitant .Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay prm gravida felis, sociis in felis.Diam habitant .'**
+  String get privacyStandardParagraph;
+
+  /// No description provided for @termsFirstParagraph.
+  ///
+  /// In en, this message translates to:
+  /// **'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay prm gravida felis, sociis in felis.Diam habitant .'**
+  String get termsFirstParagraph;
+
+  /// No description provided for @termsStandardParagraph.
+  ///
+  /// In en, this message translates to:
+  /// **'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay prm gravida felis, sociis in felis.Diam habitant .Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay prm gravida felis, sociis in felis.Diam habitant .'**
+  String get termsStandardParagraph;
+
+  /// No description provided for @hostInfoText.
+  ///
+  /// In en, this message translates to:
+  /// **'Register your property and the tourist activities with lobby in regular way and get additional income you will now be directed to the lobby business app to register'**
+  String get hostInfoText;
+
+  /// No description provided for @aboutFirstParagraph.
+  ///
+  /// In en, this message translates to:
+  /// **'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay prm gravida felis, sociis in felis.Diam habitant .'**
+  String get aboutFirstParagraph;
+
+  /// No description provided for @aboutSecondParagraph.
+  ///
+  /// In en, this message translates to:
+  /// **'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay prm gravida felis, sociis in felis.Diam habitant .Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay prm gravida felis, sociis in felis.Diam habitant .'**
+  String get aboutSecondParagraph;
+
+  /// No description provided for @notificationDetailParagraph1.
+  ///
+  /// In en, this message translates to:
+  /// **'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay lorem ipsum dolor sit amet, consecr text Diam habitant '**
+  String get notificationDetailParagraph1;
+
+  /// No description provided for @notificationDetailParagraph2.
+  ///
+  /// In en, this message translates to:
+  /// **'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay lorem ipsum dolor sit amet, consecr text Diam habitant.'**
+  String get notificationDetailParagraph2;
+
+  /// No description provided for @notificationDetailParagraph3.
+  ///
+  /// In en, this message translates to:
+  /// **'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay lorem ipsum dolor sit amet.'**
+  String get notificationDetailParagraph3;
+
+  /// No description provided for @firstName.
+  ///
+  /// In en, this message translates to:
+  /// **'First Name'**
+  String get firstName;
+
+  /// No description provided for @lastName.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Name'**
+  String get lastName;
+
+  /// No description provided for @phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get phone;
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -1836,26 +1971,25 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['ar', 'en'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['ar', 'en'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'ar':
-      return AppLocalizationsAr();
-    case 'en':
-      return AppLocalizationsEn();
+    case 'ar': return AppLocalizationsAr();
+    case 'en': return AppLocalizationsEn();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.',
+    'that was used.'
   );
 }

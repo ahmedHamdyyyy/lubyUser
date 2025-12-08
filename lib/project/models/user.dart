@@ -6,59 +6,40 @@ import 'package:equatable/equatable.dart';
 import '../../../config/constants/constance.dart';
 
 class UserModel extends Equatable {
-  final String firstName, lastName, email, phone, password, role, id, profilePicture;
+  final String firstName, lastName, email, phone, id, profilePicture;
 
   const UserModel({
     required this.id,
-    required this.password,
     required this.firstName,
     required this.lastName,
     required this.email,
     required this.phone,
-    required this.role,
     required this.profilePicture,
   });
 
-  static const initial = UserModel(
-    password: '',
-    firstName: '',
-    lastName: '',
-    id: '',
-    email: '',
-    phone: '',
-    role: '',
-    profilePicture: '',
-  );
+  static const initial = UserModel(firstName: '', lastName: '', email: '', id: '', phone: '', profilePicture: '');
 
   UserModel copyWith({
-    String? password,
     String? firstName,
     String? lastName,
     String? email,
     String? phone,
-    String? role,
     String? id,
     String? profilePicture,
-  }) {
-    return UserModel(
-      id: id ?? this.id,
-      password: password ?? this.password,
-      firstName: firstName ?? this.firstName,
-      lastName: lastName ?? this.lastName,
-      email: email ?? this.email,
-      phone: phone ?? this.phone,
-      role: role ?? this.role,
-      profilePicture: profilePicture ?? this.profilePicture,
-    );
-  }
+  }) => UserModel(
+    id: id ?? this.id,
+    firstName: firstName ?? this.firstName,
+    lastName: lastName ?? this.lastName,
+    email: email ?? this.email,
+    phone: phone ?? this.phone,
+    profilePicture: profilePicture ?? this.profilePicture,
+  );
 
   Future<FormData> signUp() async => FormData.fromMap({
     AppConst.firstName: firstName,
     AppConst.lastName: lastName,
-    AppConst.password: password,
     AppConst.email: email,
     AppConst.phone: phone,
-    AppConst.role: role,
     if (profilePicture.isNotEmpty)
       AppConst.profilePicture: await MultipartFile.fromFile(
         profilePicture,
@@ -68,12 +49,10 @@ class UserModel extends Equatable {
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-    password: json[AppConst.password] ?? '',
     firstName: json[AppConst.firstName] ?? '',
     lastName: json[AppConst.lastName] ?? '',
     email: json[AppConst.email] ?? '',
     phone: json[AppConst.phone] ?? '',
-    role: json[AppConst.role] ?? '',
     id: json[AppConst.id] ?? '',
     profilePicture: json[AppConst.profilePicture] ?? '',
   );
@@ -82,15 +61,13 @@ class UserModel extends Equatable {
     AppConst.id: id,
     AppConst.firstName: firstName,
     AppConst.lastName: lastName,
-    AppConst.password: password,
     AppConst.email: email,
     AppConst.phone: phone,
-    AppConst.role: role,
     AppConst.profilePicture: profilePicture,
   });
 
   factory UserModel.fromCache(String user) => UserModel.fromJson(jsonDecode(user) as Map<String, dynamic>);
 
   @override
-  List<Object?> get props => [id, password, firstName, lastName, email, phone, role, profilePicture];
+  List<Object?> get props => [id, firstName, lastName, email, phone, profilePicture];
 }

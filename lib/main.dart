@@ -8,24 +8,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:luby2/core/localization/l10n_ext.dart';
 
 import 'config/constants/api_constance.dart';
 import 'config/constants/constance.dart';
 import 'core/localization/localization_cubit.dart';
 import 'core/services/api_services.dart';
+import 'core/services/app_links_service.dart';
 import 'core/services/cach_services.dart';
 import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
 import 'locator.dart';
 import 'project/Home/cubit/home_cubit.dart';
 import 'project/activities/cubit/cubit.dart';
+import 'project/activities/view/screens/activity.dart';
 import 'project/auth/cubit/auth_cubit.dart';
 import 'project/auth/view/Screen/splash/luby_screen_splash.dart';
 import 'project/favorites/cubit/cubit.dart';
 import 'project/reservation/cubit/cubit.dart';
-import 'project/activities/view/screens/activity.dart';
-import 'project/profile/screens/propreties/views/rental_details_view.dart';
 import 'project/reservation/view/screens/reservation_loader_screen.dart';
+import 'project/screens/propreties/views/property_screen.dart';
 
 // Must be a top-level or static function.
 @pragma('vm:entry-point')
@@ -154,7 +156,7 @@ Future<void> main() async {
     await _updateFcmTokenIfLoggedIn(newToken);
   });
 
-  // Foreground message handler
+  // Foreground message handler: show local notification only; don't auto-navigate.
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
     final notification = message.notification;
     final android = notification?.android;
@@ -182,10 +184,10 @@ Future<void> main() async {
         payload: message.data.isNotEmpty ? jsonEncode(message.data) : null,
       );
     }
-    // Optionally navigate immediately on foreground message
-    if (message.data.isNotEmpty) {
-      _handleNotificationNavigation(message.data);
-    }
+    // Do not navigate on foreground messages automatically to avoid surprising users
+    // and accidental double navigations. Navigation is handled when the user taps
+    // the notification (onMessageOpenedApp) or taps a displayed local notification
+    // (onDidReceiveNotificationResponse).
   });
 
   // When the user taps a notification and the app opens
@@ -198,7 +200,8 @@ Future<void> main() async {
   final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
   if (initialMessage != null) {
     developer.log('App opened from terminated by notification: ${initialMessage.data}', name: 'FCM');
-    _handleNotificationNavigation(initialMessage.data);
+    // Defer handling until after MaterialApp builds and Navigator is ready
+    _pendingInitialMessageData = initialMessage.data;
   }
 
   setup();
@@ -221,8 +224,39 @@ Future<void> _updateFcmTokenIfLoggedIn(String token) async {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  AppLinksService? _appLinksService;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_pendingInitialMessageData != null && !_hasHandledInitialMessage) {
+        _hasHandledInitialMessage = true;
+        _handleNotificationNavigation(_pendingInitialMessageData!);
+        _pendingInitialMessageData = null;
+      }
+      // Initialize deep links
+      _appLinksService = AppLinksService(
+        navigatorKey: navigatorKey,
+        onRouteData: _handleNotificationNavigation,
+        acceptedSchemes: const ['lubyuser', 'https'],
+      );
+      _appLinksService!.init();
+    });
+  }
+
+  @override
+  void dispose() {
+    _appLinksService?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -244,7 +278,7 @@ class MyApp extends StatelessWidget {
             builder: (context, locale) {
               return MaterialApp(
                 debugShowCheckedModeBanner: false,
-                theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+                theme: ThemeData(scaffoldBackgroundColor: Colors.white, useMaterial3: true),
                 navigatorKey: navigatorKey,
                 locale: locale,
                 localizationsDelegates: const [
@@ -254,7 +288,7 @@ class MyApp extends StatelessWidget {
                   GlobalCupertinoLocalizations.delegate,
                 ],
                 supportedLocales: const [Locale('en'), Locale('ar')],
-                onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
+                onGenerateTitle: (context) => context.l10n.appTitle,
                 home: const LubyScreenSplash(),
               );
             },
@@ -268,12 +302,29 @@ class MyApp extends StatelessWidget {
 // Global navigator key to allow navigation from notification callbacks
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
+// Hold initial notification data until the Navigator is ready
+Map<String, dynamic>? _pendingInitialMessageData;
+bool _hasHandledInitialMessage = false;
+
+// Simple debounce to avoid duplicate navigations from multiple sources (e.g.,
+// local notification tap and onMessageOpenedApp firing close together).
+DateTime? _lastNavAt;
+String? _lastNavKey;
+
 void _handleNotificationNavigation(Map<String, dynamic> data) {
   try {
     final type = (data['type'] ?? '').toString();
     final activityId = (data['activityId'] ?? '').toString();
     final propertyId = (data['propertyId'] ?? '').toString();
     final registrationId = (data['registrationId'] ?? '').toString();
+
+    // Build a lightweight key for deduplication
+    final navKey = '$type|$activityId|$propertyId|$registrationId';
+    final now = DateTime.now();
+    if (_lastNavKey == navKey && _lastNavAt != null && now.difference(_lastNavAt!).inMilliseconds < 1500) {
+      // Ignore duplicate navigation attempts within 1.5s window
+      return;
+    }
 
     Widget? target;
     switch (type) {
@@ -293,7 +344,7 @@ void _handleNotificationNavigation(Map<String, dynamic> data) {
       case 'new_property':
       case 'property_verification':
         if (propertyId.isNotEmpty) {
-          target = RentalDetailScreen(id: propertyId);
+          target = PropertyScreen(id: propertyId);
         }
         break;
       default:
@@ -301,12 +352,23 @@ void _handleNotificationNavigation(Map<String, dynamic> data) {
     }
 
     if (target != null) {
+      // Update debounce markers
+      _lastNavKey = navKey;
+      _lastNavAt = DateTime.now();
       final nav = navigatorKey.currentState;
       if (nav != null) {
+        // Use push to keep user's back stack; alternatively pushNamed if routes are defined.
         nav.push(MaterialPageRoute(builder: (_) => target!));
+      } else {
+        // Navigator not ready yet (e.g., app cold start). Defer once more.
+        _pendingInitialMessageData = data;
       }
     }
   } catch (e) {
     developer.log('Failed to handle notification navigation: $e', name: 'FCM');
   }
 }
+
+// Note: Firebase Dynamic Links code removed. Custom scheme links are handled via AppLinksService.
+
+// favorites, reservations, messages, reviews, profile (test) done

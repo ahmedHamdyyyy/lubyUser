@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:luby2/core/localization/l10n_ext.dart';
@@ -5,16 +7,14 @@ import 'package:luby2/core/localization/l10n_ext.dart';
 import '../../../../../../config/constants/constance.dart';
 import '../../../../../../config/widget/widget.dart';
 import '../../../../../../locator.dart';
-import '../../../../Home/cubit/home_cubit.dart';
-import '../../../../Home/ui/home_screen.dart';
 import '../../../../models/user.dart';
 import '../../../cubit/auth_cubit.dart';
 import 'reset_password.dart';
 
 class ConfirmOtpScreen extends StatefulWidget {
-  const ConfirmOtpScreen({super.key, this.user, required this.willSignup, required this.email});
+  const ConfirmOtpScreen({super.key, this.user, required this.willSignup, required this.phone});
   final UserModel? user;
-  final String email;
+  final String phone;
   final bool willSignup;
   @override
   State<ConfirmOtpScreen> createState() => _ConfirmOtpScreenState();
@@ -29,6 +29,13 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
   late Animation<double> _slideAnimation;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
+
+  // Resend OTP variables
+  int _resendCountdown = 0;
+  int _resendAttemptsThisHour = 0;
+  DateTime? _firstResendAttemptTime;
+  bool _canResend = false;
+  Timer? _countdownTimer;
 
   @override
   void initState() {
@@ -52,10 +59,79 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
 
     _animationController.forward();
     _fadeController.forward();
+    _startResendTimer();
+  }
+
+  void _startResendTimer() {
+    setState(() {
+      _resendCountdown = 120; // 2 minutes in seconds
+      _canResend = false;
+    });
+
+    _countdownTimer?.cancel();
+    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_resendCountdown > 0) {
+        setState(() {
+          _resendCountdown--;
+        });
+      } else {
+        timer.cancel();
+        setState(() {
+          _canResend = true;
+        });
+      }
+    });
+  }
+
+  bool _checkHourlyLimit() {
+    final now = DateTime.now();
+
+    // Reset counter if more than an hour has passed since first attempt
+    if (_firstResendAttemptTime != null && now.difference(_firstResendAttemptTime!).inHours >= 1) {
+      _resendAttemptsThisHour = 0;
+      _firstResendAttemptTime = null;
+    }
+
+    // Check if limit is reached
+    if (_resendAttemptsThisHour >= 3) {
+      final timeSinceFirst = now.difference(_firstResendAttemptTime!);
+      final remainingTime = const Duration(hours: 1) - timeSinceFirst;
+      final minutes = remainingTime.inMinutes;
+
+      showToast(text: 'Maximum resend attempts reached. Please try again in $minutes minutes.', stute: ToustStute.error);
+      return false;
+    }
+
+    return true;
+  }
+
+  void _resendOtp() {
+    if (!_canResend) {
+      return;
+    }
+
+    if (!_checkHourlyLimit()) {
+      return;
+    }
+
+    // Track the attempt
+    _firstResendAttemptTime ??= DateTime.now();
+    _resendAttemptsThisHour++;
+
+    // Resend the OTP using the same method as initial send
+    if (widget.willSignup) {
+      context.read<AuthCubit>().initiateSignup(widget.phone);
+    } else {
+      context.read<AuthCubit>().initiateSignin(phone: widget.phone);
+    }
+
+    // Restart the timer
+    _startResendTimer();
   }
 
   @override
   void dispose() {
+    _countdownTimer?.cancel();
     _animationController.dispose();
     _fadeController.dispose();
     _otpController.dispose();
@@ -70,7 +146,11 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
       setState(() => _isLoading = false);
       return;
     }
-    context.read<AuthCubit>().confirmOtp(widget.email, _otpController.text, widget.willSignup);
+    if (widget.willSignup) {
+      context.read<AuthCubit>().confirmOtp(widget.phone, _otpController.text, widget.willSignup);
+    } else {
+      context.read<AuthCubit>().verifySignin(phone: widget.phone, code: _otpController.text);
+    }
   }
 
   @override
@@ -84,7 +164,8 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
           if (widget.willSignup) {
             getIt.get<AuthCubit>().signup(widget.user!);
           } else {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ResetPasswordScreen(email: widget.email)));
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ResetPasswordScreen(email: widget.phone)));
           }
           break;
         default:
@@ -97,16 +178,52 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
           showToast(text: state.msg, stute: ToustStute.error);
           break;
         case Status.success:
-          getIt.get<HomeCubit>().updateCurrentScreenIndex(0);
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
-
+          Navigator.pop(context);
+          Navigator.pop(context, true);
+          break;
+        default:
+          break;
+      }
+      switch (state.verifySigninStatus) {
+        case Status.initial:
+          break;
+        case Status.error:
+          showToast(text: state.msg, stute: ToustStute.error);
+          break;
+        case Status.success:
+          showToast(text: state.msg, stute: ToustStute.success);
+          Navigator.pop(context);
+          break;
+        default:
+          break;
+      }
+      // Handle resend OTP for signup
+      switch (state.initiateSignupStatus) {
+        case Status.error:
+          showToast(text: state.msg, stute: ToustStute.error);
+          break;
+        case Status.success:
+          showToast(text: 'OTP resent successfully', stute: ToustStute.success);
+          break;
+        default:
+          break;
+      }
+      // Handle resend OTP for signin
+      switch (state.initiateSigninStatus) {
+        case Status.error:
+          showToast(text: state.msg, stute: ToustStute.error);
+          break;
+        case Status.success:
+          showToast(text: 'OTP resent successfully', stute: ToustStute.success);
           break;
         default:
           break;
       }
     },
     builder: (context, state) {
-      if (state.confirmOtpStatus == Status.loading || state.signupStatus == Status.loading) {
+      if (state.confirmOtpStatus == Status.loading ||
+          state.signupStatus == Status.loading ||
+          state.verifySigninStatus == Status.loading) {
         _isLoading = true;
       } else {
         _isLoading = false;
@@ -183,7 +300,7 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
 
                             // Title
                             Text(
-                              context.l10n.verifyEmailTitle,
+                              context.l10n.verifyPhoneTitle,
                               style: TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
@@ -200,9 +317,9 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                               text: TextSpan(
                                 style: const TextStyle(fontSize: 16, color: Color(0xFF64748B), height: 1.5),
                                 children: [
-                                  TextSpan(text: context.l10n.sendVerificationEmail + '\n'),
+                                  TextSpan(text: '${context.l10n.sendVerificationPhone}\n'),
                                   TextSpan(
-                                    text: widget.email,
+                                    text: widget.phone,
                                     style: const TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF1E293B)),
                                   ),
                                 ],
@@ -246,7 +363,7 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                                   letterSpacing: 8,
                                 ),
                                 decoration: InputDecoration(
-                                  labelText: context.l10n.verifyEmailTitle,
+                                  labelText: context.l10n.verifyPhoneTitle,
                                   labelStyle: const TextStyle(color: Color(0xFF94A3B8), fontSize: 16),
                                   hintText: 'ABC123',
                                   hintStyle: const TextStyle(color: Color(0xFFCBD5E1), fontSize: 24, letterSpacing: 8),
@@ -291,7 +408,7 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                                           child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                                         )
                                         : Text(
-                                          context.l10n.verifyEmailTitle,
+                                          context.l10n.verifyPhoneTitle,
                                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, letterSpacing: 0.5),
                                         ),
                               ),
@@ -328,20 +445,19 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  context.l10n.retry + ' ',
+                                  '${context.l10n.retry} ',
                                   style: TextStyle(fontSize: 14, color: const Color(0xFF64748B)),
                                 ),
                                 GestureDetector(
-                                  onTap: () {
-                                    // Add resend logic here
-                                    showToast(text: context.l10n.resendComingSoon, stute: ToustStute.success);
-                                  },
+                                  onTap: _canResend ? _resendOtp : null,
                                   child: Text(
-                                    context.l10n.retry,
+                                    _canResend
+                                        ? context.l10n.retry
+                                        : '${_resendCountdown ~/ 60}:${(_resendCountdown % 60).toString().padLeft(2, '0')}',
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
-                                      color: const Color(0xFF10B981),
+                                      color: _canResend ? const Color(0xFF10B981) : const Color(0xFF94A3B8),
                                     ),
                                   ),
                                 ),

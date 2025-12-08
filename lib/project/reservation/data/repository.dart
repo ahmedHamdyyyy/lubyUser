@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../models/reversation.dart';
 import '../cubit/cubit.dart';
@@ -25,7 +26,7 @@ class ReservationsRepository {
       }
       throw Exception('An unknown error occurred');
     } catch (e, s) {
-      print('Error $e stack trace: $s');
+      debugPrint('ReservationsRepository.getReservations error: $e\n$s');
       throw Exception('An unexpected error occurred: $e');
     }
   }
@@ -44,7 +45,7 @@ class ReservationsRepository {
       }
       throw Exception('An unknown error occurred');
     } catch (e, s) {
-      print('Error $e stack trace: $s');
+      debugPrint('ReservationsRepository.getReservation error: $e\n$s');
       throw Exception('An unexpected error occurred: $e');
     }
   }
@@ -53,7 +54,7 @@ class ReservationsRepository {
     try {
       return await _data.createReservation(reservation);
     } on DioException catch (e, s) {
-      print('Error $e stack trace: $s');
+      debugPrint('ReservationsRepository.createReservation dio error: $e\n$s');
       if (e.response?.data != null && e.response?.data['error'] != null) {
         final errorMessage = e.response!.data['error'];
         if (errorMessage is List) {
@@ -64,7 +65,7 @@ class ReservationsRepository {
       }
       throw Exception('An unknown error occurred');
     } catch (e, s) {
-      print('Error $e stack trace: $s');
+      debugPrint('ReservationsRepository.createReservation error: $e\n$s');
       throw Exception('An unexpected error occurred: $e');
     }
   }

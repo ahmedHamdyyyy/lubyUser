@@ -5,38 +5,26 @@ import 'package:luby2/core/localization/l10n_ext.dart';
 import '../../../../../../config/constants/constance.dart';
 import '../../../../../../config/widget/widget.dart';
 import '../../../../../../locator.dart';
-import '../../../../Home/ui/home_screen.dart';
 import '../../../cubit/auth_cubit.dart';
 import '../../Widget/all_widget_auth.dart';
+import 'confirm_otp.dart';
 import 'sign_up.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
-
   @override
   State<SignInScreen> createState() => _SignInScreenState();
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  bool obscurePassword = true;
-  @override
-  @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
-  }
+  String _phone = '';
 
   void _handleLogin() {
-    final email = emailController.text.trim();
-    final password = passwordController.text;
-    if (email.isEmpty || password.isEmpty) {
+    if (_phone.isEmpty) {
       showToast(text: context.l10n.fillAllFields, stute: ToustStute.error);
       return;
     }
-    getIt<AuthCubit>().signin(email: email, password: password);
+    getIt<AuthCubit>().initiateSignin(phone: _phone);
   }
 
   void _handleCreateAccount() {
@@ -44,10 +32,26 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return BlocListener<AuthCubit, AuthState>(
+  Widget build(BuildContext context) => Scaffold(
+    backgroundColor: Colors.white,
+    body: BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
-        switch (state.signinStatus) {
+        switch (state.initiateSigninStatus) {
+          case Status.initial:
+            break;
+          case Status.error:
+            showToast(text: state.msg, stute: ToustStute.error);
+            break;
+          case Status.success:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ConfirmOtpScreen(phone: _phone, willSignup: false)),
+            );
+            break;
+          default:
+            break;
+        }
+        switch (state.verifySigninStatus) {
           case Status.initial:
             break;
           case Status.error:
@@ -55,36 +59,28 @@ class _SignInScreenState extends State<SignInScreen> {
             break;
           case Status.success:
             showToast(text: state.msg, stute: ToustStute.success);
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+            WidgetsBinding.instance.addPostFrameCallback((_) => Navigator.pop(context, true));
             break;
           default:
             break;
         }
       },
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: BlocBuilder<AuthCubit, AuthState>(
-          builder: (context, state) {
-            return Stack(
-              children: [
-                LoginScreenContent(
-                  emailController: emailController,
-                  passwordController: passwordController,
-                  obscurePassword: obscurePassword,
-                  onTogglePassword: () => setState(() => obscurePassword = !obscurePassword),
-                  onContinue: _handleLogin,
-                  onCreateAccount: _handleCreateAccount,
-                  onGoogleContinue: () {},
-                  onFacebookContinue: () {},
-                  onGuestLogin: () {},
-                ),
-                if (state.signinStatus == Status.loading)
-                  Container(color: Colors.black26, child: const Center(child: CircularProgressIndicator())),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
+      builder: (context, state) {
+        return Stack(
+          children: [
+            SignInScreenContent(
+              onPhoneChanged: (phone) => _phone = phone,
+              onContinue: _handleLogin,
+              onCreateAccount: _handleCreateAccount,
+              onGoogleContinue: () {},
+              onFacebookContinue: () {},
+              onGuestLogin: () {},
+            ),
+            if (state.initiateSigninStatus == Status.loading || state.verifySigninStatus == Status.loading)
+              Container(color: Colors.black26, child: const Center(child: CircularProgressIndicator())),
+          ],
+        );
+      },
+    ),
+  );
 }

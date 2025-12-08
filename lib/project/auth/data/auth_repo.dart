@@ -20,9 +20,19 @@ class AuthRepo {
     }
   }
 
-  Future<UserModel> signin({required String email, required String password}) async {
+  Future<void> initiateSignin({required String phone}) async {
     try {
-      return await _authData.signin(email: email, password: password);
+      return await _authData.initiateSignin(phone: phone);
+    } on DioException catch (e) {
+      throw ApiExceptionHandler.handle(e);
+    } catch (e) {
+      throw Exception('An unexpected error occurred. Please try again later.');
+    }
+  }
+
+  Future<UserModel> verifySignin({required String phone, required String code}) async {
+    try {
+      return await _authData.verifySignin(phone: phone, code: code);
     } on DioException catch (e) {
       throw ApiExceptionHandler.handle(e);
     } catch (e) {
@@ -42,9 +52,9 @@ class AuthRepo {
     }
   }
 
-  Future<void> verifyEmail({required String email}) async {
+  Future<void> verifyPhone({required String phone}) async {
     try {
-      await _authData.verifyEmail(email: email);
+      await _authData.verifyPhone(phone: phone);
     } on DioException catch (e) {
       debugPrint(e.response?.data.toString());
       throw Exception(e.response?.data['error']);
@@ -54,9 +64,9 @@ class AuthRepo {
     }
   }
 
-  Future<void> confirmOtp(String email, String otp, bool willSignup) async {
+  Future<void> confirmOtp(String phone, String otp, bool willSignup) async {
     try {
-      await _authData.confirmOtpSignUp(email, otp, willSignup);
+      await _authData.confirmOtpSignUp(phone, otp, willSignup);
     } on DioException catch (e) {
       debugPrint(e.response?.data.toString());
       throw Exception(e.response?.data['error']);

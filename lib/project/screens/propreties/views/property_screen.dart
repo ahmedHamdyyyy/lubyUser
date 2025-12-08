@@ -1,0 +1,209 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../../../../config/constants/constance.dart';
+import '../../../../../config/widget/helper.dart';
+import '../../../../../locator.dart';
+import '../../../../core/localization/l10n_ext.dart';
+import '../../../Home/Widget/signin_placeholder.dart';
+import '../../../Home/cubit/home_cubit.dart';
+import '../../../favorites/cubit/cubit.dart';
+import '../../../models/favorite.dart';
+import '../widgets/amenities_widget.dart';
+import '../widgets/booking_details_widget.dart';
+import '../widgets/carde_reserve.dart';
+import '../widgets/host_details.dart';
+import '../widgets/location_widget.dart';
+import '../widgets/medias_list.dart';
+import '../widgets/read_details_widget.dart';
+import '../widgets/read_more.dart';
+import '../widgets/rental_unit_widget.dart';
+import '../widgets/reviews_widget.dart';
+
+class PropertyScreen extends StatefulWidget {
+  const PropertyScreen({super.key, required this.id});
+  final String id;
+  @override
+  State<PropertyScreen> createState() => _PropertyScreenState();
+}
+
+class _PropertyScreenState extends State<PropertyScreen> {
+  bool isExpanded = false, waitingForFavorite = false;
+  @override
+  void initState() {
+    getIt<HomeCubit>().getProperty(widget.id);
+    super.initState();
+  }
+
+  String _localizedPropertyType(BuildContext context, String rawType) {
+    final t = rawType.toLowerCase();
+    if (t == 'apartment') return context.l10n.apartmentsTitle;
+    if (t == 'studio') return context.l10n.propertyTypeApartmentStudios;
+    if (t == 'house') return context.l10n.villasTitle;
+    return context.l10n.apartmentsTitle;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: BlocBuilder<HomeCubit, HomeState>(
+        builder: (context, state) {
+          if (state.propertyStatus == Status.loading) return const Center(child: CircularProgressIndicator());
+          if (state.propertyStatus == Status.error) return Center(child: Text(state.msg));
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Stack(
+                  children: [
+                    Material(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child: Container(
+                        height: 250,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(
+                              state.property.medias.firstWhere((media) => !media.endsWith('mp4'), orElse: () => ''),
+                            ),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 40,
+                      left: 0,
+                      right: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            InkWell(
+                              onTap: () => Navigator.of(context).pop(),
+                              child: const Icon(Icons.arrow_back_ios_new, size: 24, color: Colors.white),
+                            ),
+                            Row(
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/images/export.svg',
+                                  // ignore: deprecated_member_use
+                                  color: Colors.white,
+                                  height: 24,
+                                ),
+                                const SizedBox(width: 8),
+                                BlocSelector<HomeCubit, HomeState, bool>(
+                                  selector: (state) => state.isSignedIn,
+                                  builder: (context, isSignedIn) {
+                                    return InkWell(
+                                      onTap: () async {
+                                        if (!isSignedIn) {
+                                          await showSigninPlaceholder(context);
+
+                                          return;
+                                        }
+                                        if (state.property.isFavorite) {
+                                          getIt<FavoritesCubit>().removeFromFavorites(
+                                            state.property.id,
+                                            FavoriteType.property,
+                                          );
+                                        } else {
+                                          getIt<FavoritesCubit>().addToFavorites(state.property.id, FavoriteType.property);
+                                        }
+                                        waitingForFavorite = true;
+                                      },
+                                      child: Icon(
+                                        state.property.isFavorite ? Icons.favorite : Icons.favorite_border,
+                                        size: 24,
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    // Title
+                    Positioned(
+                      top: 100,
+                      bottom: 0,
+                      left: 23,
+                      child: TextWidget(
+                        text: _localizedPropertyType(context, state.property.type),
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 112),
+                        CardeReserve(property: state.property),
+                        BookingDetailsWidget(property: state.property),
+                        RentalUnitWidget(state: state),
+                        LocationWidget(state: state),
+                        const Driver(),
+                        ReviewsWidget(
+                          entityId: state.property.id,
+                          isProperty: true,
+                          review: state.property.review,
+                          commentsCount: state.property.reviewsCount,
+                          totalRate: state.property.totalRate,
+                        ),
+                        HostDetailsWidget(vendor: state.property.vendor),
+                        MediasListWidget(medias: state.property.medias),
+                        const Driver(),
+                        if (isExpanded != true)
+                          ReadMoreTextWidget(details: state.property.details)
+                        else
+                          ReadDetailsWidget(details: state.property.details),
+                        Center(
+                          child: SizedBox(
+                            width: 173,
+                            height: 35,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  isExpanded = !isExpanded;
+                                });
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF262626),
+                                padding: const EdgeInsets.only(bottom: 2),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                              ),
+                              child: TextWidget(
+                                text: isExpanded ? context.l10n.readLess : context.l10n.readMore,
+                                color: const Color(0xFFFFFFFF),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        const Driver(),
+                        AmenitiesWidget(tags: state.property.tags),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

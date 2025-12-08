@@ -6,9 +6,9 @@ import 'package:luby2/project/Home/Widget/widget_home.dart' show buildBottomNavi
 
 import '../../../../locator.dart';
 import '../../favorites/view/favourite2.dart';
-import '../../profile/screens/Conversations/conversations_screen.dart';
-import '../../profile/screens/account/account_info/account.dart';
 import '../../reservation/view/screens/reservations_screen.dart';
+import '../../screens/Conversations/conversations_screen.dart';
+import '../../screens/account/account_info/account.dart';
 import '../cubit/home_cubit.dart';
 import 'home_main_screen.dart';
 
@@ -23,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    getIt<HomeCubit>().checkSignin();
     getIt<HomeCubit>().fetchUser();
     super.initState();
   }

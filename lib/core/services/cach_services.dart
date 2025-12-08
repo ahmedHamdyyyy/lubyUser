@@ -14,6 +14,8 @@ class CacheService {
     }
   }
 
+  // bool isSignedIn() => storage.containsKey(AppConst.accessToken);
+
   // Future<void> saveToken(String token) async {
   //   await storage.setString(_tokenKey, token);
   //   await storage.setBool(_isLoggedInKey, true);

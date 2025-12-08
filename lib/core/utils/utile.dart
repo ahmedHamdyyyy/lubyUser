@@ -27,10 +27,9 @@ class Utils {
 
   static int calculateDaysDifference(String? startDate, String? endDate) {
     if (startDate == null || endDate == null) return 0;
-    final start = parseDate(startDate);
-    final end = parseDate(endDate);
-    if (start == null || end == null) return 0;
-    return end.difference(start).inDays;
+    final start = DateTime.parse(startDate);
+    final end = DateTime.parse(endDate);
+    return end.difference(start).inDays.abs();
   }
 
   static Future<T?> loadingDialog<T>(
@@ -68,17 +67,6 @@ class Utils {
       default:
         return 'application/octet-stream'; // fallback
     }
-  }
-
-  static DateTime? parseDate(String value) {
-    final valueList = value.split('/');
-    if (valueList.length != 3) return null;
-    final day = int.tryParse(valueList.first);
-    final month = int.tryParse(valueList[1]);
-    final year = int.tryParse(valueList.last);
-    if (day == null || month == null || year == null) return null;
-    final date = DateTime(year, month, day);
-    return date;
   }
 }
 

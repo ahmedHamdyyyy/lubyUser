@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:luby2/project/models/favorite.dart';
 
 import 'data.dart';
@@ -21,7 +22,7 @@ class FavoritesRepository {
       }
       throw Exception('An unknown error occurred');
     } catch (e, s) {
-      print('Error $e stack trace: $s');
+      debugPrint('FavoritesRepository.getFavorites error: $e\n$s');
       throw Exception('An unexpected error occurred: $e');
     }
   }

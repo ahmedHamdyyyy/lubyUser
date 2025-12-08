@@ -4,7 +4,6 @@ import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../config/constants/constance.dart';
 import '../../../cubit/auth_cubit.dart';
-import '../splash/splash_screens.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({super.key, required this.email});
@@ -40,7 +39,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           _isLoading = true;
         } else if (state.resetPasswordStatus == Status.success) {
           _isLoading = false;
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SplashScreens()));
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.l10n.passwordResetSuccess)));
         } else if (state.resetPasswordStatus == Status.error) {
           _isLoading = false;
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.msg)));

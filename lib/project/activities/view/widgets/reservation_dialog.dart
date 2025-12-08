@@ -3,19 +3,14 @@ import 'package:flutter/services.dart';
 
 import '../../../../../../config/colors/colors.dart';
 import '../../../../../../config/widget/helper.dart';
-import '../../../../../../core/utils/utile.dart';
 import '../../../../../core/localization/l10n_ext.dart';
 import '../../../models/activity.dart';
 import '../../../models/reversation.dart';
-import '../../../profile/screens/Complete reservation and payment/summary_screen.dart';
+import '../../../reservation/view/screens/summary_screen.dart';
 
-Future<dynamic> showActivityReserveDialoge(
-  BuildContext context,
-  ActivityModel activity,
-  TextEditingController dateController,
-  TextEditingController guestController,
-) {
+Future<dynamic> showActivityReserveDialoge(BuildContext context, ActivityModel activity, String guestsCount) {
   final formKey = GlobalKey<FormState>();
+  final guestsController = TextEditingController(text: guestsCount);
   return showDialog(
     context: context,
     barrierDismissible: true,
@@ -42,34 +37,27 @@ Future<dynamic> showActivityReserveDialoge(
                             children: [
                               TextWidget(
                                 text: context.l10n.dateLabel.trim(),
-                                color: Color(0xFF414141),
+                                color: AppColors.secondTextColor,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),
                               const SizedBox(height: 4),
-                              SizedBox(
+                              Container(
                                 height: 40,
-                                child: TextFormField(
-                                  controller: dateController,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) return context.l10n.pleaseEnterDate;
-                                    final date = Utils.parseDate(value);
-                                    if (date == null) return context.l10n.invalidDateFormat;
-                                    final now = DateTime.now();
-                                    if (date.isBefore(now)) return context.l10n.dateMustBeInFuture;
-                                    return null;
-                                  },
-                                  keyboardType: TextInputType.datetime,
-                                  onChanged: (value) => setState(() {}),
-                                  decoration: InputDecoration(
-                                    enabledBorder: buildOutlineInputBorder(5),
-                                    focusedBorder: buildOutlineInputBorder(5),
-                                    hintText: context.l10n.enterDateInDdMmYyyy,
-                                    hintStyle: const TextStyle(
-                                      color: Color(0xFF757575),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                    ),
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color: Colors.black54),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                alignment: Alignment.centerLeft,
+                                padding: EdgeInsets.all(8),
+                                child: Text(
+                                  activity.date.split('T').first.replaceAll('-', '/').split('/').reversed.join('/'),
+                                  style: TextStyle(
+                                    color: AppColors.grayTextColor,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
                                   ),
                                 ),
                               ),
@@ -92,7 +80,7 @@ Future<dynamic> showActivityReserveDialoge(
                                 height: 40,
                                 width: double.infinity,
                                 child: TextFormField(
-                                  controller: guestController,
+                                  controller: guestsController,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) return context.l10n.invalidGuestNumber;
                                     final guests = int.tryParse(value);
@@ -126,7 +114,7 @@ Future<dynamic> showActivityReserveDialoge(
                           children: [
                             TextWidget(
                               text: context.l10n.priceTimesGuests(
-                                int.tryParse(guestController.text.trim()) ?? 1,
+                                int.tryParse(guestsController.text.trim()) ?? 1,
                                 activity.price,
                               ),
                               color: Color(0xFF414141),
@@ -136,7 +124,7 @@ Future<dynamic> showActivityReserveDialoge(
                             Spacer(),
                             TextWidget(
                               text: context.l10n.sarAmount(
-                                _total(activity, guestController)?.toStringAsFixed(2) ?? '---.--',
+                                _total(activity, guestsController)?.toStringAsFixed(2) ?? '---.--',
                               ),
                               color: Color(0xFF414141),
                               fontSize: 16,
@@ -177,9 +165,9 @@ Future<dynamic> showActivityReserveDialoge(
                               Spacer(),
                               TextWidget(
                                 text:
-                                    _total(activity, guestController) == null
+                                    _total(activity, guestsController) == null
                                         ? '---'
-                                        : context.l10n.sarAmount(_total(activity, guestController)!.toStringAsFixed(2)),
+                                        : context.l10n.sarAmount(_total(activity, guestsController)!.toStringAsFixed(2)),
                                 color: Color(0xFF414141),
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,
@@ -207,9 +195,8 @@ Future<dynamic> showActivityReserveDialoge(
                               child: ElevatedButton(
                                 onPressed: () {
                                   if (!formKey.currentState!.validate()) return;
-                                  final date = Utils.parseDate(dateController.text.trim());
-                                  final guests = int.tryParse(guestController.text.trim());
-                                  if (date == null || guests == null || guests <= 0) return;
+                                  final guests = int.tryParse(guestsController.text.trim());
+                                  if (guests == null || guests <= 0) return;
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -219,9 +206,9 @@ Future<dynamic> showActivityReserveDialoge(
                                             item: activity,
                                             guestNumber: guests,
                                             type: ReservationType.activity,
-                                            checkInDate: date.toIso8601String(),
-                                            checkOutDate: date.toIso8601String(),
-                                            totalPrice: (_total(activity, guestController) ?? 0).toDouble(),
+                                            checkInDate: activity.date,
+                                            checkOutDate: activity.date,
+                                            totalPrice: (_total(activity, guestsController) ?? 0).toDouble(),
                                           ),
                                         );
                                       },

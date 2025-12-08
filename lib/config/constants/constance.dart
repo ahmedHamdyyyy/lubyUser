@@ -69,4 +69,13 @@ class AppConst {
   static const String isLoggedInKey = 'is_logged_in';
 
   static const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+
+  // Deep link base used by backend to craft return links back into the app
+  // Examples backend can build:
+  //   lubyuser://open/reservation/<id>
+  //   lubyuser://open/activity/<id>
+  //   lubyuser://open/property/<id>
+  // Using custom scheme deep links (not Firebase Dynamic Links)
+  static const String deepLinkBase = 'lubyuser://open/';
 }
+// sha1   A3:F0:AA:05:78:C3:9A:43:7E:4B:39:55:03:AC:5D:24:FB:52:C0:EE

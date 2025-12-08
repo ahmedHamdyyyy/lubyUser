@@ -35,8 +35,8 @@ class ReservationsCubit extends Cubit<ReservationsState> {
   void createReservation(ReservationModel reservation) async {
     emit(state.copyWith(createReservationStatus: Status.loading));
     try {
-      await _repository.createReservation(reservation);
-      emit(state.copyWith(createReservationStatus: Status.success));
+      final created = await _repository.createReservation(reservation);
+      emit(state.copyWith(createReservationStatus: Status.success, message: created.id));
     } catch (e) {
       emit(state.copyWith(createReservationStatus: Status.error, message: e.toString()));
     }
@@ -45,8 +45,8 @@ class ReservationsCubit extends Cubit<ReservationsState> {
   void updateReservation(ReservationModel reservation) async {
     emit(state.copyWith(updateReservationStatus: Status.loading));
     try {
-      await _repository.updateReservation(reservation);
-      emit(state.copyWith(updateReservationStatus: Status.success));
+      final updated = await _repository.updateReservation(reservation);
+      emit(state.copyWith(updateReservationStatus: Status.success, message: updated.id));
     } catch (e) {
       emit(state.copyWith(updateReservationStatus: Status.error, message: e.toString()));
     }
@@ -67,35 +67,56 @@ class ReservationsCubit extends Cubit<ReservationsState> {
     }
   }
 
-  Future<({String message, bool isSuccess})> initiatePayment(String reservationId) async {
+  void initiatePayment() async {
+    emit(state.copyWith(paymentStatus: PaymentStatus.loading, paymentUrl: ''));
     try {
-      final paymentLink = await _repository.payment(reservationId);
-      return (message: paymentLink, isSuccess: true);
+      final paymentLink = await _repository.payment(state.reservation.id);
+      emit(
+        state.copyWith(
+          paymentStatus: PaymentStatus.paying,
+          paymentUrl: paymentLink.replaceFirst('https://pay.', 'https://sandbox.'),
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(message: e.toString()));
-      return (message: e.toString(), isSuccess: false);
+      emit(state.copyWith(paymentStatus: PaymentStatus.error, message: e.toString(), paymentUrl: ''));
     }
   }
 
-  void updateReservationStatus(String reservationId, ReservationStatus status) async {
-    try {
-      state.reservations.firstWhere((r) => r.id == reservationId);
-      emit(state.copyWith(reservations: [...state.reservations..removeWhere((r) => r.id == reservationId)]));
-    } catch (e) {
-      emit(state.copyWith(message: e.toString()));
-    }
-  }
+  void setPayingInitial() => emit(state.copyWith(paymentStatus: PaymentStatus.initial));
 
-  Future<bool> checkPaymentStatus(String reservationId) async {
+  void setReservation(ReservationModel reservation) => emit(state.copyWith(reservation: reservation));
+
+  // void updateReservationStatus() async {
+  //   try {
+  //     final updatedList = state.reservations
+  //         .map((r) => r.id == reservationId ? r.copyWith(status: status) : r)
+  //         .toList(growable: false);
+  //     emit(state.copyWith(reservations: updatedList));
+  //   } catch (e) {
+  //     emit(state.copyWith(message: e.toString()));
+  //   }
+  // }
+
+  Future<bool> checkPaymentStatus() async {
+    emit(state.copyWith(paymentStatus: PaymentStatus.loading, paymentUrl: ''));
     try {
-      final reservation = await _repository.getReservation(reservationId);
+      final reservation = await _repository.getReservation(state.reservation.id).timeout(const Duration(seconds: 12));
       if (reservation.status == ReservationStatus.completed) {
-        emit(state.copyWith(reservations: state.reservations.map((r) => r.id == reservation.id ? reservation : r).toList()));
+        emit(
+          state.copyWith(
+            reservations: state.reservations.map((r) => r.id == reservation.id ? reservation : r).toList(),
+            paymentStatus: PaymentStatus.success,
+            reservation: reservation,
+            paymentUrl: '',
+          ),
+        );
         return true;
+      } else {
+        emit(state.copyWith(paymentStatus: PaymentStatus.error, paymentUrl: ''));
+        return false;
       }
-      return false;
     } catch (e) {
-      emit(state.copyWith(message: e.toString()));
+      emit(state.copyWith(message: e.toString(), paymentStatus: PaymentStatus.error, paymentUrl: ''));
       return false;
     }
   }

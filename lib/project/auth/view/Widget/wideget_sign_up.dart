@@ -458,7 +458,6 @@ class SignUpHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 22),
         Row(
           children: [
             InkWell(
@@ -555,26 +554,28 @@ class _EditableProfileImageState extends State<EditableProfileImage> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _pickImage,
-      child: Stack(
-        children: [
-          CircleAvatar(
-            radius: 50,
-            backgroundColor: Colors.grey[200],
-            backgroundImage: _selectedImage != null ? FileImage(_selectedImage!) : null,
-            child: _selectedImage == null ? const Icon(Icons.person, size: 50, color: Colors.grey) : null,
-          ),
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: const BoxDecoration(color: AppColors.primaryColor, shape: BoxShape.circle),
-              child: const Icon(Icons.camera_alt, color: Colors.white, size: 20),
+    return Center(
+      child: GestureDetector(
+        onTap: _pickImage,
+        child: Stack(
+          children: [
+            CircleAvatar(
+              radius: 50,
+              backgroundColor: Colors.grey[200],
+              backgroundImage: _selectedImage != null ? FileImage(_selectedImage!) : null,
+              child: _selectedImage == null ? const Icon(Icons.person, size: 50, color: Colors.grey) : null,
             ),
-          ),
-        ],
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: const BoxDecoration(color: AppColors.primaryColor, shape: BoxShape.circle),
+                child: const Icon(Icons.camera_alt, color: Colors.white, size: 20),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -629,39 +630,6 @@ class RegistrationTextField extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-// Terms Checkbox
-class TermsCheckbox extends StatelessWidget {
-  final bool value;
-  final ValueChanged<bool> onChanged;
-
-  const TermsCheckbox({super.key, required this.value, required this.onChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        GestureDetector(
-          onTap: () => onChanged(!value),
-          child:
-              value
-                  ? SvgPicture.asset(ImageAssets.cracalBlack, width: 20, height: 20)
-                  : SvgPicture.asset(ImageAssets.cracalWhite, width: 20, height: 20),
-        ),
-        const SizedBox(width: 10),
-        Text(
-          context.l10n.agreeToTermsAndConditions,
-          style: const TextStyle(
-            fontFamily: 'Poppins',
-            fontSize: 16,
-            color: AppColors.primaryTextColor,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-      ],
     );
   }
 }

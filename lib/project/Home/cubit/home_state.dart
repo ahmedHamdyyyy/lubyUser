@@ -1,7 +1,7 @@
 part of 'home_cubit.dart';
 
 class HomeState extends Equatable {
-  final int currentScreenIndex;
+  final int currentScreenIndex, unreadNotificationsCount;
   final Status getUserStatus, updateUserStatus;
   final UserModel user;
   final Status propertyStatus,
@@ -16,9 +16,11 @@ class HomeState extends Equatable {
   final String msg;
   final List<ReviewModel> reviews;
   final List<NotificationModel> notifications;
+  final bool isSignedIn;
 
   const HomeState({
     this.currentScreenIndex = 0,
+    this.unreadNotificationsCount = 0,
     this.propertiesStatus = Status.initial,
     this.getUserStatus = Status.initial,
     this.readNotificationStatus = Status.initial,
@@ -34,6 +36,7 @@ class HomeState extends Equatable {
     this.reviewStatus = Status.initial,
     this.updateUserStatus = Status.initial,
     this.notifications = const [],
+    this.isSignedIn = false,
   });
 
   HomeState copyWith({
@@ -53,6 +56,8 @@ class HomeState extends Equatable {
     Status? reviewStatus,
     Status? updateUserStatus,
     List<NotificationModel>? notifications,
+    int? unreadNotificationsCount,
+    bool? isSignedIn,
   }) => HomeState(
     currentScreenIndex: currentScreenIndex ?? this.currentScreenIndex,
     getUserStatus: getUserStatus ?? this.getUserStatus,
@@ -70,6 +75,8 @@ class HomeState extends Equatable {
     loadNotificationsStatus: loadNotificationsStatus ?? this.loadNotificationsStatus,
     updateUserStatus: updateUserStatus ?? this.updateUserStatus,
     notifications: notifications ?? this.notifications,
+    unreadNotificationsCount: unreadNotificationsCount ?? this.unreadNotificationsCount,
+    isSignedIn: isSignedIn ?? this.isSignedIn,
   );
 
   @override
@@ -90,5 +97,7 @@ class HomeState extends Equatable {
     loadNotificationsStatus,
     updateUserStatus,
     notifications,
+    unreadNotificationsCount,
+    isSignedIn,
   ];
 }

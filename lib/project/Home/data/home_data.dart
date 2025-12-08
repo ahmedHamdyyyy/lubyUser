@@ -6,18 +6,24 @@ import '../../../../config/constants/api_constance.dart';
 import '../../../../config/constants/constance.dart';
 import '../../../../core/error/dio_error.dart';
 import '../../../../core/services/api_services.dart';
+import '../../../core/services/cach_services.dart';
 import '../../models/notification.dart';
 import '../../models/property.dart';
 import '../../models/review.dart';
 import '../../models/user.dart';
 
 class HomeData {
-  HomeData(this._apiService);
+  HomeData(this._apiService, this._cacheService);
   final ApiService _apiService;
+  final CacheService _cacheService;
   int _currentPropertiesPage = 1;
   int _currentNotificationsPage = 1;
 
+  bool isSignedIn() => (_cacheService.storage.getString(AppConst.accessToken) ?? '').isNotEmpty;
+
   Future<UserModel> fetchUser() async {
+    final isLoggedIn = isSignedIn();
+    if (!isLoggedIn) return UserModel.initial;
     final response = await _apiService.dio.get(ApiConstance.userProfile);
     if (!(response.data['success'] ?? false) || response.data['data'] == null) {
       throw ApiExceptionHandler.handle(
@@ -95,18 +101,12 @@ class HomeData {
     _checkIfSuccess(response);
   }
 
-  Future<UserModel> updateUser({
-    required String firstName,
-    required String lastName,
-    required String phone,
-    required String imagePath,
-  }) async {
+  Future<UserModel> updateUser({required String firstName, required String lastName, required String imagePath}) async {
     final response = await _apiService.dio.put(
       '/auth/update',
       data: FormData.fromMap(<String, dynamic>{
         AppConst.firstName: firstName,
         AppConst.lastName: lastName,
-        AppConst.phone: phone,
         if (imagePath.isNotEmpty && !imagePath.startsWith('http'))
           AppConst.profilePicture: await MultipartFile.fromFile(
             imagePath,
@@ -119,16 +119,20 @@ class HomeData {
     return UserModel.fromJson(response.data['data']);
   }
 
-  Future<({List<NotificationModel> notifications, bool hasNextPage})> fetchNotifications(bool fetchNext) async {
+  Future<({List<NotificationModel> notifications, bool hasNextPage, int unreadNotificationsCount})> fetchNotifications(
+    bool fetchNext,
+  ) async {
     _setNotificationsPage(fetchNext);
     final response = await _apiService.dio.get(
       ApiConstance.notifications,
       queryParameters: {'page': _currentNotificationsPage},
     );
     _checkIfSuccess(response);
+    log(response.data.toString());
     return (
       notifications: ((response.data['data']['data'] as List?) ?? []).map((e) => NotificationModel.fromMap(e)).toList(),
       hasNextPage: (response.data['data']['pagination']['hasNextPage'] as bool?) ?? false,
+      unreadNotificationsCount: (response.data['data']['unreadNotificationsCount'] as int?) ?? 0,
     );
   }
 

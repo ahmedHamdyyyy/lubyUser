@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../config/colors/colors.dart';
+import 'phone_field.dart';
 
 class SocialButton extends StatelessWidget {
   const SocialButton({super.key, required this.imagePath, required this.text, required this.onPressed});
@@ -125,22 +126,18 @@ class _GuestLoginButtonState extends State<GuestLoginButton> with SingleTickerPr
   }
 }
 
-class LoginScreenContent extends StatelessWidget {
-  const LoginScreenContent({
+class SignInScreenContent extends StatelessWidget {
+  const SignInScreenContent({
     super.key,
-    required this.emailController,
-    required this.passwordController,
     required this.onContinue,
     required this.onGoogleContinue,
     required this.onFacebookContinue,
     required this.onGuestLogin,
-    required this.obscurePassword,
-    required this.onTogglePassword,
     required this.onCreateAccount,
+    required this.onPhoneChanged,
   });
-  final VoidCallback onContinue, onGoogleContinue, onFacebookContinue, onGuestLogin, onTogglePassword, onCreateAccount;
-  final TextEditingController emailController, passwordController;
-  final bool obscurePassword;
+  final VoidCallback onContinue, onGoogleContinue, onFacebookContinue, onGuestLogin, onCreateAccount;
+  final ValueChanged<String> onPhoneChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -173,67 +170,7 @@ class LoginScreenContent extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              Container(
-                height: 48,
-                width: double.infinity,
-                decoration: BoxDecoration(border: Border.all(color: Colors.white), borderRadius: BorderRadius.circular(10)),
-                child: TextField(
-                  style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor, fontWeight: FontWeight.w400),
-                  controller: emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.email_outlined, color: AppColors.primaryColor),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: AppColors.primaryColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: AppColors.primaryColor),
-                    ),
-                    hintText: context.l10n.enterYourEmail,
-                    hintStyle: GoogleFonts.poppins(
-                      color: const Color(0xFFCBCBCB),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Container(
-                height: 48,
-                width: double.infinity,
-                decoration: BoxDecoration(border: Border.all(color: Colors.white), borderRadius: BorderRadius.circular(10)),
-                child: TextField(
-                  style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor, fontWeight: FontWeight.w400),
-                  controller: passwordController,
-                  obscureText: obscurePassword,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.lock_outline, color: AppColors.primaryColor),
-                    suffixIcon: IconButton(
-                      icon: Icon(obscurePassword ? Icons.visibility_off : Icons.visibility, color: AppColors.primaryColor),
-                      onPressed: onTogglePassword,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: AppColors.primaryColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: AppColors.primaryColor),
-                    ),
-                    hintText: context.l10n.enterYourPassword,
-                    hintStyle: GoogleFonts.poppins(
-                      color: const Color(0xFFCBCBCB),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
-                  ),
-                ),
-              ),
+              PhoneField(onChanged: onPhoneChanged),
               const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,

@@ -1,5 +1,6 @@
-// ignore_for_file: deprecated_member_use, unnecessary_to_list_in_spreads, avoid_print, library_private_types_in_public_api
+// ignore_for_file: deprecated_member_use, unnecessary_to_list_in_spreads, avoid_print, library_private_types_in_public_api, use_build_context_synchronously
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,42 +10,56 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../../../../../config/colors/colors.dart';
 import '../../../../../../../config/images/image_assets.dart';
-import '../../../../locator.dart';
 import '../../activities/cubit/cubit.dart';
-import '../../activities/view/screens/activity.dart';
-import '../../favorites/cubit/cubit.dart';
-import '../../models/activity.dart';
-import '../../models/favorite.dart';
-import '../../models/property.dart';
-import '../../profile/screens/Notifications/notifications_screen.dart';
-import '../../profile/screens/account/account_info/account_screen.dart';
-import '../../profile/screens/propreties/views/rental_details_view.dart';
+import '../../screens/Notifications/notifications_screen.dart';
+import '../../screens/account/account_info/account_screen.dart';
 import '../cubit/home_cubit.dart';
-import 'select_citi_widget.dart';
+import 'select_city_widget.dart';
+import 'signin_placeholder.dart';
 
-class IconNotifcationHome extends StatefulWidget {
+class IconNotifcationHome extends StatelessWidget {
   const IconNotifcationHome({super.key});
 
   @override
-  _IconNotifcationHome createState() => _IconNotifcationHome();
-}
-
-class _IconNotifcationHome extends State<IconNotifcationHome> {
-  @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: AppColors.primaryColor,
-        shape: BoxShape.rectangle,
-      ),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationsScreen()));
-        },
-        child: SvgPicture.asset(ImageAssets.notificationsIcon, width: 30, height: 30),
+    return InkWell(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationsScreen()));
+      },
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: AppColors.primaryColor,
+          shape: BoxShape.rectangle,
+        ),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            SvgPicture.asset(ImageAssets.notificationsIcon, width: 30, height: 30),
+            Align(
+              alignment: AlignmentDirectional.bottomEnd,
+              child: BlocSelector<HomeCubit, HomeState, int>(
+                selector: (state) => state.unreadNotificationsCount,
+                builder: (context, unreadCount) {
+                  if (unreadCount > 0) {
+                    return Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                      child: Text(
+                        unreadCount > 9 ? '9+' : '$unreadCount',
+                        style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    );
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -85,77 +100,55 @@ Row iconImageTaxt(HomeState state, BuildContext context) {
   return Row(
     children: [
       GestureDetector(
-        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => AccountScreen())),
+        onTap: () async {
+          bool? isLoggedIn = state.isSignedIn;
+          if (!isLoggedIn) {
+            await showSigninPlaceholder(context);
+            return;
+          }
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AccountScreen()));
+        },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(50),
           child:
               state.user.profilePicture.isNotEmpty
-                  ? Image.network(
-                    state.user.profilePicture,
+                  ? CachedNetworkImage(
+                    imageUrl: state.user.profilePicture,
                     width: 50,
                     height: 50,
                     fit: BoxFit.cover,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(50)),
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                    memCacheWidth: 200,
+                    placeholder:
+                        (context, url) => Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(50)),
+                          child: const Center(
+                            child: SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2)),
                           ),
                         ),
-                      );
-                    },
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Colors.blue.shade300, Colors.blue.shade600],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: Icon(Icons.person, color: Colors.white, size: 28),
-                      );
-                    },
+                    errorWidget: (context, url, error) => _fallbackAvatar(),
                   )
-                  : Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.blue.shade300, Colors.blue.shade600],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Icon(Icons.person, color: Colors.white, size: 28),
-                  ),
+                  : _fallbackAvatar(),
         ),
       ),
       const SizedBox(width: 8),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "${state.user.firstName} ${state.user.lastName}",
-            style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            context.l10n.welcomeToOurApp,
-            style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
-          ),
-        ],
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              state.user.id.isNotEmpty ? "${state.user.firstName} ${state.user.lastName}" : context.l10n.guestUser,
+              style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              context.l10n.welcomeToOurApp,
+              style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
       ),
-      Spacer(),
-      IconNotifcationHome(),
+      const IconNotifcationHome(),
     ],
   );
 }
@@ -342,251 +335,6 @@ Widget buildImageSlider(BuildContext context, PageController pageController) {
       ),
       const SizedBox(height: 4), // Reduced from 8 to save space
     ],
-  );
-}
-
-Widget buildPropertyList({
-  required String title,
-  required BuildContext context,
-  required HomeState state,
-  String? selectedPropertyCategory,
-  required ValueChanged<Map<String, dynamic>> onApplyFilters,
-}) {
-  // String? selectedPropertyType, selectedPriceRange, selectedRatingRange;
-
-  // // قائمة أنواع العقارات
-  // final List<String> propertyTypes = [
-  //   context.l10n.propertyTypeApartmentStudios,
-  //   context.l10n.propertyTypeCamps,
-  //   context.l10n.propertyTypeVillas,
-  // ];
-
-  // // قائمة نطاقات الأسعار
-  // final List<String> priceRanges = [context.l10n.priceHighToLow, context.l10n.priceLowToHigh];
-
-  // // قائمة نطاقات التقييم
-  // final List<String> ratingRanges = [context.l10n.ratingHighToLow, context.l10n.ratingDefault];
-
-  return Container(
-    margin: const EdgeInsets.only(bottom: 4),
-    padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Title row - more compact
-        Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.secondTextColor),
-              ),
-              // InkWell(
-              //   onTap: () {
-              //     showFilterOptions(
-              //       context,
-              //       propertyTypes,
-              //       priceRanges,
-              //       ratingRanges,
-              //       selectedPropertyType ?? '',
-              //       selectedPriceRange ?? '',
-              //       selectedRatingRange ?? '',
-              //       onApply: (String sType, String sPrice, String sRating) {
-              //         // Build backend-compatible sort filters
-              //         final Map<String, dynamic> filters = {};
-
-              //         // Price sort
-              //         if (sPrice.isNotEmpty) {
-              //           if (sPrice == context.l10n.priceHighToLow) {
-              //             filters['sort[pricePerNight]'] = 'desc';
-              //           } else if (sPrice == context.l10n.priceLowToHigh) {
-              //             filters['sort[pricePerNight]'] = 'asc';
-              //           }
-              //         }
-
-              //         // Rating sort
-              //         if (sRating.isNotEmpty) {
-              //           if (sRating == context.l10n.ratingHighToLow) {
-              //             filters['sort[averageRating]'] = 'desc';
-              //           } else if (sRating == context.l10n.ratingDefault) {
-              //             // No sort for rating
-              //           }
-              //         }
-
-              //         onApplyFilters(filters);
-              //       },
-              //     );
-              //   },
-              //   child: Container(
-              //     margin: EdgeInsets.only(left: 10),
-              //     decoration: BoxDecoration(
-              //       color: AppColors.primaryColor,
-              //       borderRadius: BorderRadius.circular(10),
-              //       border: Border.all(color: AppColors.primaryColor),
-              //     ),
-              //     child: Image.asset('assets/images/setting-4.png', color: Colors.white, width: 30, height: 30),
-              //   ),
-              // ),
-            ],
-          ),
-        ),
-
-        state.properties.isEmpty
-            ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.search_off, size: 64, color: Colors.grey[400]),
-                  SizedBox(height: 16),
-                  Text(
-                    selectedPropertyCategory == null
-                        ? context.l10n.noPropertiesFound
-                        : context.l10n.noPropertiesFound.replaceFirst('properties', selectedPropertyCategory),
-                    style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[600], fontWeight: FontWeight.w500),
-                  ),
-                ],
-              ),
-            )
-            : GridView.builder(
-              itemCount: state.properties.length,
-              padding: EdgeInsets.zero,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 1 / 1.6,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-              ),
-              itemBuilder: (context, index) => buildPropertyCard(context, state.properties[index]),
-            ),
-      ],
-    ),
-  );
-}
-
-Widget buildPropertyCard(BuildContext context, CustomPropertyModel property) {
-  bool isFavorite = property.isFavorite;
-  return InkWell(
-    onTap: () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => RentalDetailScreen(id: property.id)));
-    },
-    child: Card(
-      color: Colors.white,
-      elevation: 3, // Reduced elevation
-      margin: EdgeInsets.zero,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Image with fixed aspect ratio and heart icon
-          Expanded(
-            child: Stack(
-              alignment: AlignmentDirectional.topEnd,
-              children: [
-                FadeInImage.assetNetwork(
-                  image: property.imageUrl,
-                  width: double.infinity,
-                  height: double.infinity,
-                  fit: BoxFit.cover,
-                  placeholder: 'assets/images/IMAG.png',
-                  placeholderFit: BoxFit.cover,
-                ),
-                StatefulBuilder(
-                  builder:
-                      (context, setState) => IconButton(
-                        onPressed: () {
-                          if (isFavorite) {
-                            getIt<FavoritesCubit>().removeFromFavorites(property.id, FavoriteType.property);
-                          } else {
-                            getIt<FavoritesCubit>().addToFavorites(property.id, FavoriteType.property);
-                          }
-                          setState(() => isFavorite = !isFavorite);
-                        },
-                        icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border, size: 24),
-                      ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        property.type,
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          color: AppColors.secondTextColor,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    Icon(Icons.star, color: AppColors.primaryColor, size: 14),
-                    SizedBox(width: 1),
-                    Text(
-                      property.rate.toString(),
-                      style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 14, color: AppColors.primaryColor),
-                    ),
-                  ],
-                ),
-                Text(
-                  property.address,
-                  style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor, fontWeight: FontWeight.w400),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "${property.guestNumber} ${context.l10n.guests}",
-                      style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor, fontWeight: FontWeight.w400),
-                    ),
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            context.l10n.sarAmount(property.pricePerNight),
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.primaryColor,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        SizedBox(width: 4),
-                        Text(
-                          context.l10n.perNightLabel,
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.grayTextColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    ),
   );
 }
 
@@ -812,152 +560,203 @@ class HomeSearchSection extends StatefulWidget {
 }
 
 class _HomeSearchSectionState extends State<HomeSearchSection> {
-  String? selectedCity, selectedState;
+  String? selectedCity, selectedState; // selectedState = district/neighbourhood
   DateTime? checkInDate, checkOutDate;
   int guestsCount = 0;
 
-  final cities = ['Riyadh', 'Jeddah', 'Dammam', 'Alula', 'Makkah', 'Jazan', 'Tabuk', 'Abha'];
-  final district = ['East Riyadh', 'West Riyadh', 'North Riyadh', 'South Riyadh', 'Central Riyadh', 'Other'];
+  // Real Saudi Arabia major cities (mix of top urban centers + touristic) & regions
+  // We map each city to a curated list of well‑known districts / neighborhoods.
+  final Map<String, List<String>> cityDistricts = {
+    'Riyadh': [
+      'Al Olaya',
+      'Al Malaz',
+      'Al Nakheel',
+      'Al Sulaymaniyah',
+      'Al Rawdah',
+      'Al Yasmin',
+      'Al Wadi',
+      'Al Muruj',
+      'Al Nada',
+      'Diplomatic Quarter',
+    ],
+    'Jeddah': ['Al Hamra', 'Al Zahra', 'Al Shati', 'Al Balad', 'Al Rawdah', 'Al Salama', 'Al Naeem', 'Al Andalus'],
+    'Makkah': ['Ajyad', 'Al Aziziyah', 'Al Shoqiyah', 'Al Misfalah', 'Al Nafaa'],
+    'Madinah': ['Central Area', 'Al Khalidiyyah', 'Quba', 'Al Areej', 'Al Shuhada'],
+    'Dammam': ['Al Faisaliyah', 'Al Mazruiyah', 'Al Badiyah', 'Al Jalawiyah'],
+    'Khobar': ['Al Ulaya', 'Al Aqrabiyah', 'Al Rawabi', 'Corniche', 'Al Shamaliya'],
+    'Dhahran': ['ARAMCO Camp', 'Al Jamiah', 'Al Waha'],
+    'Taif': ['Al Hawiyah', 'Al Shifa', 'Al Faisaliyah', 'Al Masar'],
+    'Abha': ['Al Sadd', 'Al Khandq', 'Al Manhal', 'Al Nuzhah'],
+    'Khamis Mushait': ['Al Dhahran', 'Al Suq', 'Al Safa', 'Al Aziziyah'],
+    'Tabuk': ['Al Mahd', 'Al Qaryah', 'Al Iskan', 'Al Munqar'],
+    'Hail': ['Al Aziziyah', 'Al Salamah', 'Al Samer', 'Al Qusour'],
+    'Jazan': ['Sabya', 'Abu Arish', 'Samtah', 'Baish'],
+    'Najran': ['Al Fahad', 'Al Khalij', 'Al Amana', 'Al Manjoura'],
+    'Al Baha': ['Baljurashi', 'Al Mandaq', 'Al Qura'],
+    'Buraidah': ['Al Iskan', 'Al Khaleej', 'Al Rayyan', 'Al Nakheel'],
+    'Yanbu': ['Industrial City', 'Al Sinaiyah', 'Al Bahr', 'Al Sharm'],
+    'AlUla': ['Al Dirah', 'Al Jadidah', 'Al Hafaier'],
+    'Sakakah': ['Al Quos', 'Al Basateen', 'Al Suwaydi'],
+    'Arar': ['Al Shamal', 'Al Faiha', 'Al Aziziyah'],
+  };
+
+  late final List<String> cities = cityDistricts.keys.toList(growable: false);
 
   @override
-  Widget build(BuildContext context) => Container(
-    padding: EdgeInsets.all(16),
-    margin: EdgeInsets.symmetric(horizontal: 8),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(15),
-      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, spreadRadius: 2)],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CityDropdown(
-          title: context.l10n.cityLabel,
-          hint: context.l10n.cityLabel,
-          list: cities,
-          selectedCity: selectedCity,
-          onChanged: (value) => selectedCity = value,
-        ),
-        SizedBox(height: 12),
-        CityDropdown(
-          title: context.l10n.districtOptionalLabel,
-          hint: context.l10n.districtLabel,
-          list: district,
-          selectedCity: selectedState,
-          onChanged: (value) => selectedState = value,
-        ),
-        SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    context.l10n.checkIn.trim(),
-                    style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.secondTextColor),
-                  ),
-                  SizedBox(height: 6),
-                  HomeInputBox(
-                    text:
-                        checkInDate != null
-                            ? "${checkInDate!.day}/${checkInDate!.month}/${checkInDate!.year}"
-                            : context.l10n.selectDateLabel,
-                    onPressed: () => _selectDate(context, checkInDate, (date) => setState(() => checkInDate = date)),
-                  ),
-                ],
+  Widget build(BuildContext context) {
+    final List<String> districtsForCity = selectedCity != null ? (cityDistricts[selectedCity] ?? const []) : const [];
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, spreadRadius: 2)],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CityDropdown(
+            title: context.l10n.cityLabel,
+            hint: context.l10n.cityLabel,
+            list: cities,
+            selectedCity: selectedCity,
+            onChanged:
+                (value) => setState(() {
+                  selectedCity = value;
+                  selectedState = null; // reset district when city changes
+                }),
+          ),
+          const SizedBox(height: 12),
+          CityDropdown(
+            title: context.l10n.districtOptionalLabel,
+            hint: context.l10n.districtLabel,
+            list: districtsForCity,
+            selectedCity: selectedState,
+            onChanged: (value) => setState(() => selectedState = value),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.l10n.checkIn.trim(),
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.secondTextColor,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    HomeInputBox(
+                      text:
+                          checkInDate != null
+                              ? "${checkInDate!.day}/${checkInDate!.month}/${checkInDate!.year}"
+                              : context.l10n.selectDateLabel,
+                      onPressed: () => _selectDate(context, checkInDate, (date) => setState(() => checkInDate = date)),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    context.l10n.checkOut.trim(),
-                    style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.secondTextColor),
-                  ),
-                  SizedBox(height: 6),
-                  HomeInputBox(
-                    text:
-                        checkOutDate != null
-                            ? "${checkOutDate!.day}/${checkOutDate!.month}/${checkOutDate!.year}"
-                            : context.l10n.selectDateLabel,
-                    onPressed: () {
-                      _selectDate(
-                        context,
-                        checkOutDate,
-                        (date) => setState(() => checkOutDate = date),
-                        checkInDate: checkInDate,
-                      );
-                    },
-                  ),
-                ],
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.l10n.checkOut.trim(),
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.secondTextColor,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    HomeInputBox(
+                      text:
+                          checkOutDate != null
+                              ? "${checkOutDate!.day}/${checkOutDate!.month}/${checkOutDate!.year}"
+                              : context.l10n.selectDateLabel,
+                      onPressed: () {
+                        _selectDate(
+                          context,
+                          checkOutDate,
+                          (date) => setState(() => checkOutDate = date),
+                          checkInDate: checkInDate,
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
-        SizedBox(height: 12),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              context.l10n.guestsNoLabel,
-              style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.secondTextColor),
-            ),
-            SizedBox(height: 6),
-            HomeGuestsSelector(guestsCount: guestsCount, onChanged: (guests) => guestsCount = guests),
-          ],
-        ),
-        SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-              child: ElevatedButton(
+            ],
+          ),
+          const SizedBox(height: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                context.l10n.guestsNoLabel,
+                style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.secondTextColor),
+              ),
+              const SizedBox(height: 6),
+              HomeGuestsSelector(guestsCount: guestsCount, onChanged: (guests) => guestsCount = guests),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    backgroundColor: AppColors.primaryColor,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  onPressed: () {
+                    String? fmt(DateTime? d) => d?.toIso8601String().split('T').first;
+                    widget.onSearch({
+                      if (selectedCity != null) 'filter[city]': selectedCity,
+                      if (selectedState != null) 'filter[state]': selectedState,
+                      if (checkInDate != null) 'filter[startDate]': fmt(checkInDate),
+                      if (checkOutDate != null) 'filter[endDate]': fmt(checkOutDate),
+                      if (guestsCount > 0) 'filter[guestNumber]': guestsCount,
+                    });
+                  },
+                  child: Text(
+                    context.l10n.commonSearch,
+                    style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
                   backgroundColor: AppColors.primaryColor,
-                  padding: EdgeInsets.symmetric(vertical: 14),
                 ),
                 onPressed: () {
-                  String? fmt(DateTime? d) => d?.toIso8601String().split('T').first;
-                  widget.onSearch({
-                    if (selectedCity != null) 'filter[city]': selectedCity,
-                    if (selectedState != null) 'filter[state]': selectedState,
-                    if (checkInDate != null) 'filter[startDate]': fmt(checkInDate),
-                    if (checkOutDate != null) 'filter[endDate]': fmt(checkOutDate),
-                    if (guestsCount > 0) 'filter[guestNumber]': guestsCount,
-                  });
+                  selectedCity = null;
+                  selectedState = null;
+                  checkInDate = null;
+                  checkOutDate = null;
+                  guestsCount = 0;
+                  setState(() {});
+                  widget.onSearch({});
                 },
-                child: Text(
-                  context.l10n.commonSearch,
-                  style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white),
-                ),
+                child: const Icon(Icons.filter_list_off, color: Colors.white),
               ),
-            ),
-            SizedBox(width: 8),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                padding: EdgeInsets.symmetric(vertical: 14),
-                backgroundColor: AppColors.primaryColor,
-              ),
-              onPressed: () {
-                selectedCity = null;
-                selectedState = null;
-                checkInDate = null;
-                checkOutDate = null;
-                guestsCount = 0;
-                setState(() {});
-                widget.onSearch({});
-              },
-              child: Icon(Icons.filter_list_off, color: Colors.white),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
   Future<void> _selectDate(
     BuildContext context,
@@ -977,6 +776,20 @@ class _HomeSearchSectionState extends State<HomeSearchSection> {
     }
   }
 }
+
+Widget _fallbackAvatar() => Container(
+  width: 50,
+  height: 50,
+  decoration: BoxDecoration(
+    gradient: LinearGradient(
+      colors: [Colors.blue.shade300, Colors.blue.shade600],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+    borderRadius: BorderRadius.circular(50),
+  ),
+  child: const Icon(Icons.person, color: Colors.white, size: 28),
+);
 
 class HomeInputBox extends StatelessWidget {
   final String text;
@@ -1144,233 +957,4 @@ class HomeCategoryButtons extends StatelessWidget {
       },
     );
   }
-}
-
-Widget buildActivitiesList({
-  required String title,
-  required BuildContext context,
-  required ActivitiesState state,
-  ValueChanged<Map<String, dynamic>>? onApplyFilters,
-}) {
-  return Container(
-    margin: const EdgeInsets.only(bottom: 4),
-    padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Title row
-        Padding(
-          padding: const EdgeInsets.only(bottom: 4.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.secondTextColor),
-              ),
-              if (onApplyFilters != null)
-                InkWell(
-                  onTap: () {
-                    // Reuse bottom sheet to apply sorting on activities
-                    showFilterOptions(
-                      context,
-                      const [], // no type radios for now
-                      [context.l10n.priceHighToLow, context.l10n.priceLowToHigh],
-                      [context.l10n.ratingHighToLow, context.l10n.ratingDefault],
-                      '',
-                      '',
-                      '',
-                      onApply: (String sType, String sPrice, String sRating) {
-                        final Map<String, dynamic> filters = {};
-                        // Activities price field is 'price'
-                        if (sPrice.isNotEmpty) {
-                          if (sPrice == context.l10n.priceHighToLow) {
-                            filters['sort[price]'] = 'desc';
-                          } else if (sPrice == context.l10n.priceLowToHigh) {
-                            filters['sort[price]'] = 'asc';
-                          }
-                        }
-                        if (sRating.isNotEmpty) {
-                          if (sRating == context.l10n.ratingHighToLow) {
-                            filters['sort[averageRating]'] = 'desc';
-                          }
-                        }
-                        onApplyFilters(filters);
-                      },
-                    );
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(left: 10),
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryColor,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: AppColors.primaryColor),
-                    ),
-                    child: Image.asset('assets/images/setting-4.png', color: Colors.white, width: 30, height: 30),
-                  ),
-                ),
-            ],
-          ),
-        ),
-
-        state.activities.isEmpty
-            ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.search_off, size: 64, color: Colors.grey[400]),
-                  SizedBox(height: 16),
-                  Text(
-                    context.l10n.noActivitiesFound,
-                    style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[600], fontWeight: FontWeight.w500),
-                  ),
-                ],
-              ),
-            )
-            : GridView.builder(
-              itemCount: state.activities.length,
-              padding: EdgeInsets.zero,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 1 / 1.6,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-              ),
-              itemBuilder: (context, index) {
-                return buildActivityCard(context, state.activities[index], index);
-              },
-            ),
-      ],
-    ),
-  );
-}
-
-Widget buildActivityCard(BuildContext context, CustomActivityModel activity, int index) {
-  bool isFavorite = activity.isFavorite;
-  return InkWell(
-    onTap: () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => ActivityScreen(id: activity.id)));
-    },
-    child: Card(
-      color: Colors.white,
-      elevation: 3,
-      margin: EdgeInsets.zero,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Image with fixed aspect ratio and heart icon
-          Expanded(
-            child: Stack(
-              alignment: AlignmentDirectional.topEnd,
-              children: [
-                FadeInImage.assetNetwork(
-                  image: activity.image,
-                  width: double.infinity,
-                  height: double.infinity,
-                  fit: BoxFit.cover,
-                  placeholder: 'assets/images/IMAG.png',
-                  placeholderFit: BoxFit.cover,
-                ),
-                StatefulBuilder(
-                  builder:
-                      (context, setState) => IconButton(
-                        onPressed: () {
-                          if (isFavorite) {
-                            getIt<FavoritesCubit>().removeFromFavorites(activity.id, FavoriteType.activity);
-                          } else {
-                            getIt<FavoritesCubit>().addToFavorites(activity.id, FavoriteType.activity);
-                          }
-                          setState(() => isFavorite = !isFavorite);
-                        },
-                        icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border, size: 24),
-                      ),
-                ),
-              ],
-            ),
-          ),
-          // Content
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        activity.name.isNotEmpty ? activity.name : "Activity",
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          color: AppColors.secondTextColor,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    Icon(Icons.star, color: AppColors.primaryColor, size: 14),
-                    SizedBox(width: 1),
-                    Text(
-                      activity.rate.toString(),
-                      style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 14, color: AppColors.primaryColor),
-                    ),
-                  ],
-                ),
-
-                // Activity type or location
-                Text(
-                  context.l10n.touristActivity,
-                  style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor, fontWeight: FontWeight.w400),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-
-                // Duration and price
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.l10n.fullDayExperience,
-                      style: GoogleFonts.poppins(fontSize: 14, color: AppColors.grayTextColor, fontWeight: FontWeight.w400),
-                    ),
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            context.l10n.fromSarPrice('299'),
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.primaryColor,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        SizedBox(width: 4),
-                        Text(
-                          context.l10n.perPersonLabel,
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.grayTextColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
 }

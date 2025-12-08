@@ -74,30 +74,53 @@ class NotificationModel extends Equatable {
   //     updatedAt: Date;
   // }
   factory NotificationModel.fromMap(Map<String, dynamic> map) {
-    final type = NotificationTypes.values.firstWhere(
-      (e) => e.toString().split('.').last == map['type'],
-      orElse: () => NotificationTypes.initial,
-    );
-    String entityId = '';
+    NotificationTypes type = NotificationTypes.initial;
+    switch (map['type']) {
+      case 'vendor_verification':
+        type = NotificationTypes.vendorVerification;
+        break;
+      case 'activity_verification':
+        type = NotificationTypes.activityVerification;
+        break;
+      case 'property_verification':
+        type = NotificationTypes.propertyVerification;
+        break;
+      case 'new_activity':
+        type = NotificationTypes.newActivity;
+        break;
+      case 'new_property':
+        type = NotificationTypes.newProperty;
+        break;
+      case 'new_registration':
+        type = NotificationTypes.newRegistration;
+        break;
+      case 'confirm_payment':
+        type = NotificationTypes.confirmPayment;
+        break;
+      case 'refund':
+        type = NotificationTypes.refund;
+        break;
+      default:
+        type = NotificationTypes.initial;
+    }
+    String entityKey = '';
     switch (type) {
       case NotificationTypes.newActivity:
       case NotificationTypes.activityVerification:
-        entityId = (map['activityId'] ?? '').toString();
+        entityKey = 'activityId';
         break;
       case NotificationTypes.propertyVerification:
       case NotificationTypes.newProperty:
-        entityId = (map['propertyId'] ?? '').toString();
+        entityKey = 'propertyId';
         break;
       case NotificationTypes.newRegistration:
       case NotificationTypes.confirmPayment:
-        entityId = (map['registrationId'] ?? '').toString();
-        break;
-      case NotificationTypes.refund:
-        entityId = (map['registrationId'] ?? '').toString();
+        entityKey = 'registrationId';
         break;
       default:
-        entityId = '';
+        entityKey = '';
     }
+    final entityId = entityKey.isNotEmpty ? (map[entityKey]?.toString() ?? '') : '';
     return NotificationModel(
       id: map['_id'] ?? '',
       title: map['title'] ?? '',

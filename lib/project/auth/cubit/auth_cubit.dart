@@ -42,15 +42,26 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(signupStatus: Status.initial));
   }
 
-  Future<void> signin({required String email, required String password}) async {
-    emit(state.copyWith(signinStatus: Status.loading));
+  Future<void> initiateSignin({required String phone}) async {
+    emit(state.copyWith(initiateSigninStatus: Status.loading));
     try {
-      final user = await _repo.signin(email: email, password: password);
-      emit(state.copyWith(msg: 'Authentication successful', signinStatus: Status.success, user: user));
+      await _repo.initiateSignin(phone: phone);
+      emit(state.copyWith(msg: 'OTP sent successfully', initiateSigninStatus: Status.success));
     } catch (e) {
-      emit(state.copyWith(signinStatus: Status.error, msg: _normalizeError(e)));
+      emit(state.copyWith(initiateSigninStatus: Status.error, msg: _normalizeError(e)));
     }
-    emit(state.copyWith(signinStatus: Status.initial));
+    emit(state.copyWith(initiateSigninStatus: Status.initial));
+  }
+
+  Future<void> verifySignin({required String phone, required String code}) async {
+    emit(state.copyWith(verifySigninStatus: Status.loading));
+    try {
+      final user = await _repo.verifySignin(phone: phone, code: code);
+      emit(state.copyWith(msg: 'Authentication successful', verifySigninStatus: Status.success, user: user));
+    } catch (e) {
+      emit(state.copyWith(verifySigninStatus: Status.error, msg: _normalizeError(e)));
+    }
+    emit(state.copyWith(verifySigninStatus: Status.initial));
   }
 
   void signout() async {
@@ -64,21 +75,21 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(signoutStatus: Status.initial));
   }
 
-  void verifyEmail(String email) async {
-    emit(state.copyWith(verifyEmailStatus: Status.loading));
+  void initiateSignup(String phone) async {
+    emit(state.copyWith(initiateSignupStatus: Status.loading));
     try {
-      await _repo.verifyEmail(email: email);
-      emit(state.copyWith(verifyEmailStatus: Status.success, msg: 'Verification email sent'));
+      await _repo.verifyPhone(phone: phone);
+      emit(state.copyWith(initiateSignupStatus: Status.success, msg: 'OTP sent to your phone'));
     } catch (e) {
-      emit(state.copyWith(verifyEmailStatus: Status.error, msg: e.toString()));
+      emit(state.copyWith(initiateSignupStatus: Status.error, msg: e.toString()));
     }
-    emit(state.copyWith(verifyEmailStatus: Status.initial));
+    emit(state.copyWith(initiateSignupStatus: Status.initial));
   }
 
-  void confirmOtp(String email, String otp, bool willSignup) async {
+  void confirmOtp(String phone, String otp, bool willSignup) async {
     emit(state.copyWith(confirmOtpStatus: Status.loading));
     try {
-      await _repo.confirmOtp(email, otp, willSignup);
+      await _repo.confirmOtp(phone, otp, willSignup);
       emit(state.copyWith(confirmOtpStatus: Status.success));
     } catch (e) {
       emit(state.copyWith(confirmOtpStatus: Status.error, msg: e.toString()));

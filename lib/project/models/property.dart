@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
 
 import '../../../config/constants/constance.dart';
@@ -7,10 +9,10 @@ import 'review.dart';
 import 'vendor.dart';
 
 // ignore: constant_identifier_names
-enum PropertyType { apartment, house, cabin, guest_house, studio, yacht, cruise }
+enum PropertyType { apartment, house, studio }
 
 class CustomPropertyModel extends Equatable {
-  final String id, type, imageUrl, address;
+  final String id, type, image, address;
   final int guestNumber;
   final bool isFavorite;
   final double rate, pricePerNight;
@@ -18,7 +20,7 @@ class CustomPropertyModel extends Equatable {
   const CustomPropertyModel({
     required this.id,
     required this.type,
-    required this.imageUrl,
+    required this.image,
     required this.address,
     required this.guestNumber,
     required this.isFavorite,
@@ -38,7 +40,7 @@ class CustomPropertyModel extends Equatable {
   }) => CustomPropertyModel(
     id: id ?? this.id,
     type: type ?? this.type,
-    imageUrl: imageUrl ?? this.imageUrl,
+    image: imageUrl ?? this.image,
     address: address ?? this.address,
     guestNumber: guestNumber ?? this.guestNumber,
     isFavorite: isFavorite ?? this.isFavorite,
@@ -46,19 +48,22 @@ class CustomPropertyModel extends Equatable {
     pricePerNight: pricePerNight ?? this.pricePerNight,
   );
 
-  factory CustomPropertyModel.fromJson(Map<String, dynamic> json) => CustomPropertyModel(
-    id: json[AppConst.id] ?? '',
-    type: json[AppConst.type] ?? '',
-    imageUrl: json[AppConst.medias]?.firstWhere((media) => !media.toString().endsWith('mp4'), orElse: () => ''),
-    address: json[AppConst.address]?['formattedAddress'] ?? '',
-    guestNumber: json[AppConst.guestNumber] ?? 0,
-    isFavorite: json[AppConst.isFavorite] ?? false,
-    rate: (json['averageRating'] ?? 0.0).toDouble(),
-    pricePerNight: (json[AppConst.pricePerNight] ?? 0.0).toDouble(),
-  );
+  factory CustomPropertyModel.fromJson(Map<String, dynamic> json) {
+    log(json.toString());
+    return CustomPropertyModel(
+      id: json[AppConst.id] ?? '',
+      type: json[AppConst.type] ?? '',
+      image: json[AppConst.medias]?.firstWhere((media) => !media.toString().endsWith('mp4'), orElse: () => ''),
+      address: json[AppConst.address]?['formattedAddress'] ?? '',
+      guestNumber: json[AppConst.guestNumber] ?? 0,
+      isFavorite: json[AppConst.isFavorite] ?? false,
+      rate: (json['averageRating'] ?? 0.0).toDouble(),
+      pricePerNight: (json[AppConst.pricePerNight] ?? 0.0).toDouble(),
+    );
+  }
 
   @override
-  List<Object?> get props => [id, type, imageUrl, address, guestNumber, isFavorite, rate, pricePerNight];
+  List<Object?> get props => [id, type, image, address, guestNumber, isFavorite, rate, pricePerNight];
 }
 
 class PropertyModel extends Equatable {

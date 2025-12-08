@@ -1,0 +1,14 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "lubyappp",
+            "package_name": "com.lubyappp.luby2",
+            "sha256_cert_fingerprints": [
+                "A3:F0:AA:05:78:C3:9A:43:7E:4B:39:55:03:AC:5D:24:FB:52:C0:EE"
+            ]
+        }
+    }
+]

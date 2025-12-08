@@ -45,6 +45,18 @@
 		<true/>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
+		<!-- URL Schemes for deep links (lubyuser://app/...) -->
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleURLName</key>
+				<string>com.lubyuser.app</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>lubyuser</string>
+				</array>
+			</dict>
+		</array>
 		<!-- iOS notification permissions -->
 		<key>UIBackgroundModes</key>
 		<array>
@@ -53,5 +65,10 @@
 		</array>
 		<key>FirebaseAppDelegateProxyEnabled</key>
 		<true/>
+		<!-- Associated Domains for universal links -->
+		<key>com.apple.developer.associated-domains</key>
+		<array>
+			<string>applinks:dashboard.lubyksa.com</string>
+		</array>
 	</dict>
 </plist>

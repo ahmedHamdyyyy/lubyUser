@@ -2,15 +2,22 @@ part of 'auth_cubit.dart';
 
 class AuthState extends Equatable {
   final String msg;
-  final Status signupStatus, signinStatus, signoutStatus, verifyEmailStatus, resetPasswordStatus, confirmOtpStatus;
+  final Status signupStatus,
+      initiateSigninStatus,
+      verifySigninStatus,
+      signoutStatus,
+      initiateSignupStatus,
+      resetPasswordStatus,
+      confirmOtpStatus;
   final UserModel user;
 
   const AuthState({
     this.msg = '',
     this.signupStatus = Status.initial,
-    this.signinStatus = Status.initial,
+    this.initiateSigninStatus = Status.initial,
+    this.verifySigninStatus = Status.initial,
     this.signoutStatus = Status.initial,
-    this.verifyEmailStatus = Status.initial,
+    this.initiateSignupStatus = Status.initial,
     this.resetPasswordStatus = Status.initial,
     this.confirmOtpStatus = Status.initial,
     this.user = UserModel.initial,
@@ -18,18 +25,20 @@ class AuthState extends Equatable {
   AuthState copyWith({
     String? msg,
     Status? signupStatus,
-    Status? signinStatus,
+    Status? initiateSigninStatus,
+    Status? verifySigninStatus,
     Status? signoutStatus,
-    Status? verifyEmailStatus,
+    Status? initiateSignupStatus,
     UserModel? user,
     Status? resetPasswordStatus,
     Status? confirmOtpStatus,
   }) => AuthState(
     msg: msg ?? this.msg,
     signupStatus: signupStatus ?? this.signupStatus,
-    signinStatus: signinStatus ?? this.signinStatus,
+    initiateSigninStatus: initiateSigninStatus ?? this.initiateSigninStatus,
+    verifySigninStatus: verifySigninStatus ?? this.verifySigninStatus,
     signoutStatus: signoutStatus ?? this.signoutStatus,
-    verifyEmailStatus: verifyEmailStatus ?? this.verifyEmailStatus,
+    initiateSignupStatus: initiateSignupStatus ?? this.initiateSignupStatus,
     resetPasswordStatus: resetPasswordStatus ?? this.resetPasswordStatus,
     confirmOtpStatus: confirmOtpStatus ?? this.confirmOtpStatus,
     user: user ?? this.user,
@@ -39,9 +48,10 @@ class AuthState extends Equatable {
   List<Object?> get props => [
     msg,
     signupStatus,
-    signinStatus,
+    initiateSigninStatus,
+    verifySigninStatus,
     signoutStatus,
-    verifyEmailStatus,
+    initiateSignupStatus,
     user,
     confirmOtpStatus,
     resetPasswordStatus,

@@ -4,18 +4,21 @@ import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../../../../../config/images/image_assets.dart';
 
-Positioned iconImageTaxtVendor() => const Positioned(
+Positioned iconImageTaxtVendor(BuildContext context) => Positioned(
   top: 50,
   left: 20,
   child: Row(
     children: [
-      CircleAvatar(radius: 30, backgroundImage: AssetImage(ImageAssets.profileImage)),
-      SizedBox(width: 8), // مسافة بين الأيقونة والنص
+      const CircleAvatar(radius: 30, backgroundImage: AssetImage(ImageAssets.profileImage)),
+      const SizedBox(width: 8),
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Mostafa Abdalah", style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
-          Text("Welcome to our App", style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400)),
+          const Text("Mostafa Abdalah", style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
+          Text(
+            context.l10n.welcomeToOurApp,
+            style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400),
+          ),
         ],
       ),
     ],

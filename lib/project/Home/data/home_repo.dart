@@ -11,14 +11,7 @@ class HomeRespository {
   const HomeRespository(this._homeData);
   final HomeData _homeData;
 
-  /* 
-  UserModel getCachedUser() {
-    try {
-      return _homeData.getCachedUser();
-    } catch (e) {
-      throw Exception('حدث خطأ غير متوقع يرجي اعادة تسجيل الدخول');
-    }
-  } */
+  bool isSignedIn() => _homeData.isSignedIn();
 
   Future<UserModel> fetchUser() async {
     try {
@@ -98,14 +91,9 @@ class HomeRespository {
     }
   }
 
-  Future<UserModel> updateUser({
-    required String firstName,
-    required String lastName,
-    required String phone,
-    required String imagePath,
-  }) async {
+  Future<UserModel> updateUser({required String firstName, required String lastName, required String imagePath}) async {
     try {
-      return await _homeData.updateUser(firstName: firstName, lastName: lastName, phone: phone, imagePath: imagePath);
+      return await _homeData.updateUser(firstName: firstName, lastName: lastName, imagePath: imagePath);
     } on DioException catch (e) {
       debugPrint('DioException: ${e.error}');
       throw Exception(e.response?.data['error'].toString());
@@ -114,7 +102,9 @@ class HomeRespository {
     }
   }
 
-  Future<({List<NotificationModel> notifications, bool hasNextPage})> fetchNotifications(bool fetchNext) async {
+  Future<({List<NotificationModel> notifications, bool hasNextPage, int unreadNotificationsCount})> fetchNotifications(
+    bool fetchNext,
+  ) async {
     try {
       return await _homeData.fetchNotifications(fetchNext);
     } on DioException catch (e) {

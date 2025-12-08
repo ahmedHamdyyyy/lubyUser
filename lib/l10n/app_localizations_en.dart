@@ -57,15 +57,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noConversationsYet => 'No conversations yet';
 
   @override
-  String get startByContactingSellers =>
-      'Start by contacting the sellers and the conversations will be displayed here';
+  String get startByContactingSellers => 'Start by contacting the sellers and the conversations will be displayed here';
 
   @override
   String get deleteConversationTitle => 'Delete conversation';
 
   @override
-  String get deleteConversationBody =>
-      'Are you sure you want to delete this conversation? This cannot be undone.';
+  String get deleteConversationBody => 'Are you sure you want to delete this conversation? This cannot be undone.';
 
   @override
   String get commonClose => 'Close';
@@ -139,7 +137,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reservationsTitle => 'Reservation';
 
   @override
-  String get tabPending => 'Pending';
+  String get tabPending => 'Draft';
 
   @override
   String get tabCurrent => 'Current';
@@ -151,21 +149,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get propertiesSection => 'Properties';
 
   @override
-  String get activitiesSection => 'Activities';
+  String get activitiesSection => 'Premium Services';
 
   @override
   String get noPropertyReservations => 'No Property Reservations';
 
   @override
-  String get noCurrentPropertyReservations =>
-      'You don\'t have any current property reservations.';
+  String get noCurrentPropertyReservations => 'You don\'t have any current property reservations.';
 
   @override
   String get noActivityReservations => 'No Activity Reservations';
 
   @override
-  String get noCurrentActivityReservations =>
-      'You don\'t have any current activity reservations.';
+  String get noCurrentActivityReservations => 'You don\'t have any current activity reservations.';
 
   @override
   String get viewReservationDetails => 'View Reservation Details';
@@ -192,8 +188,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noCoordinatesProvided => 'No coordinates provided';
 
   @override
-  String get noMappedLocationYet =>
-      'This property does not have a mapped location yet.';
+  String get noMappedLocationYet => 'This property does not have a mapped location yet.';
 
   @override
   String get openInGoogleMaps => 'Open in Google Maps';
@@ -208,8 +203,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yourNotifications => 'Your Notifications';
 
   @override
-  String get noNotificationsRightNow =>
-      'You don\'t have any notifications right now';
+  String get noNotificationsRightNow => 'You don\'t have any notifications right now';
 
   @override
   String get notificationNameLabel => 'Notification Name';
@@ -218,8 +212,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginOrRegister => 'Log in or register';
 
   @override
-  String get pleaseLoginToCompleteBooking =>
-      'Please log in or register first to\ncomplete the booking';
+  String get pleaseLoginToCompleteBooking => 'Please log in or register first to\ncomplete the booking';
 
   @override
   String get commonVat => 'Vat';
@@ -258,8 +251,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get payNow => 'Pay Now';
 
   @override
-  String get paymentNotCompleted =>
-      'Payment not completed yet. Please complete the payment.';
+  String get paymentNotCompleted => 'Payment not completed yet. Please complete the payment.';
 
   @override
   String get canceledLabel => 'Canceled...';
@@ -277,12 +269,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get thankYou => 'Thank you';
 
   @override
-  String get reservationCompleted =>
-      'Your reservation has been\nsuccessfully completed.';
+  String get reservationCompleted => 'Your reservation has been\nsuccessfully completed.';
 
   @override
-  String get paymentDisclaimer =>
-      'Loby disclaims responsibility for any financial\ntransfers outside the platform.\nIf there is a deposit or a balance, it is paid\nbefore you enter.';
+  String get paymentDisclaimer => 'Luby disclaims responsibility for any financial\ntransfers outside the platform.\nIf there is a deposit or a balance, it is paid\nbefore you enter.';
 
   @override
   String get uploadStudioPhotosOrVideo => 'Upload studio photos or video';
@@ -303,8 +293,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorLabel => 'Error';
 
   @override
-  String get cardDetailsUpdatedSuccessfully =>
-      'Card details updated successfully';
+  String get cardDetailsUpdatedSuccessfully => 'Card details updated successfully';
 
   @override
   String get commonYes => 'Yes';
@@ -325,7 +314,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rentalService => 'Rental Service';
 
   @override
-  String get touristActivities => 'Tourist Activities';
+  String get touristActivities => 'Premium Services';
 
   @override
   String get noFavoritesFound => 'No favorites found';
@@ -334,12 +323,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectOnlyJpgOrPng => 'Please select only JPG or PNG images';
 
   @override
-  String get imageTooLarge =>
-      'The image is too large. It must be less than 2 MB';
+  String get imageTooLarge => 'The image is too large. It must be less than 2 MB';
 
   @override
-  String get errorSelectingImage =>
-      'An error occurred while selecting the image';
+  String get errorSelectingImage => 'An error occurred while selecting the image';
 
   @override
   String get orContinueWith => 'Or continue with';
@@ -348,13 +335,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get skip => 'Skip';
 
   @override
-  String get verifyEmailTitle => 'Verify Email';
+  String get verifyPhoneTitle => 'Verify Phone';
 
   @override
   String get enterYourEmail => 'Enter your email';
 
   @override
-  String get sendVerificationEmail => 'Send Verification Email';
+  String get sendVerificationPhone => 'Send Verification Phone';
 
   @override
   String get resetPassword => 'Reset Password';
@@ -444,8 +431,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteAccount => 'Delete Account';
 
   @override
-  String get areYouSureDeleteAccount =>
-      'Are you sure about deleting your account?';
+  String get areYouSureDeleteAccount => 'Are you sure about deleting your account?';
 
   @override
   String get signIn => 'Sign In';
@@ -454,8 +440,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createAccount => 'Create Account';
 
   @override
-  String get signInInstruction =>
-      'Please enter your email and password to sign in to your account.';
+  String get signInInstruction => 'Please enter your email and password to sign in to your account.';
 
   @override
   String get searchLocationHint => 'Location (city, area, or property name)';
@@ -494,8 +479,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get checkInDateMustBeInFuture => 'Check-in date must be in the future';
 
   @override
-  String get dateMustBeWithinAvailability =>
-      'Date must be within property availability';
+  String get dateMustBeWithinAvailability => 'Date must be within property availability';
 
   @override
   String get checkOutMustBeAfterCheckIn => 'Check-out must be after check-in';
@@ -516,8 +500,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notChargedYet => 'You won\'t be charged yet';
 
   @override
-  String get checkInBeforeCheckOut =>
-      'Check-in date must be before check-out date';
+  String get checkInBeforeCheckOut => 'Check-in date must be before check-out date';
 
   @override
   String get reserveLabel => 'Reserve';
@@ -564,7 +547,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchForAccommodations => 'Search for Accommodations';
 
   @override
-  String get propertyTypeApartmentStudios => 'Apartment - Studios';
+  String get propertyTypeApartmentStudios => 'Studios';
 
   @override
   String get propertyTypeCamps => 'Camps';
@@ -594,8 +577,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get resendComingSoon => 'Resend functionality coming soon';
 
   @override
-  String get mobileLoginPrompt =>
-      'Please enter your mobile number to create an account or log in.';
+  String get mobileLoginPrompt => 'Please enter your mobile number to create an account or log in.';
 
   @override
   String get requestWasCancelled => 'Request was cancelled';
@@ -625,7 +607,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sliderExperienceLuxury => 'EXPERIENCE LUXURY LIVING';
 
   @override
-  String get noActivitiesFound => 'No activities found';
+  String get noActivitiesFound => 'No Premium Services found';
 
   @override
   String get noPropertiesFound => 'No properties found';
@@ -726,8 +708,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signUp => 'Sign Up';
 
   @override
-  String get signUpInstruction =>
-      'Create your account to continue using the app';
+  String get signUpInstruction => 'Create your account to continue using the app';
 
   @override
   String get passwordTooShort => 'Password must be at least 6 characters';
@@ -771,8 +752,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get reservationCompletedShort =>
-      'Your studio reservation has been successfully completed!';
+  String get reservationCompletedShort => 'Your studio reservation has been successfully completed!';
 
   @override
   String get mostViewed => 'Most Viewed';
@@ -797,15 +777,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingExploreSaudiTitle => 'Explore Saudi Arabia';
 
   @override
-  String get onboardingExploreSaudiDescription =>
-      'Lorem ipsum dolor sit amet, consecr adipiscing elit. Ut hendrerit triueasdwfa prm gravida felis, sociis in felis.';
+  String get onboardingExploreSaudiDescription => 'Lorem ipsum dolor sit amet, consecr adipiscing elit. Ut hendrerit triueasdwfa prm gravida felis, sociis in felis.';
 
   @override
-  String get welcomeToLobyTitle => 'Welcome to LOBY';
+  String get welcomeToLobyTitle => 'Welcome to LUBY';
 
   @override
-  String get welcomeToLobyDescription =>
-      'LLorem ipsum dolor sit amet, consecr adipiscing elit. Ut hendrerit triueasdwfa prm gravida felis, sociis in felis.';
+  String get welcomeToLobyDescription => 'LLorem ipsum dolor sit amet, consecr adipiscing elit. Ut hendrerit triueasdwfa prm gravida felis, sociis in felis.';
 
   @override
   String get letsStarted => 'Let\'s Started';
@@ -891,12 +869,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String availableForRange(
-    Object from,
-    Object nights,
-    Object nightsLabel,
-    Object to,
-  ) {
+  String availableForRange(Object from, Object nights, Object nightsLabel, Object to) {
     return 'Available for $nights $nightsLabel from $from to $to';
   }
 
@@ -945,4 +918,76 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reservationStatusCanceled => 'Canceled';
+
+  @override
+  String get reservationStatusConfirmed => 'Confirmed';
+
+  @override
+  String get reservationStatusRefund => 'Refund';
+
+  @override
+  String get refunded => 'Refunded';
+
+  @override
+  String get guestUser => 'Guest User';
+
+  @override
+  String get loginToGetThisFeature => 'Please log in to use this feature';
+
+  @override
+  String get privacyPolicyTitle => 'Privacy Policy';
+
+  @override
+  String get termsAndConditionsTitle => 'Terms and Conditions';
+
+  @override
+  String get hostWithUsTitle => 'Host With Us';
+
+  @override
+  String get aboutLobyTitle => 'About Loby';
+
+  @override
+  String get registerLabel => 'Register';
+
+  @override
+  String get passwordResetSuccess => 'Password reset successfully.';
+
+  @override
+  String get privacyFirstParagraph => 'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay prm gravida felis, sociis in felis.Diam habitant .';
+
+  @override
+  String get privacyStandardParagraph => 'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay prm gravida felis, sociis in felis.Diam habitant .Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay prm gravida felis, sociis in felis.Diam habitant .';
+
+  @override
+  String get termsFirstParagraph => 'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay prm gravida felis, sociis in felis.Diam habitant .';
+
+  @override
+  String get termsStandardParagraph => 'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay prm gravida felis, sociis in felis.Diam habitant .Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay prm gravida felis, sociis in felis.Diam habitant .';
+
+  @override
+  String get hostInfoText => 'Register your property and the tourist activities with lobby in regular way and get additional income you will now be directed to the lobby business app to register';
+
+  @override
+  String get aboutFirstParagraph => 'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay prm gravida felis, sociis in felis.Diam habitant .';
+
+  @override
+  String get aboutSecondParagraph => 'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay prm gravida felis, sociis in felis.Diam habitant .Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay prm gravida felis, sociis in felis.Diam habitant .';
+
+  @override
+  String get notificationDetailParagraph1 => 'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay lorem ipsum dolor sit amet, consecr text Diam habitant ';
+
+  @override
+  String get notificationDetailParagraph2 => 'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay lorem ipsum dolor sit amet, consecr text Diam habitant.';
+
+  @override
+  String get notificationDetailParagraph3 => 'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay lorem ipsum dolor sit amet.';
+
+  @override
+  String get firstName => 'First Name';
+
+  @override
+  String get lastName => 'Last Name';
+
+  @override
+  String get phone => 'Phone';
 }

@@ -15,7 +15,7 @@ class ActivityCardeReserve extends StatefulWidget {
 }
 
 class _ActivityCardeReserveState extends State<ActivityCardeReserve> {
-  final dateController = TextEditingController(), guestController = TextEditingController(text: '1');
+  final guestsController = TextEditingController(text: '1');
 
   @override
   Widget build(BuildContext context) => Container(
@@ -44,20 +44,17 @@ class _ActivityCardeReserveState extends State<ActivityCardeReserve> {
                   const SizedBox(height: 4),
                   Container(
                     height: 40,
-                    width: 144,
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
-                    child: TextField(
-                      controller: dateController,
-                      decoration: InputDecoration(
-                        enabledBorder: buildOutlineInputBorder(5),
-                        focusedBorder: buildOutlineInputBorder(5),
-                        hintText: context.l10n.enterDateInDdMmYyyy,
-                        hintStyle: const TextStyle(
-                          color: AppColors.grayTextColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: Colors.black54),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      widget.activity.date.split('T').first.replaceAll('-', '/').split('/').reversed.join('/'),
+                      style: TextStyle(color: AppColors.grayTextColor, fontSize: 14, fontWeight: FontWeight.w400),
                     ),
                   ),
                 ],
@@ -80,7 +77,7 @@ class _ActivityCardeReserveState extends State<ActivityCardeReserve> {
                     width: double.infinity,
                     decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
                     child: TextField(
-                      controller: guestController,
+                      controller: guestsController,
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       decoration: InputDecoration(
@@ -106,7 +103,7 @@ class _ActivityCardeReserveState extends State<ActivityCardeReserve> {
           height: 40,
           child: ElevatedButton(
             onPressed: () {
-              showActivityReserveDialoge(context, widget.activity, dateController, guestController);
+              showActivityReserveDialoge(context, widget.activity, guestsController.text.trim());
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryColor,

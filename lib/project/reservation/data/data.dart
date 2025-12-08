@@ -20,7 +20,6 @@ class ReservationsData {
       'registrations/me',
       queryParameters: {'status': filter.name, 'page': _currentPage},
     );
-    print(response.data);
     if (response.statusCode != 200) throw DioException(requestOptions: response.requestOptions, response: response);
     final reservations =
         ((response.data['data']?['data'] as List?) ?? []).map((item) => ReservationModel.fromMap(item)).toList();
@@ -30,9 +29,8 @@ class ReservationsData {
 
   Future<ReservationModel> getReservation(String id) async {
     final response = await _apiService.dio.get('registrations/$id');
-    print(response.data);
     if (response.statusCode != 200) throw DioException(requestOptions: response.requestOptions, response: response);
-    return ReservationModel.fromMap(response.data['data']);
+    return ReservationModel.fromMap(response.data?['data']);
   }
 
   void _setPage(bool fetchNext) => _currentPage = fetchNext ? _currentPage + 1 : 1;
@@ -56,7 +54,9 @@ class ReservationsData {
   }
 
   Future<String> payment(String reservationId) async {
-    final response = await _apiService.dio.post('/payments/initiate', data: {'registrationId': reservationId});
+    final response = await _apiService.dio
+        .post('/payments/initiate', data: {'registrationId': reservationId})
+        .timeout(const Duration(seconds: 15));
     if (response.statusCode != 200) throw Exception('Failed to initiate payment');
     log(response.data.toString());
     return response.data['data']['redirect_url'] as String;

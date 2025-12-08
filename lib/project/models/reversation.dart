@@ -5,7 +5,7 @@ import 'property.dart';
 
 enum ReservationType { activity, property }
 
-enum ReservationStatus { draft, completed, canceled }
+enum ReservationStatus { draft, completed }
 
 class ReservationModel extends Equatable {
   final String id, checkInDate, checkOutDate;
@@ -90,10 +90,7 @@ class ReservationModel extends Equatable {
               ? map['checkInDate'] ?? ''
               : (map['activityId']?['date'] ?? (item as ActivityModel?)?.date ?? ''),
       checkOutDate: map['checkOutDate'] ?? '',
-      status:
-          map['status'] == 'draft'
-              ? ReservationStatus.draft
-              : (map['status'] == 'completed' ? ReservationStatus.completed : ReservationStatus.canceled),
+      status: map['status'] == 'draft' ? ReservationStatus.draft : ReservationStatus.completed,
       guestNumber: map['guestNumber'] ?? 1,
       registrationNumber: map['registrationNumber'] ?? 0,
       totalPrice: (map['totalPrice'] as num?)?.toDouble() ?? 0.0,

@@ -19,8 +19,7 @@ class AuthData {
       data: {AppConst.refreshToken: _cacheServices.storage.getString(AppConst.refreshToken)},
     );
     if (response.data['success'] == false) throw _responseException(response);
-    await _cacheServices.storage.remove(AppConst.accessToken);
-    await _cacheServices.storage.remove(AppConst.refreshToken);
+    await _cacheServices.storage.clear();
     return response.data['data']['message'];
   }
 
@@ -35,17 +34,25 @@ class AuthData {
     return addedUser;
   }
 
-  Future<UserModel> signin({required String email, required String password}) async {
-    final loginData = {AppConst.email: email, AppConst.password: password, 'app-type': 'user'};
+  Future<void> initiateSignin({required String phone}) async {
+    final deviceId = await getDeviceId();
+    final response = await _apiServices.dio.post(
+      ApiConstance.initiateSignin,
+      data: {AppConst.phone: phone},
+      options: Options(headers: {'X-Device-ID': deviceId}),
+    );
+    if (response.statusCode != 200) throw _responseException(response);
+  }
+
+  Future<UserModel> verifySignin({required String phone, required String code}) async {
+    final loginData = {AppConst.phone: phone, 'code': code};
     try {
       final fcmToken = await FirebaseMessaging.instance.getToken();
-      if (fcmToken != null && fcmToken.isNotEmpty) {
-        loginData['fcmToken'] = fcmToken;
-      }
+      if (fcmToken != null && fcmToken.isNotEmpty) loginData['fcmToken'] = fcmToken;
     } catch (_) {
       // ignore token failures silently for login
     }
-    final response = await _apiServices.dio.post(ApiConstance.signin, data: loginData);
+    final response = await _apiServices.dio.post(ApiConstance.verifySignin, data: loginData);
     final data = response.data['data'];
     if (data == null || data['user'] == null) throw _responseException(response);
     final user = UserModel.fromJson(data['user']);
@@ -57,20 +64,19 @@ class AuthData {
   Exception _responseException(Response response) =>
       DioException(requestOptions: response.requestOptions, response: response, error: response.data['error']);
 
-  Future<void> verifyEmail({required String email}) async {
+  Future<void> verifyPhone({required String phone}) async {
     final response = await _apiServices.dio.post(
-      ApiConstance.verifyEmail,
-      data: {AppConst.email: email},
+      ApiConstance.initiateSignup,
+      data: {AppConst.phone: phone},
       options: Options(headers: {'X-Device-ID': 256454}),
-      // options: Options(headers: {'X-Device-ID': await getDeviceId()}),
     );
     if (response.statusCode != 200) throw _responseException(response);
   }
 
-  Future<String> confirmOtpSignUp(String email, String otp, bool willSignup) async {
+  Future<String> confirmOtpSignUp(String phone, String otp, bool willSignup) async {
     final response = await _apiServices.dio.post(
       willSignup ? ApiConstance.confirmOtpSignUp : ApiConstance.confirmOtpResetPassword,
-      data: {AppConst.email: email, 'code': otp},
+      data: {AppConst.phone: phone, 'code': otp},
     );
     if (response.data['success'] == false) throw _responseException(response);
     return response.data['data']['message'];

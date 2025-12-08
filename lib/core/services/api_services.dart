@@ -55,7 +55,9 @@ class _ApiInterceptor extends InterceptorsWrapper {
     debugPrint('REQUEST[${options.method}] => PATH: ${options.path}');
     final isMultipart = options.data is FormData;
     final accessToken = _cacheService.storage.getString(AppConst.accessToken);
-    print(accessToken);
+    if (kDebugMode) {
+      debugPrint('Auth header set: ${accessToken != null && accessToken.isNotEmpty}');
+    }
     options.headers['Content-Type'] = isMultipart ? 'multipart/form-data' : 'application/json';
     if (isMultipart) options.headers['Accept-Encoding'] = 'gzip, deflate, br';
     if (accessToken != null && accessToken.isNotEmpty) options.headers['Authorization'] = 'Bearer $accessToken';
@@ -65,7 +67,7 @@ class _ApiInterceptor extends InterceptorsWrapper {
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) async {
     debugPrint('RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
-    if ([ApiConstance.signin, ApiConstance.signup, ApiConstance.resetpassword].contains(response.requestOptions.path)) {
+    if ([ApiConstance.signup, ApiConstance.resetpassword].contains(response.requestOptions.path)) {
       if (response.data != null && response.data['success']) {
         final accessToken = (response.data['data'] ?? {})['accessToken'];
         final refreshToken = (response.data['data'] ?? {})['refreshToken'];

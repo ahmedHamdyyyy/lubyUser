@@ -29,7 +29,6 @@ class ActivitiesData {
   Future<ActivityModel> getActivity(String id) async {
     final response = await _apiService.dio.get(ApiConstance.getActivity(id));
     _checkIfSuccess(response);
-    print(response.data['data']['activity']);
     return ActivityModel.fromJson(response.data['data']['activity']);
   }
 

@@ -9,13 +9,15 @@ import '../../../../../../config/widget/helper.dart';
 import '../../../../../../locator.dart';
 import '../../../../../config/colors/colors.dart';
 import '../../../../../core/localization/l10n_ext.dart';
+import '../../../Home/Widget/signin_placeholder.dart';
+import '../../../Home/cubit/home_cubit.dart';
 import '../../../favorites/cubit/cubit.dart';
-import '../../../profile/screens/propreties/widgets/amenities_widget.dart';
-import '../../../profile/screens/propreties/widgets/host_details.dart';
-import '../../../profile/screens/propreties/widgets/medias_list.dart';
-import '../../../profile/screens/propreties/widgets/read_details_widget.dart';
-import '../../../profile/screens/propreties/widgets/read_more.dart';
-import '../../../profile/screens/propreties/widgets/reviews_widget.dart';
+import '../../../screens/propreties/widgets/amenities_widget.dart';
+import '../../../screens/propreties/widgets/host_details.dart';
+import '../../../screens/propreties/widgets/medias_list.dart';
+import '../../../screens/propreties/widgets/read_details_widget.dart';
+import '../../../screens/propreties/widgets/read_more.dart';
+import '../../../screens/propreties/widgets/reviews_widget.dart';
 import '../../cubit/cubit.dart';
 import '../widgets/booking_details.dart';
 import '../widgets/reserve_card.dart';
@@ -85,20 +87,32 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                   height: 24,
                                 ),
                                 const SizedBox(width: 8),
-                                InkWell(
-                                  onTap: () {
-                                    if (state.activity.isFavorite) {
-                                      getIt<FavoritesCubit>().removeFromFavorites(state.activity.id, FavoriteType.activity);
-                                    } else {
-                                      getIt<FavoritesCubit>().addToFavorites(state.activity.id, FavoriteType.activity);
-                                    }
+                                BlocSelector<HomeCubit, HomeState, bool>(
+                                  selector: (state) => state.isSignedIn,
+                                  builder: (context, isSignedIn) {
+                                    return InkWell(
+                                      onTap: () async {
+                                        if (!isSignedIn) {
+                                          await showSigninPlaceholder(context);
+                                          return;
+                                        }
+                                        if (state.activity.isFavorite) {
+                                          getIt<FavoritesCubit>().removeFromFavorites(
+                                            state.activity.id,
+                                            FavoriteType.activity,
+                                          );
+                                        } else {
+                                          getIt<FavoritesCubit>().addToFavorites(state.activity.id, FavoriteType.activity);
+                                        }
+                                      },
+                                      child: SvgPicture.asset(
+                                        'assets/images/heart.svg',
+                                        // ignore: deprecated_member_use
+                                        color: Colors.white, // Changes SVG color
+                                        height: 24,
+                                      ),
+                                    );
                                   },
-                                  child: SvgPicture.asset(
-                                    'assets/images/heart.svg',
-                                    // ignore: deprecated_member_use
-                                    color: Colors.white, // Changes SVG color
-                                    height: 24,
-                                  ),
                                 ),
                               ],
                             ),
