@@ -24,11 +24,8 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
   final TextEditingController _otpController = TextEditingController();
   bool _isLoading = false;
   String? _errorText;
-  late AnimationController _animationController;
-  late AnimationController _fadeController;
-  late Animation<double> _slideAnimation;
-  late Animation<double> _fadeAnimation;
-  late Animation<double> _scaleAnimation;
+  late AnimationController _animationController, _fadeController;
+  late Animation<double> _slideAnimation, _fadeAnimation, _scaleAnimation;
 
   // Resend OTP variables
   int _resendCountdown = 0;
@@ -119,11 +116,12 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
     _resendAttemptsThisHour++;
 
     // Resend the OTP using the same method as initial send
-    if (widget.willSignup) {
-      context.read<AuthCubit>().initiateSignup(widget.phone);
-    } else {
-      context.read<AuthCubit>().initiateSignin(phone: widget.phone);
-    }
+    context.read<AuthCubit>().resendOtp(widget.user!, widget.willSignup);
+    // if (widget.willSignup) {
+    //   context.read<AuthCubit>().initiateSignup(widget.user!);
+    // } else {
+    //   context.read<AuthCubit>().initiateSignin(phone: widget.phone);
+    // }
 
     // Restart the timer
     _startResendTimer();
@@ -179,6 +177,7 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
           break;
         case Status.success:
           Navigator.pop(context);
+          Navigator.pop(context);
           Navigator.pop(context, true);
           break;
         default:
@@ -192,33 +191,36 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
           break;
         case Status.success:
           showToast(text: state.msg, stute: ToustStute.success);
-          Navigator.pop(context);
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.pop(context);
+            Navigator.pop(context, true);
+          });
           break;
         default:
           break;
       }
-      // Handle resend OTP for signup
-      switch (state.initiateSignupStatus) {
-        case Status.error:
-          showToast(text: state.msg, stute: ToustStute.error);
-          break;
-        case Status.success:
-          showToast(text: 'OTP resent successfully', stute: ToustStute.success);
-          break;
-        default:
-          break;
-      }
-      // Handle resend OTP for signin
-      switch (state.initiateSigninStatus) {
-        case Status.error:
-          showToast(text: state.msg, stute: ToustStute.error);
-          break;
-        case Status.success:
-          showToast(text: 'OTP resent successfully', stute: ToustStute.success);
-          break;
-        default:
-          break;
-      }
+      // // Handle resend OTP for signup
+      // switch (state.initiateSignupStatus) {
+      //   case Status.error:
+      //     showToast(text: state.msg, stute: ToustStute.error);
+      //     break;
+      //   case Status.success:
+      //     showToast(text: 'OTP resent successfully', stute: ToustStute.success);
+      //     break;
+      //   default:
+      //     break;
+      // }
+      // // Handle resend OTP for signin
+      // switch (state.initiateSigninStatus) {
+      //   case Status.error:
+      //     showToast(text: state.msg, stute: ToustStute.error);
+      //     break;
+      //   case Status.success:
+      //     showToast(text: 'OTP resent successfully', stute: ToustStute.success);
+      //     break;
+      //   default:
+      //     break;
+      // }
     },
     builder: (context, state) {
       if (state.confirmOtpStatus == Status.loading ||

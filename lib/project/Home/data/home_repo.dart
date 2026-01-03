@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../../core/error/dio_error.dart';
 import '../../models/notification.dart';
 import '../../models/property.dart';
 import '../../models/review.dart';
@@ -19,7 +20,7 @@ class HomeRespository {
     } on DioException catch (e) {
       debugPrint('DioException: ${e.response?.data}');
       if (e.response?.data['error'] != null) throw Exception(e.response?.data['error'].toString());
-      throw Exception('فشل الاتصال بالخادم');
+      throw ApiExceptionHandler.handle(e);
     } catch (e) {
       debugPrint('Unexpected error: $e');
       throw Exception('حدث خطأ غير متوقع');
@@ -34,7 +35,7 @@ class HomeRespository {
       return await _homeData.getProperties(fetchNext, filters);
     } on DioException catch (e) {
       debugPrint('DioException: ${e.response?.data}');
-      throw Exception(e.response?.data['error'].toString());
+      throw ApiExceptionHandler.handle(e);
     } catch (e, s) {
       debugPrint('Unexpected error: $e');
       debugPrintStack(stackTrace: s);
@@ -47,7 +48,7 @@ class HomeRespository {
       return await _homeData.getProperty(id);
     } on DioException catch (e) {
       debugPrint('DioException: ${e.response?.data}');
-      throw Exception(e.response?.data['error'].toString());
+      throw ApiExceptionHandler.handle(e);
     } catch (e, s) {
       debugPrint('Unexpected error: $e');
       debugPrintStack(stackTrace: s);
@@ -60,7 +61,7 @@ class HomeRespository {
       return await _homeData.getReviewes(itemId, type);
     } on DioException catch (e) {
       debugPrint('DioException: ${e.response?.data}');
-      throw Exception(e.response?.data['error'].toString());
+      throw ApiExceptionHandler.handle(e);
     }
   }
 
@@ -69,7 +70,7 @@ class HomeRespository {
       return await _homeData.addReview(review);
     } on DioException catch (e) {
       debugPrint('DioException: ${e.response?.data}');
-      throw Exception(e.response?.data['error'].toString());
+      throw ApiExceptionHandler.handle(e);
     }
   }
 
@@ -78,7 +79,7 @@ class HomeRespository {
       await _homeData.updateReview(id, comment, rating);
     } on DioException catch (e) {
       debugPrint('DioException: ${e.response?.data}');
-      throw Exception(e.response?.data['error'].toString());
+      throw ApiExceptionHandler.handle(e);
     }
   }
 
@@ -87,7 +88,7 @@ class HomeRespository {
       await _homeData.deleteReview(id);
     } on DioException catch (e) {
       debugPrint('DioException: ${e.response?.data}');
-      throw Exception(e.response?.data['error'].toString());
+      throw ApiExceptionHandler.handle(e);
     }
   }
 
@@ -96,7 +97,7 @@ class HomeRespository {
       return await _homeData.updateUser(firstName: firstName, lastName: lastName, imagePath: imagePath);
     } on DioException catch (e) {
       debugPrint('DioException: ${e.error}');
-      throw Exception(e.response?.data['error'].toString());
+      throw ApiExceptionHandler.handle(e);
     } catch (e) {
       throw Exception('حدث خطأ غير متوقع');
     }
@@ -109,7 +110,7 @@ class HomeRespository {
       return await _homeData.fetchNotifications(fetchNext);
     } on DioException catch (e) {
       debugPrint('DioException: ${e.response?.data}');
-      throw Exception(e.response?.data['error'].toString());
+      throw ApiExceptionHandler.handle(e);
     } catch (e, s) {
       debugPrint('Unexpected error: $e, $s');
       throw Exception('حدث خطأ غير متوقع');
@@ -121,7 +122,7 @@ class HomeRespository {
       await _homeData.readNotification(id);
     } on DioException catch (e) {
       debugPrint('DioException: ${e.response?.data}');
-      throw Exception(e.response?.data['error'].toString());
+      throw ApiExceptionHandler.handle(e);
     } catch (e, s) {
       debugPrint('Unexpected error: $e, $s');
       throw Exception('حدث خطأ غير متوقع');

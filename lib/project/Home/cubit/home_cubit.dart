@@ -36,7 +36,7 @@ class HomeCubit extends Cubit<HomeState> {
       );
       return true;
     } catch (e) {
-      emit(state.copyWith(getUserStatus: Status.error, msg: e.toString()));
+      emit(state.copyWith(getUserStatus: Status.error, msg: AppConst.normalizeError(e)));
       return false;
     }
   }
@@ -57,7 +57,7 @@ class HomeCubit extends Cubit<HomeState> {
         ),
       );
     } catch (e) {
-      emit(state.copyWith(propertiesStatus: Status.error, msg: e.toString()));
+      emit(state.copyWith(propertiesStatus: Status.error, msg: AppConst.normalizeError(e)));
     }
   }
 
@@ -71,7 +71,7 @@ class HomeCubit extends Cubit<HomeState> {
         print(userProperty.toString());
       }
     } catch (e) {
-      emit(state.copyWith(propertyStatus: Status.error, msg: e.toString()));
+      emit(state.copyWith(propertyStatus: Status.error, msg: AppConst.normalizeError(e)));
       if (kDebugMode) print(e.toString());
     }
   }
@@ -100,7 +100,7 @@ class HomeCubit extends Cubit<HomeState> {
       final reviews = await repo.getReviewes(itemId, type);
       emit(state.copyWith(reviewesStatus: Status.success, reviews: reviews));
     } catch (e) {
-      emit(state.copyWith(reviewesStatus: Status.error, msg: e.toString()));
+      emit(state.copyWith(reviewesStatus: Status.error, msg: AppConst.normalizeError(e)));
     }
   }
 
@@ -116,7 +116,7 @@ class HomeCubit extends Cubit<HomeState> {
         ),
       );
     } catch (e) {
-      emit(state.copyWith(reviewStatus: Status.error, msg: e.toString()));
+      emit(state.copyWith(reviewStatus: Status.error, msg: AppConst.normalizeError(e)));
     } finally {
       emit(state.copyWith(reviewStatus: Status.initial));
     }
@@ -148,7 +148,7 @@ class HomeCubit extends Cubit<HomeState> {
         ),
       );
     } catch (e) {
-      emit(state.copyWith(reviewStatus: Status.error, msg: e.toString()));
+      emit(state.copyWith(reviewStatus: Status.error, msg: AppConst.normalizeError(e)));
     }
   }
 
@@ -164,7 +164,7 @@ class HomeCubit extends Cubit<HomeState> {
         ),
       );
     } catch (e) {
-      emit(state.copyWith(reviewStatus: Status.error, msg: e.toString()));
+      emit(state.copyWith(reviewStatus: Status.error, msg: AppConst.normalizeError(e)));
     }
   }
 
@@ -176,7 +176,7 @@ class HomeCubit extends Cubit<HomeState> {
       final user = await repo.updateUser(firstName: firstName, lastName: lastName, imagePath: imagePath);
       emit(state.copyWith(updateUserStatus: Status.success, user: user));
     } catch (e) {
-      emit(state.copyWith(updateUserStatus: Status.error, msg: e.toString()));
+      emit(state.copyWith(updateUserStatus: Status.error, msg: AppConst.normalizeError(e)));
     }
   }
 
@@ -194,7 +194,7 @@ class HomeCubit extends Cubit<HomeState> {
         ),
       );
     } catch (e) {
-      emit(state.copyWith(loadNotificationsStatus: Status.error, msg: e.toString()));
+      emit(state.copyWith(loadNotificationsStatus: Status.error, msg: AppConst.normalizeError(e)));
     } finally {
       emit(state.copyWith(loadNotificationsStatus: Status.initial));
     }
@@ -220,7 +220,7 @@ class HomeCubit extends Cubit<HomeState> {
         ),
       );
     } catch (e) {
-      emit(state.copyWith(readNotificationStatus: Status.error, msg: e.toString()));
+      emit(state.copyWith(readNotificationStatus: Status.error, msg: AppConst.normalizeError(e)));
     } finally {
       emit(state.copyWith(readNotificationStatus: Status.initial));
     }

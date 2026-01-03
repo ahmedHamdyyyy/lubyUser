@@ -21,6 +21,10 @@ class _AccountScreenState extends State<AccountScreen> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final phoneController = TextEditingController();
+  final dobController = TextEditingController();
+  final nationalIdController = TextEditingController();
+  final residenceNumberController = TextEditingController();
+  final passportNumberController = TextEditingController();
 
   void _handleButtonAction() {
     showDeleteAccountDialog(context);
@@ -34,6 +38,10 @@ class _AccountScreenState extends State<AccountScreen> {
           firstNameController.text = state.user.firstName;
           lastNameController.text = state.user.lastName;
           phoneController.text = state.user.phone;
+          dobController.text = state.user.dateOfBirth;
+          nationalIdController.text = state.user.nationalIdNumber;
+          residenceNumberController.text = state.user.residenceNumber;
+          passportNumberController.text = state.user.passportNumber;
           _imageUrl = state.user.profilePicture;
           return Scaffold(
             backgroundColor: Colors.white,
@@ -57,6 +65,10 @@ class _AccountScreenState extends State<AccountScreen> {
                     firstNameController: firstNameController,
                     lastNameController: lastNameController,
                     phoneController: phoneController,
+                    dobController: dobController,
+                    nationalIdController: nationalIdController,
+                    residenceNumberController: residenceNumberController,
+                    passportNumberController: passportNumberController,
                     isEditing: isEditing,
                   ),
                   ActionButton(isEditing: isEditing, onPressed: _handleButtonAction),

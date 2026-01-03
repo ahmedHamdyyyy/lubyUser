@@ -6,6 +6,7 @@ class ApiConstance {
   static const verifySignin = "auth/signin/verify";
   static const initiateSignup = "auth/signup/initiate";
   static const signup = "auth/signup";
+  static const verifyUserData = "auth/signup/validate";
   static const logout = "auth/logout";
   static const refreshToken = "auth/refresh-token";
   static const resetpassword = "auth/reset-password";

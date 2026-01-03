@@ -1,18 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../config/widget/helper.dart';
 import '../../../../config/images/assets.dart';
-import '../../../../locator.dart';
-import '../../../Home/Widget/signin_placeholder.dart';
-import '../../../Home/cubit/home_cubit.dart';
-import '../../../models/chat.dart';
 import '../../../models/vendor.dart';
-import '../../Conversations/chat_screen.dart';
 
 class HostDetailsWidget extends StatelessWidget {
   const HostDetailsWidget({super.key, required this.vendor});
@@ -49,46 +42,46 @@ class HostDetailsWidget extends StatelessWidget {
             ],
           ),
           const Spacer(),
-          BlocSelector<HomeCubit, HomeState, bool>(
-            selector: (state) => state.isSignedIn,
-            builder: (context, isSignedIn) {
-              return InkWell(
-                onTap: () async {
-                  if (!isSignedIn) {
-                    await showSigninPlaceholder(context);
-                    return;
-                  }
-                  final user = getIt<HomeCubit>().state.user;
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return ChatScreen(
-                          chat: ChatModel(
-                            id: '${vendor.id}_${user.id}',
-                            vendorId: vendor.id,
-                            vendorName: '${vendor.firstName} ${vendor.lastName}',
-                            vendorImage: vendor.profilePicture,
-                            lastMessage: '',
-                            lastTimestamp: DateTime.now(),
-                            userId: user.id,
-                            userImageUrl: user.profilePicture,
-                            userName: '${user.firstName} ${user.lastName}',
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
-                child: SvgPicture.asset(
-                  'assets/images/message-2.svg',
-                  // ignore: deprecated_member_use
-                  color: const Color(0xFF414141),
-                  height: 24,
-                ),
-              );
-            },
-          ),
+          // BlocSelector<HomeCubit, HomeState, bool>(
+          //   selector: (state) => state.isSignedIn,
+          //   builder: (context, isSignedIn) {
+          //     return InkWell(
+          //       onTap: () async {
+          //         if (!isSignedIn) {
+          //           await showSigninPlaceholder(context);
+          //           return;
+          //         }
+          //         final user = getIt<HomeCubit>().state.user;
+          //         Navigator.push(
+          //           context,
+          //           MaterialPageRoute(
+          //             builder: (context) {
+          //               return ChatScreen(
+          //                 chat: ChatModel(
+          //                   id: '${vendor.id}_${user.id}',
+          //                   vendorId: vendor.id,
+          //                   vendorName: '${vendor.firstName} ${vendor.lastName}',
+          //                   vendorImage: vendor.profilePicture,
+          //                   lastMessage: '',
+          //                   lastTimestamp: DateTime.now(),
+          //                   userId: user.id,
+          //                   userImageUrl: user.profilePicture,
+          //                   userName: '${user.firstName} ${user.lastName}',
+          //                 ),
+          //               );
+          //             },
+          //           ),
+          //         );
+          //       },
+          //       child: SvgPicture.asset(
+          //         'assets/images/message-2.svg',
+          //         // ignore: deprecated_member_use
+          //         color: const Color(0xFF414141),
+          //         height: 24,
+          //       ),
+          //     );
+          //   },
+          // ),
         ],
       ),
     );

@@ -300,6 +300,10 @@ class AccountFormFields extends StatelessWidget {
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;
   final TextEditingController phoneController;
+  final TextEditingController dobController;
+  final TextEditingController nationalIdController;
+  final TextEditingController residenceNumberController;
+  final TextEditingController passportNumberController;
   final bool isEditing;
 
   const AccountFormFields({
@@ -307,6 +311,10 @@ class AccountFormFields extends StatelessWidget {
     required this.firstNameController,
     required this.lastNameController,
     required this.phoneController,
+    required this.dobController,
+    required this.nationalIdController,
+    required this.residenceNumberController,
+    required this.passportNumberController,
     required this.isEditing,
   });
 
@@ -317,6 +325,10 @@ class AccountFormFields extends StatelessWidget {
         CustomTextField(controller: firstNameController, title: context.l10n.firstName, isEnabled: isEditing),
         CustomTextField(controller: lastNameController, title: context.l10n.lastName, isEnabled: isEditing),
         // CustomTextField(controller: phoneController, title: context.l10n.phone, isEnabled: isEditing),
+        CustomTextField(controller: dobController, title: context.l10n.dateOfBirthLabel, isEnabled: false),
+        CustomTextField(controller: nationalIdController, title: context.l10n.nationalIdNumberLabel, isEnabled: false),
+        CustomTextField(controller: residenceNumberController, title: context.l10n.residenceNumberLabel, isEnabled: false),
+        CustomTextField(controller: passportNumberController, title: context.l10n.passportNumberLabel, isEnabled: false),
         const SizedBox(height: 20),
       ],
     );

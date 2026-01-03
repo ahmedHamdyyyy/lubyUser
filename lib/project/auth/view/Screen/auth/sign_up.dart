@@ -16,6 +16,8 @@ import '../../Widget/wideget_sign_up.dart';
 import 'confirm_otp.dart';
 import 'sign_in.dart';
 
+enum IdentityType { citizen, resident, visitor }
+
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
   @override
@@ -26,6 +28,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
+  final dobController = TextEditingController();
+  final idNumberController = TextEditingController();
+  IdentityType? _identityType;
 
   String _phone = '';
 
@@ -37,6 +42,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     firstNameController.dispose();
     lastNameController.dispose();
     emailController.dispose();
+    dobController.dispose();
+    idNumberController.dispose();
     super.dispose();
   }
 
@@ -50,14 +57,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (firstNameController.text.isEmpty ||
         lastNameController.text.isEmpty ||
         emailController.text.isEmpty ||
-        _phone.isEmpty) {
+        dobController.text.isEmpty ||
+        _phone.isEmpty ||
+        _identityType == null ||
+        idNumberController.text.isEmpty) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(context.l10n.fillAllFields), backgroundColor: Colors.red));
       return;
     }
 
-    context.read<AuthCubit>().initiateSignup(_phone.trim());
+    context.read<AuthCubit>().initiateSignup(
+      UserModel.initial.copyWith(
+        firstName: firstNameController.text.trim(),
+        lastName: lastNameController.text.trim(),
+        email: emailController.text.trim(),
+        phone: _phone,
+        profilePicture: profileImage == null ? '' : profileImage!.path,
+        dateOfBirth: dobController.text.trim(),
+        nationalIdNumber: _identityType == IdentityType.citizen ? idNumberController.text.trim() : '',
+        residenceNumber: _identityType == IdentityType.resident ? idNumberController.text.trim() : '',
+        passportNumber: _identityType == IdentityType.visitor ? idNumberController.text.trim() : '',
+      ),
+    );
   }
 
   void _handleImageSelected(File image) => setState(() => profileImage = image);
@@ -83,6 +105,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     email: emailController.text.trim(),
                     phone: _phone,
                     profilePicture: profileImage == null ? '' : profileImage!.path,
+                    dateOfBirth: dobController.text.trim(),
+                    nationalIdNumber: _identityType == IdentityType.citizen ? idNumberController.text.trim() : '',
+                    residenceNumber: _identityType == IdentityType.resident ? idNumberController.text.trim() : '',
+                    passportNumber: _identityType == IdentityType.visitor ? idNumberController.text.trim() : '',
                   ),
                   phone: _phone,
                   willSignup: true,
@@ -111,17 +137,140 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       const SizedBox(height: 24),
                       EditableProfileImage(onImageSelected: _handleImageSelected),
                       const SizedBox(height: 38),
+                      Text(
+                        context.l10n.firstName,
+                        style: GoogleFonts.poppins(
+                          color: AppColors.grayTextColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
                       RegistrationTextField(
                         hintText: context.l10n.firstNameLabel,
                         controller: firstNameController,
                         isError: false,
                       ),
+                      const SizedBox(height: 6),
+                      Text(
+                        context.l10n.lastName,
+                        style: GoogleFonts.poppins(
+                          color: AppColors.grayTextColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
                       RegistrationTextField(hintText: context.l10n.lastNameLabel, controller: lastNameController),
+                      const SizedBox(height: 6),
+                      Text(
+                        context.l10n.emailLabel,
+                        style: GoogleFonts.poppins(
+                          color: AppColors.grayTextColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
                       RegistrationTextField(hintText: context.l10n.emailLabel, controller: emailController),
+                      const SizedBox(height: 6),
+                      Text(
+                        context.l10n.dateOfBirthLabel,
+                        style: GoogleFonts.poppins(
+                          color: AppColors.grayTextColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      GestureDetector(
+                        onTap: () async {
+                          final pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now().subtract(const Duration(days: 365 * 18)),
+                            firstDate: DateTime(1900),
+                            lastDate: DateTime.now(),
+                          );
+                          if (pickedDate != null) {
+                            setState(() {
+                              dobController.text =
+                                  '${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}';
+                            });
+                          }
+                        },
+                        child: AbsorbPointer(
+                          child: RegistrationTextField(
+                            hintText: 'YYYY-MM-DD',
+                            controller: dobController,
+                            keyboardType: TextInputType.datetime,
+                          ),
+                        ),
+                      ),
+                      // Identity type selection
+                      const SizedBox(height: 6),
+                      Text(
+                        context.l10n.phone,
+                        style: GoogleFonts.poppins(
+                          color: AppColors.grayTextColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
                       PhoneField(onChanged: (phone) => _phone = phone),
+                      const SizedBox(height: 32),
+                      Text(
+                        context.l10n.identityTypeSelect,
+                        style: GoogleFonts.poppins(
+                          color: AppColors.grayTextColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      RadioListTile<IdentityType>(
+                        title: Text(context.l10n.saudiCitizen),
+                        value: IdentityType.citizen,
+                        groupValue: _identityType,
+                        onChanged: (val) => setState(() => _identityType = val),
+                      ),
+                      RadioListTile<IdentityType>(
+                        title: Text(context.l10n.residentInSaudi),
+                        value: IdentityType.resident,
+                        groupValue: _identityType,
+                        onChanged: (val) => setState(() => _identityType = val),
+                      ),
+                      RadioListTile<IdentityType>(
+                        title: Text(context.l10n.visitor),
+                        value: IdentityType.visitor,
+                        groupValue: _identityType,
+                        onChanged: (val) => setState(() => _identityType = val),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        _identityType == IdentityType.citizen
+                            ? context.l10n.nationalIdNumberLabel
+                            : _identityType == IdentityType.resident
+                            ? context.l10n.residenceNumberLabel
+                            : context.l10n.passportNumberLabel,
+                        style: GoogleFonts.poppins(
+                          color: AppColors.grayTextColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      RegistrationTextField(
+                        hintText:
+                            _identityType == IdentityType.citizen
+                                ? context.l10n.nationalIdNumberLabel
+                                : _identityType == IdentityType.resident
+                                ? context.l10n.residenceNumberLabel
+                                : context.l10n.passportNumberLabel,
+                        controller: idNumberController,
+                        keyboardType: _identityType == IdentityType.visitor ? TextInputType.text : TextInputType.number,
+                      ),
+                      TermsConditionsbox(onChanged: (isAgreed) => agreeToTerms = isAgreed),
                       const SizedBox(height: 16),
-                      TermsConditionsbox(onChanged: (value) => agreeToTerms = value),
-                      const SizedBox(height: 10),
                       SignUpButton(onPressed: _handleSignUp),
                       const SizedBox(height: 20),
                       Row(

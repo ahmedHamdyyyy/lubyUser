@@ -59,7 +59,10 @@ class _SignInScreenState extends State<SignInScreen> {
             break;
           case Status.success:
             showToast(text: state.msg, stute: ToustStute.success);
-            WidgetsBinding.instance.addPostFrameCallback((_) => Navigator.pop(context, true));
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.pop(context);
+              Navigator.pop(context, true);
+            });
             break;
           default:
             break;

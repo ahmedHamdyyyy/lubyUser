@@ -135,7 +135,6 @@ class _SummaryScreenState extends State<SummaryScreen> {
                     onPressed: () async {
                       if (!isSignedIn) {
                         await showSigninPlaceholder(context);
-
                         return;
                       }
                       if (widget.reservation.id.isEmpty) {

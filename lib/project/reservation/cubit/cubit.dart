@@ -28,7 +28,7 @@ class ReservationsCubit extends Cubit<ReservationsState> {
         ),
       );
     } catch (e) {
-      emit(state.copyWith(getReservationsStatus: Status.error, message: e.toString()));
+      emit(state.copyWith(getReservationsStatus: Status.error, message: AppConst.normalizeError(e)));
     }
   }
 
@@ -38,7 +38,7 @@ class ReservationsCubit extends Cubit<ReservationsState> {
       final created = await _repository.createReservation(reservation);
       emit(state.copyWith(createReservationStatus: Status.success, message: created.id));
     } catch (e) {
-      emit(state.copyWith(createReservationStatus: Status.error, message: e.toString()));
+      emit(state.copyWith(createReservationStatus: Status.error, message: AppConst.normalizeError(e)));
     }
   }
 
@@ -48,7 +48,7 @@ class ReservationsCubit extends Cubit<ReservationsState> {
       final updated = await _repository.updateReservation(reservation);
       emit(state.copyWith(updateReservationStatus: Status.success, message: updated.id));
     } catch (e) {
-      emit(state.copyWith(updateReservationStatus: Status.error, message: e.toString()));
+      emit(state.copyWith(updateReservationStatus: Status.error, message: AppConst.normalizeError(e)));
     }
   }
 
@@ -63,7 +63,7 @@ class ReservationsCubit extends Cubit<ReservationsState> {
         ),
       );
     } catch (e) {
-      emit(state.copyWith(removeReservationStatus: Status.error, message: e.toString()));
+      emit(state.copyWith(removeReservationStatus: Status.error, message: AppConst.normalizeError(e)));
     }
   }
 
@@ -78,7 +78,7 @@ class ReservationsCubit extends Cubit<ReservationsState> {
         ),
       );
     } catch (e) {
-      emit(state.copyWith(paymentStatus: PaymentStatus.error, message: e.toString(), paymentUrl: ''));
+      emit(state.copyWith(paymentStatus: PaymentStatus.error, message: AppConst.normalizeError(e), paymentUrl: ''));
     }
   }
 
@@ -104,7 +104,7 @@ class ReservationsCubit extends Cubit<ReservationsState> {
       if (reservation.status == ReservationStatus.completed) {
         emit(
           state.copyWith(
-            reservations: state.reservations.map((r) => r.id == reservation.id ? reservation : r).toList(),
+            reservations: state.reservations.where((r) => r.id != reservation.id).toList(),
             paymentStatus: PaymentStatus.success,
             reservation: reservation,
             paymentUrl: '',
@@ -116,7 +116,7 @@ class ReservationsCubit extends Cubit<ReservationsState> {
         return false;
       }
     } catch (e) {
-      emit(state.copyWith(message: e.toString(), paymentStatus: PaymentStatus.error, paymentUrl: ''));
+      emit(state.copyWith(message: AppConst.normalizeError(e), paymentStatus: PaymentStatus.error, paymentUrl: ''));
       return false;
     }
   }

@@ -1,16 +1,19 @@
 // ignore_for_file: use_key_in_widget_constructors, use_build_context_synchronously
 
+import 'package:barcode/barcode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../../config/colors/colors.dart';
 import '../../../../config/images/image_assets.dart';
 import '../../../../core/localization/l10n_ext.dart';
 import '../../../../locator.dart';
-import '../../../Home/Widget/signin_placeholder.dart';
 import '../../../Home/cubit/home_cubit.dart';
 import '../../../models/activity.dart';
 import '../../../models/chat.dart';
@@ -72,6 +75,227 @@ class _ReservationScreenState extends State<ReservationScreen> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<void> _generateAndShareReservationPdf(ReservationsState state) async {
+    final reservation = state.reservation;
+    final isProperty = reservation.item is PropertyModel;
+    final vendor = isProperty ? (reservation.item as PropertyModel).vendor : (reservation.item as ActivityModel).vendor;
+    final user = getIt<HomeCubit>().state.user;
+
+    // Header image removed per request
+
+    final basePrice = reservation.totalPrice;
+    final vatAmount = (reservation.totalPrice - reservation.totalPriceAfterFees).abs();
+    final totalAmount = reservation.totalPriceAfterFees;
+
+    final doc = pw.Document();
+
+    doc.addPage(
+      pw.MultiPage(
+        pageTheme: pw.PageTheme(
+          margin: const pw.EdgeInsets.all(24),
+          theme: pw.ThemeData(defaultTextStyle: const pw.TextStyle(fontSize: 12)),
+        ),
+        build:
+            (context) => [
+              // Header
+              pw.Row(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text('Reservation Summary', style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold)),
+                      pw.SizedBox(height: 4),
+                      pw.Text(
+                        'Reservation #: ${reservation.registrationNumber}',
+                        style: const pw.TextStyle(color: PdfColors.grey700),
+                      ),
+                      pw.Text(
+                        'Generated: ${DateTime.now().toIso8601String().substring(0, 19)}',
+                        style: const pw.TextStyle(color: PdfColors.grey700),
+                      ),
+                    ],
+                  ),
+                  pw.Spacer(),
+                  pw.Container(
+                    padding: const pw.EdgeInsets.all(4),
+                    decoration: pw.BoxDecoration(
+                      border: pw.Border.all(color: PdfColors.grey400),
+                      borderRadius: pw.BorderRadius.circular(6),
+                    ),
+                    child: pw.BarcodeWidget(
+                      data: reservation.registrationNumber.toString(),
+                      barcode: Barcode.qrCode(),
+                      width: 64,
+                      height: 64,
+                    ),
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 16),
+              // Guest & Host
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey300),
+                columnWidths: {0: const pw.FlexColumnWidth(2), 1: const pw.FlexColumnWidth(3)},
+                children: [
+                  pw.TableRow(
+                    decoration: const pw.BoxDecoration(color: PdfColors.grey200),
+                    children: [
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(8),
+                        child: pw.Text('Guest', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      ),
+                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text('${user.firstName} ${user.lastName}')),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(8),
+                        child: pw.Text('Host', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      ),
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(8),
+                        child: pw.Text('${vendor.firstName} ${vendor.lastName}'),
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(8),
+                        child: pw.Text('Contact', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      ),
+                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text(user.email)),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 16),
+              // Stay/Activity details
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey300),
+                columnWidths: {0: const pw.FlexColumnWidth(2), 1: const pw.FlexColumnWidth(3)},
+                children: [
+                  pw.TableRow(
+                    decoration: const pw.BoxDecoration(color: PdfColors.grey200),
+                    children: [
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(8),
+                        child: pw.Text(
+                          isProperty ? 'Property' : 'Activity',
+                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                        ),
+                      ),
+                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text(_title)),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(8),
+                        child: pw.Text('Address', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      ),
+                      pw.Padding(padding: const pw.EdgeInsets.all(8), child: pw.Text(_address)),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(8),
+                        child: pw.Text(
+                          isProperty ? 'Check-in / Check-out' : 'Date',
+                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                        ),
+                      ),
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(8),
+                        child: pw.Text(isProperty ? '$_checkIn → $_checkOut' : _checkIn),
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(8),
+                        child: pw.Text(
+                          isProperty ? 'Nights' : 'Guests',
+                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                        ),
+                      ),
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(8),
+                        child: pw.Text(isProperty ? '$_nights' : '${reservation.guestNumber}'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 16),
+              // Pricing summary
+              pw.Container(
+                decoration: pw.BoxDecoration(
+                  border: pw.Border.all(color: PdfColors.grey300),
+                  borderRadius: pw.BorderRadius.circular(6),
+                ),
+                child: pw.Padding(
+                  padding: const pw.EdgeInsets.all(12),
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Row(
+                        children: [
+                          pw.Text(
+                            isProperty
+                                ? '$_nights night(s) × SAR ${_price.toStringAsFixed(2)}'
+                                : '${reservation.guestNumber} guest(s) × SAR ${_price.toStringAsFixed(2)}',
+                          ),
+                          pw.Spacer(),
+                          pw.Text('SAR ${basePrice.toStringAsFixed(2)}'),
+                        ],
+                      ),
+                      pw.SizedBox(height: 6),
+                      pw.Row(children: [pw.Text('VAT'), pw.Spacer(), pw.Text('SAR ${vatAmount.toStringAsFixed(2)}')]),
+                      pw.Divider(),
+                      pw.Row(
+                        children: [
+                          pw.Text('Total', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                          pw.Spacer(),
+                          pw.Text(
+                            'SAR ${totalAmount.toStringAsFixed(2)}',
+                            style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              pw.SizedBox(height: 16),
+              // Terms & notes
+              pw.Text('Terms and Notes', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+              pw.SizedBox(height: 6),
+              pw.Bullet(text: 'Free cancellation before $_checkIn.'),
+              pw.Bullet(text: 'Please bring a valid ID at check-in.'),
+              pw.Bullet(text: 'Contact your host for special requests or arrival times.'),
+              pw.SizedBox(height: 12),
+              pw.Divider(),
+              pw.SizedBox(height: 8),
+              pw.Row(
+                children: [
+                  pw.Text('Luby — Reservations', style: const pw.TextStyle(color: PdfColors.grey700)),
+                  pw.Spacer(),
+                  pw.Text('support@lubyksa.com', style: const pw.TextStyle(color: PdfColors.grey700)),
+                ],
+              ),
+            ],
+      ),
+    );
+
+    final fileName = 'Reservation_${reservation.registrationNumber}.pdf';
+    await Printing.sharePdf(bytes: await doc.save(), filename: fileName);
   }
 
   // @override
@@ -382,50 +606,42 @@ class _ReservationScreenState extends State<ReservationScreen> {
                           ],
                         ),
                       ),
-                      BlocSelector<HomeCubit, HomeState, bool>(
-                        selector: (state) => state.isSignedIn,
-                        builder: (context, isSignedIn) {
-                          return InkWell(
-                            onTap: () async {
-                              if (!isSignedIn) {
-                                await showSigninPlaceholder(context);
-                                return;
-                              }
-                              final user = getIt<HomeCubit>().state.user;
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    final vendor =
-                                        state.reservation.item is PropertyModel
-                                            ? (state.reservation.item as PropertyModel).vendor
-                                            : (state.reservation.item as ActivityModel).vendor;
-                                    return ChatScreen(
-                                      chat: ChatModel(
-                                        id: '${vendor.id}_${user.id}',
-                                        vendorId: vendor.id,
-                                        vendorName: '${vendor.firstName} ${vendor.lastName}',
-                                        vendorImage: vendor.profilePicture,
-                                        lastMessage: '',
-                                        lastTimestamp: DateTime.now(),
-                                        userId: user.id,
-                                        userImageUrl: user.profilePicture,
-                                        userName: '${user.firstName} ${user.lastName}',
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                            child: SvgPicture.asset(
-                              'assets/images/message-2.svg',
-                              // ignore: deprecated_member_use
-                              color: const Color(0xFF414141),
-                              height: 24,
-                            ),
-                          );
-                        },
-                      ),
+                      if (state.reservation.status == ReservationStatus.completed)
+                        InkWell(
+                          onTap: () async {
+                            final user = getIt<HomeCubit>().state.user;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  final vendor =
+                                      state.reservation.item is PropertyModel
+                                          ? (state.reservation.item as PropertyModel).vendor
+                                          : (state.reservation.item as ActivityModel).vendor;
+                                  return ChatScreen(
+                                    chat: ChatModel(
+                                      id: '${vendor.id}_${user.id}',
+                                      vendorId: vendor.id,
+                                      vendorName: '${vendor.firstName} ${vendor.lastName}',
+                                      vendorImage: vendor.profilePicture,
+                                      lastMessage: '',
+                                      lastTimestamp: DateTime.now(),
+                                      userId: user.id,
+                                      userImageUrl: user.profilePicture,
+                                      userName: '${user.firstName} ${user.lastName}',
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                          child: SvgPicture.asset(
+                            'assets/images/message-2.svg',
+                            // ignore: deprecated_member_use
+                            color: const Color(0xFF414141),
+                            height: 24,
+                          ),
+                        ),
                     ],
                   ),
                   Divider(height: 32, thickness: 1),
@@ -462,26 +678,27 @@ class _ReservationScreenState extends State<ReservationScreen> {
                       ),
                     ),
                   if (state.reservation.status == ReservationStatus.completed)
-                    Row(
-                      children: [
-                        Image.asset(ImageAssets.pdfIcon, width: 30, height: 30),
-                        SizedBox(width: 14),
-                        Expanded(
-                          child: Text(
-                            context.l10n.viewReservationSummary,
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.secondTextColor,
+                    InkWell(
+                      onTap: () async {
+                        await _generateAndShareReservationPdf(state);
+                      },
+                      child: Row(
+                        children: [
+                          Image.asset(ImageAssets.pdfIcon, width: 30, height: 30),
+                          SizedBox(width: 14),
+                          Expanded(
+                            child: Text(
+                              context.l10n.viewReservationSummary,
+                              style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.secondTextColor,
+                              ),
                             ),
                           ),
-                        ),
-                        InkWell(
-                          onTap:
-                              () {}, //=> Navigator.push(context, MaterialPageRoute(builder: (context) => CurretReservationDetailsScreen2())),
-                          child: Icon(Icons.arrow_forward_ios, color: AppColors.grayColorIcon),
-                        ),
-                      ],
+                          Icon(Icons.arrow_forward_ios, color: AppColors.grayColorIcon),
+                        ],
+                      ),
                     )
                   else
                     StatefulBuilder(

@@ -64,11 +64,18 @@ class AuthData {
   Exception _responseException(Response response) =>
       DioException(requestOptions: response.requestOptions, response: response, error: response.data['error']);
 
+  Future<void> verifyUserData(UserModel user) async {
+    final mapData = await user.signUp();
+    final response = await _apiServices.dio.post(ApiConstance.verifyUserData, data: mapData);
+    if (response.statusCode != 200) throw _responseException(response);
+  }
+
   Future<void> verifyPhone({required String phone}) async {
+    final deviceId = await getDeviceId();
     final response = await _apiServices.dio.post(
       ApiConstance.initiateSignup,
       data: {AppConst.phone: phone},
-      options: Options(headers: {'X-Device-ID': 256454}),
+      options: Options(headers: {'X-Device-ID': deviceId}),
     );
     if (response.statusCode != 200) throw _responseException(response);
   }

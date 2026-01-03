@@ -26,7 +26,7 @@ class ActivitiesCubit extends Cubit<ActivitiesState> {
         ),
       );
     } catch (e) {
-      emit(state.copyWith(getAllActivitiesStatus: Status.error, msg: e.toString()));
+      emit(state.copyWith(getAllActivitiesStatus: Status.error, msg: AppConst.normalizeError(e)));
     }
   }
 
@@ -36,7 +36,7 @@ class ActivitiesCubit extends Cubit<ActivitiesState> {
       final activity = await _repo.getActivity(id);
       emit(state.copyWith(getActivityStatus: Status.success, activity: activity));
     } catch (e) {
-      emit(state.copyWith(getActivityStatus: Status.error, msg: e.toString()));
+      emit(state.copyWith(getActivityStatus: Status.error, msg: AppConst.normalizeError(e)));
     }
   }
 

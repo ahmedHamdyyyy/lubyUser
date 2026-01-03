@@ -34,6 +34,7 @@ class _MediasListWidgetState extends State<MediasListWidget> {
     if (_controllers.containsKey(url)) return; // already created
     if (_initializingCount >= _maxParallelInits) return; // throttle
     _initializingCount++;
+    // ignore: deprecated_member_use
     final controller = VideoPlayerController.network(url);
     _controllers[url] = controller;
     _initStatus[url] = false;

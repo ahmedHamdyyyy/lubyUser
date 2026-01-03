@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import '../../config/constants/api_constance.dart';
 import '../../config/constants/constance.dart';
+import '../../main.dart';
+import '../../project/auth/view/Screen/auth/sign_in.dart';
 import 'cach_services.dart';
 
 class ApiService {
@@ -45,9 +48,21 @@ class _ApiInterceptor extends InterceptorsWrapper {
   static Completer<bool>? _refreshCompleter;
 
   Future<void> _forceLogout() async {
+    // Remove cached tokens
     await _cacheService.storage.remove(AppConst.accessToken);
     await _cacheService.storage.remove(AppConst.refreshToken);
+
+    // Call the custom callback if registered
     ApiService.onForceLogout?.call();
+
+    // Navigate to signin screen
+    final context = navigatorKey.currentContext;
+    if (context != null && navigatorKey.currentState != null) {
+      navigatorKey.currentState!.pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const SignInScreen()),
+        (route) => false,
+      );
+    }
   }
 
   @override

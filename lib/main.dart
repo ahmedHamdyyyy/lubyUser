@@ -141,12 +141,17 @@ Future<void> main() async {
   // Set foreground presentation options for iOS/macOS
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
 
-  // Get and print FCM token
-  final fcmToken = await messaging.getToken();
-  developer.log('FCM Token: $fcmToken', name: 'FCM');
-  // Optionally print to console as well
-  // ignore: avoid_print
-  print('FCM Token: $fcmToken');
+  // Get and print FCM token (handle errors gracefully)
+  String? fcmToken;
+  try {
+    fcmToken = await messaging.getToken();
+    developer.log('FCM Token: $fcmToken', name: 'FCM');
+    // ignore: avoid_print
+    print('FCM Token: $fcmToken');
+  } catch (e) {
+    developer.log('Failed to get FCM token: $e', name: 'FCM');
+    // Do not crash; proceed. Token may be retrieved later via onTokenRefresh.
+  }
 
   // Listen to token refresh
   // Don't send it yet; wait until services are initialized below

@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  country_picker: ^2.0.21
   flutter_localizations:
     sdk: flutter
 
@@ -70,6 +71,9 @@ dependencies:
   app_links: ^6.2.1
   cached_network_image: ^3.4.1
   webview_flutter: ^4.8.0
+  pdf: ^3.10.7
+  printing: ^5.13.4
+  barcode: ^2.2.4
   
 
 dev_dependencies:

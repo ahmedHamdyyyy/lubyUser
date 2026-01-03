@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <application android:label="luby2" android:name="${applicationName}" android:icon="@mipmap/launcher_icon">
+    <application android:label="Luby" android:name="${applicationName}" android:icon="@mipmap/launcher_icon">
         <!-- Default notification channel id for FCM (used when message doesn't specify channel) -->
         <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="high_importance_channel" />
         <!-- Google Maps API Key: Using same key as vendor app for parity.

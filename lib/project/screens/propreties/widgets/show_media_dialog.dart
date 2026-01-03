@@ -71,6 +71,7 @@ class _VideoDialogState extends State<_VideoDialog> {
 
   Future<void> _init() async {
     try {
+      // ignore: deprecated_member_use
       _controller = VideoPlayerController.network(widget.mediaUrl);
       await _controller.initialize();
       await _controller.setLooping(true);

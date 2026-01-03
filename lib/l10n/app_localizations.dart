@@ -62,15 +62,17 @@ import 'app_localizations_en.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
-  static AppLocalizations? of(BuildContext context) {
-    return Localizations.of<AppLocalizations>(context, AppLocalizations);
+  static AppLocalizations of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -82,17 +84,18 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('ar'),
-    Locale('en')
+    Locale('en'),
   ];
 
   /// No description provided for @appTitle.
@@ -1475,6 +1478,54 @@ abstract class AppLocalizations {
   /// **'Create your account to continue using the app'**
   String get signUpInstruction;
 
+  /// No description provided for @dateOfBirthLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of Birth'**
+  String get dateOfBirthLabel;
+
+  /// No description provided for @identityTypeSelect.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Identity Type'**
+  String get identityTypeSelect;
+
+  /// No description provided for @saudiCitizen.
+  ///
+  /// In en, this message translates to:
+  /// **'Saudi Citizen'**
+  String get saudiCitizen;
+
+  /// No description provided for @residentInSaudi.
+  ///
+  /// In en, this message translates to:
+  /// **'Resident in Saudi'**
+  String get residentInSaudi;
+
+  /// No description provided for @visitor.
+  ///
+  /// In en, this message translates to:
+  /// **'Visitor'**
+  String get visitor;
+
+  /// No description provided for @nationalIdNumberLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'National ID Number'**
+  String get nationalIdNumberLabel;
+
+  /// No description provided for @residenceNumberLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Residence Number'**
+  String get residenceNumberLabel;
+
+  /// No description provided for @passportNumberLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Passport Number'**
+  String get passportNumberLabel;
+
   /// No description provided for @passwordTooShort.
   ///
   /// In en, this message translates to:
@@ -1755,7 +1806,12 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Available for {nights} {nightsLabel} from {from} to {to}'**
-  String availableForRange(Object from, Object nights, Object nightsLabel, Object to);
+  String availableForRange(
+    Object from,
+    Object nights,
+    Object nightsLabel,
+    Object to,
+  );
 
   /// No description provided for @rateApartment.
   ///
@@ -1943,6 +1999,12 @@ abstract class AppLocalizations {
   /// **'Lorem ipsum dolor sit amet, consecr text adipiscing edit text hendrerit triueas dfay lorem ipsum dolor sit amet.'**
   String get notificationDetailParagraph3;
 
+  /// No description provided for @messageContainsTooManyConsecutiveNumbers.
+  ///
+  /// In en, this message translates to:
+  /// **'The message contains too many consecutive numbers'**
+  String get messageContainsTooManyConsecutiveNumbers;
+
   /// No description provided for @firstName.
   ///
   /// In en, this message translates to:
@@ -1962,7 +2024,8 @@ abstract class AppLocalizations {
   String get phone;
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -1971,25 +2034,26 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['ar', 'en'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['ar', 'en'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'ar': return AppLocalizationsAr();
-    case 'en': return AppLocalizationsEn();
+    case 'ar':
+      return AppLocalizationsAr();
+    case 'en':
+      return AppLocalizationsEn();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
+    'that was used.',
   );
 }

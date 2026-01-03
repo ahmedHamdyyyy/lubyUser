@@ -1,3 +1,4 @@
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:luby2/core/localization/l10n_ext.dart';
 
@@ -12,7 +13,18 @@ class PhoneField extends StatefulWidget {
 
 class _PhoneFieldState extends State<PhoneField> {
   final phoneController = TextEditingController();
-  String _selectedCountryCode = '+966';
+  Country _selectedCountry = Country(
+    displayNameNoCountryCode: 'Saudi Arabia',
+    countryCode: 'SA',
+    phoneCode: '966',
+    e164Sc: 0,
+    geographic: true,
+    level: 1,
+    name: 'Saudi Arabia',
+    example: '512 345 678',
+    displayName: 'Saudi Arabia (SA) [+966]',
+    e164Key: '966-SA-0',
+  );
 
   @override
   Widget build(BuildContext context) => Container(
@@ -24,18 +36,36 @@ class _PhoneFieldState extends State<PhoneField> {
     ),
     child: Row(
       children: [
-        DropdownButtonHideUnderline(
-          child: DropdownButton<String>(
-            alignment: AlignmentDirectional.centerEnd,
-            value: _selectedCountryCode,
-            icon: SizedBox.shrink(),
-            items: ['+20', '+966'].map((code) => DropdownMenuItem(value: code, child: Text(code))).toList(),
-            onChanged: (value) {
-              if (value == null) return;
-              setState(() => _selectedCountryCode = value);
-              widget.onChanged(value + phoneController.text.trim());
-              print(value + phoneController.text.trim());
-            },
+        InkWell(
+          onTap: () {
+            showCountryPicker(
+              context: context,
+              showPhoneCode: true,
+              favorite: const ['SA', 'EG'],
+              countryListTheme: CountryListThemeData(
+                flagSize: 24,
+                inputDecoration: InputDecoration(
+                  labelText: 'Search',
+                  hintText: 'Search',
+                  prefixIcon: const Icon(Icons.search),
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+              onSelect: (Country country) {
+                setState(() => _selectedCountry = country);
+                final fullNumber = '+${country.phoneCode}${phoneController.text.trim()}';
+                widget.onChanged(fullNumber);
+              },
+            );
+          },
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(_selectedCountry.flagEmoji, style: const TextStyle(fontSize: 20)),
+              const SizedBox(width: 6),
+              Text('+${_selectedCountry.phoneCode}', style: const TextStyle(fontWeight: FontWeight.w600)),
+              const Icon(Icons.keyboard_arrow_down, size: 18),
+            ],
           ),
         ),
         const SizedBox(width: 4),
@@ -55,7 +85,7 @@ class _PhoneFieldState extends State<PhoneField> {
               }
               return null;
             },
-            onChanged: (value) => widget.onChanged(_selectedCountryCode + value.trim()),
+            onChanged: (value) => widget.onChanged('+${_selectedCountry.phoneCode}${value.trim()}'),
           ),
         ),
       ],

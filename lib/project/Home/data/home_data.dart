@@ -43,7 +43,7 @@ class HomeData {
       ApiConstance.createProperty,
       queryParameters: {'page': _currentPropertiesPage, ...?filters},
     );
-    final properties = (response.data['data']['data'] as List).map((e) => CustomPropertyModel.fromJson(e)).toList();
+    final properties = (response.data['data']?['data'] as List? ?? []).map((e) => CustomPropertyModel.fromJson(e)).toList();
     final hasNextPage = (response.data['data']?['pagination']?['hasNextPage'] as bool?) ?? false;
     return (properties: properties, hasNextPage: hasNextPage);
   }

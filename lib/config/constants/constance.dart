@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+
 enum Status { initial, loading, success, error }
 
 class AppConst {
@@ -8,7 +10,13 @@ class AppConst {
   static const email = 'email';
   static const name = 'name';
   static const phone = 'phone';
+  static const dateOfBirth = 'birthDate';
   static const gender = 'gender';
+  // Identity
+  static const identityType = 'identityType'; // 'citizen' | 'resident' | 'visitor'
+  static const nationalIdNumber = 'nationalId';
+  static const residenceNumber = 'referenceNumber';
+  static const passportNumber = 'passportNumber';
   static const password = 'password';
   static const passwordConfirmation = 'password_confirmation';
   static const theme = 'theme';
@@ -67,6 +75,8 @@ class AppConst {
   // cache
   static const String tokenKey = 'auth_token';
   static const String isLoggedInKey = 'is_logged_in';
+  // onboarding
+  static const String viewOnboarding = 'view_onboarding';
 
   static const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
@@ -77,5 +87,62 @@ class AppConst {
   //   lubyuser://open/property/<id>
   // Using custom scheme deep links (not Firebase Dynamic Links)
   static const String deepLinkBase = 'lubyuser://open/';
+  static String normalizeError(Object e) {
+    String? message;
+
+    // 1️⃣ Handle DioException explicitly
+    if (e is DioException) {
+      // a) Direct Dio message (e.g. DioException(Error: ...))
+      if (e.message != null && e.message!.isNotEmpty) {
+        message = e.message;
+      }
+
+      // b) Response data
+      final data = e.response?.data;
+      if (data != null) {
+        if (data is String && data.isNotEmpty) {
+          message = data;
+        } else if (data is Map<String, dynamic>) {
+          // Common backend keys
+          for (final key in ['message', 'error', 'detail', 'details', 'msg']) {
+            if (data[key] != null && data[key].toString().isNotEmpty) {
+              message = data[key].toString();
+              break;
+            }
+
+            // Nested data { data: { message: ... } }
+            if (data['data'] is Map && data['data'][key] != null && data['data'][key].toString().isNotEmpty) {
+              message = data['data'][key].toString();
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    // 2️⃣ Handle normal Exception
+    if (message == null && e is Exception) {
+      message = e.toString();
+    }
+
+    // 3️⃣ Final fallback
+    message ??= e.toString();
+
+    // 🔥 Clean technical prefixes
+    message =
+        message
+            .replaceFirst(RegExp(r'^DioException[:\(]*', caseSensitive: false), '')
+            .replaceFirst(RegExp(r'^Exception[:\(]*', caseSensitive: false), '')
+            .replaceFirst(RegExp(r'^Error[: ]*', caseSensitive: false), '')
+            .replaceAll(')', '')
+            .trim();
+
+    // 🧠 Friendly defaults
+    if (message.isEmpty || message.toLowerCase() == 'null') {
+      return 'Something went wrong. Please try again.';
+    }
+
+    return message;
+  }
 }
 // sha1   A3:F0:AA:05:78:C3:9A:43:7E:4B:39:55:03:AC:5D:24:FB:52:C0:EE

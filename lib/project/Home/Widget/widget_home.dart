@@ -563,6 +563,7 @@ class _HomeSearchSectionState extends State<HomeSearchSection> {
   String? selectedCity, selectedState; // selectedState = district/neighbourhood
   DateTime? checkInDate, checkOutDate;
   int guestsCount = 0;
+  final _formKey = GlobalKey<FormState>();
 
   // Real Saudi Arabia major cities (mix of top urban centers + touristic) & regions
   // We map each city to a curated list of well‑known districts / neighborhoods.
@@ -606,154 +607,164 @@ class _HomeSearchSectionState extends State<HomeSearchSection> {
   Widget build(BuildContext context) {
     final List<String> districtsForCity = selectedCity != null ? (cityDistricts[selectedCity] ?? const []) : const [];
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, spreadRadius: 2)],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CityDropdown(
-            title: context.l10n.cityLabel,
-            hint: context.l10n.cityLabel,
-            list: cities,
-            selectedCity: selectedCity,
-            onChanged:
-                (value) => setState(() {
-                  selectedCity = value;
-                  selectedState = null; // reset district when city changes
-                }),
-          ),
-          const SizedBox(height: 12),
-          CityDropdown(
-            title: context.l10n.districtOptionalLabel,
-            hint: context.l10n.districtLabel,
-            list: districtsForCity,
-            selectedCity: selectedState,
-            onChanged: (value) => setState(() => selectedState = value),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.l10n.checkIn.trim(),
-                      style: GoogleFonts.poppins(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.secondTextColor,
+    return Form(
+      key: _formKey,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, spreadRadius: 2)],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CityDropdown(
+              title: context.l10n.cityLabel,
+              hint: context.l10n.cityLabel,
+              list: cities,
+              selectedCity: selectedCity,
+              onChanged:
+                  (value) => setState(() {
+                    selectedCity = value;
+                    selectedState = null; // reset district when city changes
+                  }),
+            ),
+            const SizedBox(height: 12),
+            CityDropdown(
+              title: context.l10n.districtOptionalLabel,
+              hint: context.l10n.districtLabel,
+              list: districtsForCity,
+              selectedCity: selectedState,
+              onChanged: (value) => setState(() => selectedState = value),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        context.l10n.checkIn.trim(),
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.secondTextColor,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 6),
-                    HomeInputBox(
-                      text:
-                          checkInDate != null
-                              ? "${checkInDate!.day}/${checkInDate!.month}/${checkInDate!.year}"
-                              : context.l10n.selectDateLabel,
-                      onPressed: () => _selectDate(context, checkInDate, (date) => setState(() => checkInDate = date)),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.l10n.checkOut.trim(),
-                      style: GoogleFonts.poppins(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.secondTextColor,
+                      const SizedBox(height: 6),
+                      HomeInputBox(
+                        text:
+                            checkInDate != null
+                                ? "${checkInDate!.day}/${checkInDate!.month}/${checkInDate!.year}"
+                                : context.l10n.selectDateLabel,
+                        onPressed: () => _selectDate(context, checkInDate, (date) => setState(() => checkInDate = date)),
                       ),
-                    ),
-                    const SizedBox(height: 6),
-                    HomeInputBox(
-                      text:
-                          checkOutDate != null
-                              ? "${checkOutDate!.day}/${checkOutDate!.month}/${checkOutDate!.year}"
-                              : context.l10n.selectDateLabel,
-                      onPressed: () {
-                        _selectDate(
-                          context,
-                          checkOutDate,
-                          (date) => setState(() => checkOutDate = date),
-                          checkInDate: checkInDate,
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                context.l10n.guestsNoLabel,
-                style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.secondTextColor),
-              ),
-              const SizedBox(height: 6),
-              HomeGuestsSelector(guestsCount: guestsCount, onChanged: (guests) => guestsCount = guests),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    backgroundColor: AppColors.primaryColor,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                  onPressed: () {
-                    String? fmt(DateTime? d) => d?.toIso8601String().split('T').first;
-                    widget.onSearch({
-                      if (selectedCity != null) 'filter[city]': selectedCity,
-                      if (selectedState != null) 'filter[state]': selectedState,
-                      if (checkInDate != null) 'filter[startDate]': fmt(checkInDate),
-                      if (checkOutDate != null) 'filter[endDate]': fmt(checkOutDate),
-                      if (guestsCount > 0) 'filter[guestNumber]': guestsCount,
-                    });
-                  },
-                  child: Text(
-                    context.l10n.commonSearch,
-                    style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white),
+                    ],
                   ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  backgroundColor: AppColors.primaryColor,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        context.l10n.checkOut.trim(),
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.secondTextColor,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      HomeInputBox(
+                        text:
+                            checkOutDate != null
+                                ? "${checkOutDate!.day}/${checkOutDate!.month}/${checkOutDate!.year}"
+                                : context.l10n.selectDateLabel,
+                        onPressed: () {
+                          _selectDate(
+                            context,
+                            checkOutDate,
+                            (date) => setState(() => checkOutDate = date),
+                            checkInDate: checkInDate,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-                onPressed: () {
-                  selectedCity = null;
-                  selectedState = null;
-                  checkInDate = null;
-                  checkOutDate = null;
-                  guestsCount = 0;
-                  setState(() {});
-                  widget.onSearch({});
-                },
-                child: const Icon(Icons.filter_list_off, color: Colors.white),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+            const SizedBox(height: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  context.l10n.guestsNoLabel,
+                  style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.secondTextColor),
+                ),
+                const SizedBox(height: 6),
+                HomeGuestsSelector(guestsCount: guestsCount, onChanged: (guests) => setState(() => guestsCount = guests)),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      backgroundColor: AppColors.primaryColor,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    onPressed: () {
+                      String? fmt(DateTime? d) => d?.toIso8601String().split('T').first;
+                      final filter = <String, dynamic>{
+                        if (selectedCity != null && selectedCity!.isNotEmpty) 'filter[city]': selectedCity,
+                        if (selectedState != null && selectedState!.isNotEmpty) 'filter[state]': selectedState,
+                        if (checkInDate != null) 'filter[startDate]': fmt(checkInDate),
+                        if (checkOutDate != null) 'filter[endDate]': fmt(checkOutDate),
+                        if (guestsCount > 0) 'filter[guestNumber]': guestsCount,
+                      };
+                      widget.onSearch(filter);
+                    },
+                    child: Text(
+                      context.l10n.commonSearch,
+                      style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                if (selectedCity != null ||
+                    selectedState != null ||
+                    checkInDate != null ||
+                    checkOutDate != null ||
+                    guestsCount > 0)
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      backgroundColor: AppColors.primaryColor,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        selectedCity = null;
+                        selectedState = null;
+                        checkInDate = null;
+                        checkOutDate = null;
+                        guestsCount = 0;
+                      });
+                      widget.onSearch({});
+                    },
+                    child: const Icon(Icons.filter_list_off, color: Colors.white),
+                  ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -31,7 +31,7 @@ class CustomPropertyModel extends Equatable {
   CustomPropertyModel copyWith({
     String? id,
     String? type,
-    String? imageUrl,
+    String? image,
     String? address,
     int? guestNumber,
     bool? isFavorite,
@@ -40,7 +40,7 @@ class CustomPropertyModel extends Equatable {
   }) => CustomPropertyModel(
     id: id ?? this.id,
     type: type ?? this.type,
-    image: imageUrl ?? this.image,
+    image: image ?? this.image,
     address: address ?? this.address,
     guestNumber: guestNumber ?? this.guestNumber,
     isFavorite: isFavorite ?? this.isFavorite,

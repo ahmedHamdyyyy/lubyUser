@@ -26,7 +26,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
         ),
       );
     } catch (e) {
-      emit(state.copyWith(getFavoritesStatus: Status.error, message: e.toString()));
+      emit(state.copyWith(getFavoritesStatus: Status.error, message: AppConst.normalizeError(e)));
     }
   }
 
@@ -44,7 +44,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
       emit(state.copyWith(toggleFavoriteStatus: Status.success));
       showToast(text: 'Added to favorites', stute: ToustStute.success);
     } catch (e) {
-      emit(state.copyWith(toggleFavoriteStatus: Status.error, message: e.toString()));
+      emit(state.copyWith(toggleFavoriteStatus: Status.error, message: AppConst.normalizeError(e)));
       showToast(text: 'Failed to add to favorites', stute: ToustStute.error);
     }
   }
@@ -63,7 +63,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
       );
       showToast(text: 'Removed from favorites', stute: ToustStute.worning);
     } catch (e) {
-      emit(state.copyWith(toggleFavoriteStatus: Status.error, message: e.toString()));
+      emit(state.copyWith(toggleFavoriteStatus: Status.error, message: AppConst.normalizeError(e)));
       showToast(text: 'Failed to remove from favorites', stute: ToustStute.worning);
     }
   }

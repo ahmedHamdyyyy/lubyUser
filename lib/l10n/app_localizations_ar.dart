@@ -57,13 +57,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noConversationsYet => 'لا توجد محادثات حتى الآن';
 
   @override
-  String get startByContactingSellers => 'ابدأ بالتواصل مع البائعين وستظهر المحادثات هنا';
+  String get startByContactingSellers =>
+      'ابدأ بالتواصل مع البائعين وستظهر المحادثات هنا';
 
   @override
   String get deleteConversationTitle => 'حذف المحادثة';
 
   @override
-  String get deleteConversationBody => 'هل أنت متأكد أنك تريد حذف هذه المحادثة؟ هذا الإجراء لا يمكن التراجع عنه.';
+  String get deleteConversationBody =>
+      'هل أنت متأكد أنك تريد حذف هذه المحادثة؟ هذا الإجراء لا يمكن التراجع عنه.';
 
   @override
   String get commonClose => 'إغلاق';
@@ -155,13 +157,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noPropertyReservations => 'لا توجد حجوزات عقارات';
 
   @override
-  String get noCurrentPropertyReservations => 'لا توجد لديك حجوزات عقارات حالية.';
+  String get noCurrentPropertyReservations =>
+      'لا توجد لديك حجوزات عقارات حالية.';
 
   @override
   String get noActivityReservations => 'لا توجد حجوزات أنشطة';
 
   @override
-  String get noCurrentActivityReservations => 'لا توجد لديك حجوزات أنشطة حالية.';
+  String get noCurrentActivityReservations =>
+      'لا توجد لديك حجوزات أنشطة حالية.';
 
   @override
   String get viewReservationDetails => 'عرض تفاصيل الحجز';
@@ -188,7 +192,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noCoordinatesProvided => 'لا توجد إحداثيات';
 
   @override
-  String get noMappedLocationYet => 'لا يحتوي هذا العقار على موقع محدد حتى الآن.';
+  String get noMappedLocationYet =>
+      'لا يحتوي هذا العقار على موقع محدد حتى الآن.';
 
   @override
   String get openInGoogleMaps => 'افتح في خرائط جوجل';
@@ -212,7 +217,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get loginOrRegister => 'تسجيل الدخول أو التسجيل';
 
   @override
-  String get pleaseLoginToCompleteBooking => 'يرجى تسجيل الدخول أو التسجيل أولًا\nلإكمال الحجز';
+  String get pleaseLoginToCompleteBooking =>
+      'يرجى تسجيل الدخول أو التسجيل أولًا\nلإكمال الحجز';
 
   @override
   String get commonVat => 'ضريبة القيمة المضافة';
@@ -251,7 +257,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get payNow => 'ادفع الآن';
 
   @override
-  String get paymentNotCompleted => 'لم يكتمل الدفع بعد. يرجى إتمام عملية الدفع.';
+  String get paymentNotCompleted =>
+      'لم يكتمل الدفع بعد. يرجى إتمام عملية الدفع.';
 
   @override
   String get canceledLabel => 'ملغي...';
@@ -272,7 +279,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reservationCompleted => 'تم إكمال حجزك\nبنجاح.';
 
   @override
-  String get paymentDisclaimer => 'تخلي لُبي مسؤوليتها عن أي تحويلات مالية\nخارج المنصة.\nفي حال وجود عربون أو رصيد يتم دفعه\nقبل الدخول.';
+  String get paymentDisclaimer =>
+      'تخلي لُبي مسؤوليتها عن أي تحويلات مالية\nخارج المنصة.\nفي حال وجود عربون أو رصيد يتم دفعه\nقبل الدخول.';
 
   @override
   String get uploadStudioPhotosOrVideo => 'قم بتحميل صور أو فيديو الاستوديو';
@@ -323,7 +331,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get selectOnlyJpgOrPng => 'يرجى اختيار صورة بصيغة JPG أو PNG فقط';
 
   @override
-  String get imageTooLarge => 'حجم الصورة كبير جدًا. يجب أن يكون أقل من 2 ميجابايت';
+  String get imageTooLarge =>
+      'حجم الصورة كبير جدًا. يجب أن يكون أقل من 2 ميجابايت';
 
   @override
   String get errorSelectingImage => 'حدث خطأ أثناء اختيار الصورة';
@@ -440,7 +449,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get createAccount => 'إنشاء حساب';
 
   @override
-  String get signInInstruction => 'الرجاء إدخال البريد الإلكتروني وكلمة المرور لتسجيل الدخول إلى حسابك.';
+  String get signInInstruction =>
+      'الرجاء إدخال البريد الإلكتروني وكلمة المرور لتسجيل الدخول إلى حسابك.';
 
   @override
   String get searchLocationHint => 'الموقع (مدينة، منطقة، أو اسم العقار)';
@@ -476,13 +486,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get invalidDateComponents => 'مكونات التاريخ غير صحيحة';
 
   @override
-  String get checkInDateMustBeInFuture => 'يجب أن يكون تاريخ تسجيل الوصول في المستقبل';
+  String get checkInDateMustBeInFuture =>
+      'يجب أن يكون تاريخ تسجيل الوصول في المستقبل';
 
   @override
-  String get dateMustBeWithinAvailability => 'يجب أن يكون التاريخ ضمن فترة توفر العقار';
+  String get dateMustBeWithinAvailability =>
+      'يجب أن يكون التاريخ ضمن فترة توفر العقار';
 
   @override
-  String get checkOutMustBeAfterCheckIn => 'يجب أن يكون تسجيل المغادرة بعد تسجيل الوصول';
+  String get checkOutMustBeAfterCheckIn =>
+      'يجب أن يكون تسجيل المغادرة بعد تسجيل الوصول';
 
   @override
   String get guestsNoLabel => 'عدد الضيوف';
@@ -500,7 +513,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notChargedYet => 'لن يتم تحصيل رسوم الآن';
 
   @override
-  String get checkInBeforeCheckOut => 'يجب أن يكون تاريخ تسجيل الوصول قبل تاريخ المغادرة';
+  String get checkInBeforeCheckOut =>
+      'يجب أن يكون تاريخ تسجيل الوصول قبل تاريخ المغادرة';
 
   @override
   String get reserveLabel => 'احجز';
@@ -577,7 +591,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get resendComingSoon => 'ميزة إعادة الإرسال قادمة قريبًا';
 
   @override
-  String get mobileLoginPrompt => 'يرجى إدخال رقم هاتفك لإنشاء حساب أو تسجيل الدخول.';
+  String get mobileLoginPrompt =>
+      'يرجى إدخال رقم هاتفك لإنشاء حساب أو تسجيل الدخول.';
 
   @override
   String get requestWasCancelled => 'تم إلغاء الطلب';
@@ -711,6 +726,30 @@ class AppLocalizationsAr extends AppLocalizations {
   String get signUpInstruction => 'أنشئ حسابك للمتابعة في استخدام التطبيق';
 
   @override
+  String get dateOfBirthLabel => 'تاريخ الميلاد';
+
+  @override
+  String get identityTypeSelect => 'اختر نوع الهوية';
+
+  @override
+  String get saudiCitizen => 'مواطن سعودي';
+
+  @override
+  String get residentInSaudi => 'مقيم في السعودية';
+
+  @override
+  String get visitor => 'زائر';
+
+  @override
+  String get nationalIdNumberLabel => 'رقم الهوية الوطنية';
+
+  @override
+  String get residenceNumberLabel => 'رقم الإقامة';
+
+  @override
+  String get passportNumberLabel => 'رقم جواز السفر';
+
+  @override
   String get passwordTooShort => 'يجب أن تتكون كلمة المرور من 6 أحرف على الأقل';
 
   @override
@@ -777,13 +816,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get onboardingExploreSaudiTitle => 'استكشف السعودية';
 
   @override
-  String get onboardingExploreSaudiDescription => 'هذا نص افتراضي لشرح موجز عن التطبيق. يمكن تعديله لاحقًا ليتضمن وصفًا مناسبًا.';
+  String get onboardingExploreSaudiDescription =>
+      'هذا نص افتراضي لشرح موجز عن التطبيق. يمكن تعديله لاحقًا ليتضمن وصفًا مناسبًا.';
 
   @override
   String get welcomeToLobyTitle => 'مرحبًا بك في لُوبي';
 
   @override
-  String get welcomeToLobyDescription => 'هذا نص ترحيبي تجريبي. يمكن استبداله لاحقًا بوصف حقيقي للتطبيق.';
+  String get welcomeToLobyDescription =>
+      'هذا نص ترحيبي تجريبي. يمكن استبداله لاحقًا بوصف حقيقي للتطبيق.';
 
   @override
   String get letsStarted => 'لنبدأ';
@@ -869,7 +910,12 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String availableForRange(Object from, Object nights, Object nightsLabel, Object to) {
+  String availableForRange(
+    Object from,
+    Object nights,
+    Object nightsLabel,
+    Object to,
+  ) {
     return 'متاح لمدة $nights $nightsLabel من $from إلى $to';
   }
 
@@ -953,34 +999,47 @@ class AppLocalizationsAr extends AppLocalizations {
   String get passwordResetSuccess => 'تم إعادة تعيين كلمة المرور بنجاح.';
 
   @override
-  String get privacyFirstParagraph => 'هذا نص تجريبي يوضح فقرة أولى لسياسة الخصوصية.';
+  String get privacyFirstParagraph =>
+      'هذا نص تجريبي يوضح فقرة أولى لسياسة الخصوصية.';
 
   @override
-  String get privacyStandardParagraph => 'هذا نص تجريبي لفقرة قياسية متكررة في سياسة الخصوصية، يمكن استبداله بمحتوى فعلي لاحقًا.';
+  String get privacyStandardParagraph =>
+      'هذا نص تجريبي لفقرة قياسية متكررة في سياسة الخصوصية، يمكن استبداله بمحتوى فعلي لاحقًا.';
 
   @override
-  String get termsFirstParagraph => 'هذا نص تجريبي يوضح فقرة أولى للشروط والأحكام.';
+  String get termsFirstParagraph =>
+      'هذا نص تجريبي يوضح فقرة أولى للشروط والأحكام.';
 
   @override
-  String get termsStandardParagraph => 'هذا نص تجريبي لفقرة قياسية متكررة في الشروط والأحكام، يمكن استبداله بمحتوى فعلي لاحقًا.';
+  String get termsStandardParagraph =>
+      'هذا نص تجريبي لفقرة قياسية متكررة في الشروط والأحكام، يمكن استبداله بمحتوى فعلي لاحقًا.';
 
   @override
-  String get hostInfoText => 'سجّل عقارك والأنشطة السياحية في لوبي بطريقة نظامية واحصل على دخل إضافي، سيتم توجيهك الآن إلى تطبيق لوبي للأعمال للتسجيل';
+  String get hostInfoText =>
+      'سجّل عقارك والأنشطة السياحية في لوبي بطريقة نظامية واحصل على دخل إضافي، سيتم توجيهك الآن إلى تطبيق لوبي للأعمال للتسجيل';
 
   @override
   String get aboutFirstParagraph => 'هذا نص تجريبي يوضح فقرة أولى عن لوبي.';
 
   @override
-  String get aboutSecondParagraph => 'هذا نص تجريبي لفقرة ثانية أطول عن لوبي، يمكن استبداله بمحتوى فعلي لاحقًا.';
+  String get aboutSecondParagraph =>
+      'هذا نص تجريبي لفقرة ثانية أطول عن لوبي، يمكن استبداله بمحتوى فعلي لاحقًا.';
 
   @override
-  String get notificationDetailParagraph1 => 'هذا نص تجريبي يوضح تفاصيل الإشعار بشكل عام ويمكن استبداله لاحقًا بمحتوى فعلي.';
+  String get notificationDetailParagraph1 =>
+      'هذا نص تجريبي يوضح تفاصيل الإشعار بشكل عام ويمكن استبداله لاحقًا بمحتوى فعلي.';
 
   @override
-  String get notificationDetailParagraph2 => 'هذا نص تجريبي إضافي لشرح تفاصيل الإشعار بشكل أكبر وبأسلوب مبسط.';
+  String get notificationDetailParagraph2 =>
+      'هذا نص تجريبي إضافي لشرح تفاصيل الإشعار بشكل أكبر وبأسلوب مبسط.';
 
   @override
-  String get notificationDetailParagraph3 => 'هذا نص قصير تجريبي يختتم تفاصيل الإشعار.';
+  String get notificationDetailParagraph3 =>
+      'هذا نص قصير تجريبي يختتم تفاصيل الإشعار.';
+
+  @override
+  String get messageContainsTooManyConsecutiveNumbers =>
+      'تحتوي الرسالة على أرقام متتالية كثيرة جدًا';
 
   @override
   String get firstName => 'الاسم الأول';
