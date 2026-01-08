@@ -199,17 +199,17 @@ class _ConfirmOtpScreenState extends State<ConfirmOtpScreen> with TickerProvider
         default:
           break;
       }
-      // // Handle resend OTP for signup
-      // switch (state.initiateSignupStatus) {
-      //   case Status.error:
-      //     showToast(text: state.msg, stute: ToustStute.error);
-      //     break;
-      //   case Status.success:
-      //     showToast(text: 'OTP resent successfully', stute: ToustStute.success);
-      //     break;
-      //   default:
-      //     break;
-      // }
+      // Handle resend OTP
+      switch (state.resendOtpStatus) {
+        case Status.error:
+          showToast(text: state.msg, stute: ToustStute.error);
+          break;
+        case Status.success:
+          showToast(text: 'OTP resent successfully', stute: ToustStute.success);
+          break;
+        default:
+          break;
+      }
       // // Handle resend OTP for signin
       // switch (state.initiateSigninStatus) {
       //   case Status.error:

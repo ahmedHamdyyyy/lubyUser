@@ -326,9 +326,12 @@ class AccountFormFields extends StatelessWidget {
         CustomTextField(controller: lastNameController, title: context.l10n.lastName, isEnabled: isEditing),
         // CustomTextField(controller: phoneController, title: context.l10n.phone, isEnabled: isEditing),
         CustomTextField(controller: dobController, title: context.l10n.dateOfBirthLabel, isEnabled: false),
-        CustomTextField(controller: nationalIdController, title: context.l10n.nationalIdNumberLabel, isEnabled: false),
-        CustomTextField(controller: residenceNumberController, title: context.l10n.residenceNumberLabel, isEnabled: false),
-        CustomTextField(controller: passportNumberController, title: context.l10n.passportNumberLabel, isEnabled: false),
+        if (nationalIdController.text.isNotEmpty)
+          CustomTextField(controller: nationalIdController, title: context.l10n.nationalIdNumberLabel, isEnabled: false),
+        if (residenceNumberController.text.isNotEmpty)
+          CustomTextField(controller: residenceNumberController, title: context.l10n.residenceNumberLabel, isEnabled: false),
+        if (passportNumberController.text.isNotEmpty)
+          CustomTextField(controller: passportNumberController, title: context.l10n.passportNumberLabel, isEnabled: false),
         const SizedBox(height: 20),
       ],
     );

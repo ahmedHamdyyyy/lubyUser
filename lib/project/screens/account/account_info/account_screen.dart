@@ -38,7 +38,8 @@ class _AccountScreenState extends State<AccountScreen> {
           firstNameController.text = state.user.firstName;
           lastNameController.text = state.user.lastName;
           phoneController.text = state.user.phone;
-          dobController.text = state.user.dateOfBirth;
+          dobController.text =
+              state.user.dateOfBirth.length >= 10 ? state.user.dateOfBirth.substring(0, 10) : state.user.dateOfBirth;
           nationalIdController.text = state.user.nationalIdNumber;
           residenceNumberController.text = state.user.residenceNumber;
           passportNumberController.text = state.user.passportNumber;

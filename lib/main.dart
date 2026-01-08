@@ -222,7 +222,7 @@ Future<void> main() async {
 Future<void> _updateFcmTokenIfLoggedIn(String token) async {
   try {
     final accessToken = getIt<CacheService>().storage.getString(AppConst.accessToken);
-    if (accessToken == null || accessToken.isEmpty) return; // not logged in
+    if (accessToken == null || accessToken.isEmpty) return;
     await getIt<ApiService>().dio.post(ApiConstance.updateFcmToken, data: {'fcmToken': token});
   } catch (e) {
     developer.log('Failed to update FCM token: $e', name: 'FCM');
@@ -231,7 +231,6 @@ Future<void> _updateFcmTokenIfLoggedIn(String token) async {
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
-
   @override
   State<MyApp> createState() => _MyAppState();
 }

@@ -2,12 +2,11 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 
 import '../../config/constants/api_constance.dart';
 import '../../config/constants/constance.dart';
-import '../../main.dart';
-import '../../project/auth/view/Screen/auth/sign_in.dart';
+import '../../locator.dart';
+import '../../project/Home/cubit/home_cubit.dart';
 import 'cach_services.dart';
 
 class ApiService {
@@ -54,15 +53,15 @@ class _ApiInterceptor extends InterceptorsWrapper {
 
     // Call the custom callback if registered
     ApiService.onForceLogout?.call();
-
+    getIt<HomeCubit>().clearUserData();
     // Navigate to signin screen
-    final context = navigatorKey.currentContext;
-    if (context != null && navigatorKey.currentState != null) {
-      navigatorKey.currentState!.pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const SignInScreen()),
-        (route) => false,
-      );
-    }
+    // final context = navigatorKey.currentContext;
+    // if (context != null && navigatorKey.currentState != null) {
+    //   navigatorKey.currentState!.pushAndRemoveUntil(
+    //     MaterialPageRoute(builder: (_) => const SignInScreen()),
+    //     (route) => false,
+    //   );
+    // }
   }
 
   @override

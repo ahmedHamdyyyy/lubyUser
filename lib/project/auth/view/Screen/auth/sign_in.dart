@@ -51,22 +51,19 @@ class _SignInScreenState extends State<SignInScreen> {
           default:
             break;
         }
-        switch (state.verifySigninStatus) {
-          case Status.initial:
-            break;
-          case Status.error:
-            showToast(text: state.msg, stute: ToustStute.error);
-            break;
-          case Status.success:
-            showToast(text: state.msg, stute: ToustStute.success);
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.pop(context);
-              Navigator.pop(context, true);
-            });
-            break;
-          default:
-            break;
-        }
+        // switch (state.verifySigninStatus) {
+        //   case Status.initial:
+        //     break;
+        //   case Status.error:
+        //     showToast(text: state.msg, stute: ToustStute.error);
+        //     break;
+        //   case Status.success:
+        //     showToast(text: state.msg, stute: ToustStute.success);
+        //     WidgetsBinding.instance.addPostFrameCallback((_) => Navigator.pop(context, true));
+        //     break;
+        //   default:
+        //     break;
+        // }
       },
       builder: (context, state) {
         return Stack(
