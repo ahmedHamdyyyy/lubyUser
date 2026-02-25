@@ -6,7 +6,6 @@ import 'package:luby2/core/localization/l10n_ext.dart';
 
 import '../../../../../config/constants/constance.dart';
 import '../../../Home/cubit/home_cubit.dart';
-import 'update_account_screen.dart';
 import 'wideget_account.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -16,7 +15,6 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  bool isEditing = false;
   String _imageUrl = '';
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
@@ -46,12 +44,7 @@ class _AccountScreenState extends State<AccountScreen> {
           _imageUrl = state.user.profilePicture;
           return Scaffold(
             backgroundColor: Colors.white,
-            appBar: AccountInfoAppBar(
-              isEditing: isEditing,
-              onEditPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateAccountScreen(user: state.user)));
-              },
-            ),
+            appBar: const AccountInfoAppBar(),
             body: SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -70,9 +63,8 @@ class _AccountScreenState extends State<AccountScreen> {
                     nationalIdController: nationalIdController,
                     residenceNumberController: residenceNumberController,
                     passportNumberController: passportNumberController,
-                    isEditing: isEditing,
                   ),
-                  ActionButton(isEditing: isEditing, onPressed: _handleButtonAction),
+                  ActionButton(onPressed: _handleButtonAction),
                 ],
               ),
             ),
@@ -80,13 +72,13 @@ class _AccountScreenState extends State<AccountScreen> {
         } else if (state.getUserStatus == Status.loading || state.getUserStatus == Status.initial) {
           return Scaffold(
             backgroundColor: Colors.white,
-            appBar: AccountInfoAppBar(isEditing: isEditing, onEditPressed: () {}),
+            appBar: const AccountInfoAppBar(),
             body: const Center(child: CircularProgressIndicator()),
           );
         } else {
           return Scaffold(
             backgroundColor: Colors.white,
-            appBar: AccountInfoAppBar(isEditing: isEditing, onEditPressed: () {}),
+            appBar: const AccountInfoAppBar(),
             body: Center(child: Text(context.l10n.somethingWentWrong)),
           );
         }

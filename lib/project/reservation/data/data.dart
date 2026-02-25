@@ -54,10 +54,18 @@ class ReservationsData {
   }
 
   Future<String> payment(String reservationId) async {
+    if (reservationId.isEmpty) {
+      throw Exception('Reservation ID is empty. Cannot initiate payment.');
+    }
+    log('Initiating payment for reservationId: $reservationId');
     final response = await _apiService.dio
         .post('/payments/initiate', data: {'registrationId': reservationId})
         .timeout(const Duration(seconds: 15));
-    if (response.statusCode != 200) throw Exception('Failed to initiate payment');
+    if (response.statusCode != 200) {
+      log('Payment initiation failed with status ${response.statusCode}');
+      log('Error response: ${response.data}');
+      throw Exception('Failed to initiate payment: ${response.data}');
+    }
     log(response.data.toString());
     return response.data['data']['redirect_url'] as String;
   }

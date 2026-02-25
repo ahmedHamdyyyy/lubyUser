@@ -81,6 +81,10 @@ class _ApiInterceptor extends InterceptorsWrapper {
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) async {
     debugPrint('RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
+    // Log error details for non-success responses
+    if (response.statusCode != null && response.statusCode! >= 400) {
+      debugPrint('ERROR RESPONSE DATA: ${response.data}');
+    }
     if ([ApiConstance.signup, ApiConstance.resetpassword].contains(response.requestOptions.path)) {
       if (response.data != null && response.data['success']) {
         final accessToken = (response.data['data'] ?? {})['accessToken'];

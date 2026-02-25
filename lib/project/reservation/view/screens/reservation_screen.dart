@@ -623,7 +623,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                                       id: '${vendor.id}_${user.id}',
                                       vendorId: vendor.id,
                                       vendorName: '${vendor.firstName} ${vendor.lastName}',
-                                      vendorImage: vendor.profilePicture,
+                                      vendorImageUrl: vendor.profilePicture,
                                       lastMessage: '',
                                       lastTimestamp: DateTime.now(),
                                       userId: user.id,
@@ -658,7 +658,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                     price: context.l10n.sarAmount(state.reservation.totalPrice.toStringAsFixed(2)),
                   ),
                   SummaryRow(
-                    title: context.l10n.commonVat,
+                    title: context.l10n.serviceFees,
                     price: context.l10n.sarAmount(
                       (state.reservation.totalPrice - state.reservation.totalPriceAfterFees).abs().toStringAsFixed(2),
                     ),

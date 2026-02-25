@@ -75,8 +75,8 @@ class ReservationsCubit extends Cubit<ReservationsState> {
       emit(
         state.copyWith(
           paymentStatus: PaymentStatus.paying,
-          // paymentUrl: paymentLink,
-          paymentUrl: paymentLink.replaceFirst('https://pay.', 'https://sandbox.'),
+          paymentUrl: paymentLink,
+          // paymentUrl: paymentLink.replaceFirst('https://pay.', 'https://sandbox.'),
         ),
       );
     } catch (e) {

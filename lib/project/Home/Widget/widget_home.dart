@@ -399,13 +399,11 @@ Widget buildRadioOption(String text, bool isSelected, Function(String) onSelect)
 
 void showFilterOptions(
   BuildContext context,
-  List<String> propertyTypes,
   List<String> priceRanges,
   List<String> ratingRanges,
-  String selectedPropertyType,
   String selectedPriceRange,
   String selectedRatingRange, {
-  required void Function(String selectedPropertyType, String selectedPriceRange, String selectedRatingRange) onApply,
+  required void Function(String selectedPriceRange, String selectedRatingRange) onApply,
 }) {
   showModalBottomSheet(
     context: context,
@@ -455,27 +453,6 @@ void showFilterOptions(
                   child: ListView(
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     children: [
-                      // Property Type section
-                      /*    Text(
-                        "Property Type",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: AppColors.grayTextColor,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ), */
-                      ...propertyTypes
-                          .map(
-                            (type) => buildRadioOption(type, type == selectedPropertyType, (value) {
-                              setState(() {
-                                selectedPropertyType = value;
-                              });
-                            }),
-                          )
-                          .toList(),
-
-                      SizedBox(height: 16),
-
                       // Price section
                       Text(
                         context.l10n.priceLabel,
@@ -536,7 +513,7 @@ void showFilterOptions(
                       ),
                       onPressed: () {
                         // Apply filters back to caller and close
-                        onApply(selectedPropertyType, selectedPriceRange, selectedRatingRange);
+                        onApply(selectedPriceRange, selectedRatingRange);
                         Navigator.pop(context);
                       },
                       child: Text(context.l10n.commonSearch, style: GoogleFonts.poppins(fontSize: 16, color: Colors.white)),
@@ -966,6 +943,28 @@ class HomeCategoryButtons extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+class FilterButton extends StatelessWidget {
+  final VoidCallback onTap;
+  const FilterButton({super.key, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        height: 48,
+        width: 48,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: AppColors.primaryColor),
+        ),
+        child: Center(child: Icon(Icons.tune, color: AppColors.primaryColor, size: 24)),
+      ),
     );
   }
 }

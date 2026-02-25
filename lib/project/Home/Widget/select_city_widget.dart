@@ -28,7 +28,7 @@ class CityDropdown extends StatelessWidget {
         decoration: BoxDecoration(border: Border.all(color: AppColors.lightGray), borderRadius: BorderRadius.circular(5)),
         child: DropdownButtonFormField<String>(
           dropdownColor: Colors.white,
-          value: selectedCity,
+          initialValue: selectedCity,
           style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.grayTextColor),
           decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(

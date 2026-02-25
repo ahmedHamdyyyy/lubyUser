@@ -168,7 +168,7 @@ class _ConversationScreenState extends State<ConversationScreen> with SingleTick
                             leading: ClipRRect(
                               borderRadius: BorderRadius.circular(100),
                               child: FadeInImage.assetNetwork(
-                                image: chat.vendorImage,
+                                image: chat.vendorImageUrl,
                                 width: 50,
                                 height: 50,
                                 fit: BoxFit.cover,

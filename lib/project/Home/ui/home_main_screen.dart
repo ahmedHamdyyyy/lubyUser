@@ -31,6 +31,8 @@ class _HomeScreenMainState extends State<HomeScreenMain> with AutomaticKeepAlive
   final _pageController = PageController();
   PropertyType? selectedPropertyCategory;
   MainCategory selectedMainCategory = MainCategory.rentalServices;
+  String? _selectedPriceRange;
+  String? _selectedRatingRange;
 
   String _localizedPropertyType(BuildContext context, PropertyType type) {
     switch (type) {
@@ -228,9 +230,9 @@ class _HomeScreenMainState extends State<HomeScreenMain> with AutomaticKeepAlive
                               ],
                             ),
                           ),
-                          if (selectedMainCategory == MainCategory.rentalServices)
+                          if (selectedMainCategory == MainCategory.rentalServices) ...[
                             Padding(
-                              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                              padding: const EdgeInsets.only(left: 16, right: 16),
                               child: Row(
                                 children:
                                     _availablePropertyTypes
@@ -270,6 +272,20 @@ class _HomeScreenMainState extends State<HomeScreenMain> with AutomaticKeepAlive
                                         .toList(),
                               ),
                             ),
+                          ],
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
+                            child: Row(
+                              children: [
+                                Text(
+                                  context.l10n.filterTitle,
+                                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+                                ),
+                                const Spacer(),
+                                FilterButton(onTap: () => _openFilter(context)),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -375,6 +391,44 @@ class _HomeScreenMainState extends State<HomeScreenMain> with AutomaticKeepAlive
             ),
           ),
         );
+      },
+    );
+  }
+
+  void _openFilter(BuildContext context) {
+    showFilterOptions(
+      context,
+      [context.l10n.priceHighToLow, context.l10n.priceLowToHigh],
+      [context.l10n.ratingHighToLow, context.l10n.ratingDefault],
+      _selectedPriceRange ?? '',
+      _selectedRatingRange ?? '',
+      onApply: (price, rate) {
+        setState(() {
+          _selectedPriceRange = price;
+          _selectedRatingRange = rate;
+        });
+
+        final String priceSortKey =
+            selectedMainCategory == MainCategory.rentalServices ? 'sort[pricePerNight]' : 'sort[price]';
+        const String ratingSortKey = 'sort[averageRating]';
+
+        if (price.isNotEmpty) {
+          _filters[priceSortKey] = price == context.l10n.priceHighToLow ? -1 : 1;
+        } else {
+          _filters.remove(priceSortKey);
+        }
+
+        if (rate.isNotEmpty && rate == context.l10n.ratingHighToLow) {
+          _filters[ratingSortKey] = -1;
+        } else {
+          _filters.remove(ratingSortKey);
+        }
+
+        if (selectedMainCategory == MainCategory.rentalServices) {
+          getIt<HomeCubit>().getProperties(filters: _filters);
+        } else {
+          getIt<ActivitiesCubit>().getActivities(filters: _filters);
+        }
       },
     );
   }

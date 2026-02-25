@@ -16,10 +16,7 @@ import '../../../Home/cubit/home_cubit.dart';
 
 // Account App Bar widget
 class AccountInfoAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final bool isEditing;
-  final VoidCallback onEditPressed;
-
-  const AccountInfoAppBar({super.key, required this.isEditing, required this.onEditPressed});
+  const AccountInfoAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +37,6 @@ class AccountInfoAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       centerTitle: false,
-      actions: [if (!isEditing) IconButton(icon: SvgPicture.asset(ImageAssets.editIcon), onPressed: onEditPressed)],
     );
   }
 
@@ -174,10 +170,9 @@ class CustomTextField extends StatelessWidget {
 
 // Action Button Widget
 class ActionButton extends StatelessWidget {
-  final bool isEditing;
   final VoidCallback onPressed;
 
-  const ActionButton({super.key, required this.isEditing, required this.onPressed});
+  const ActionButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +185,7 @@ class ActionButton extends StatelessWidget {
         decoration: BoxDecoration(color: AppColors.primaryColor, borderRadius: BorderRadius.circular(10)),
         child: Center(
           child: Text(
-            isEditing ? context.l10n.saveLabel : context.l10n.deleteAccount,
+            context.l10n.deleteAccount,
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white, fontFamily: 'Poppins'),
           ),
         ),
@@ -304,7 +299,6 @@ class AccountFormFields extends StatelessWidget {
   final TextEditingController nationalIdController;
   final TextEditingController residenceNumberController;
   final TextEditingController passportNumberController;
-  final bool isEditing;
 
   const AccountFormFields({
     super.key,
@@ -315,15 +309,14 @@ class AccountFormFields extends StatelessWidget {
     required this.nationalIdController,
     required this.residenceNumberController,
     required this.passportNumberController,
-    required this.isEditing,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CustomTextField(controller: firstNameController, title: context.l10n.firstName, isEnabled: isEditing),
-        CustomTextField(controller: lastNameController, title: context.l10n.lastName, isEnabled: isEditing),
+        CustomTextField(controller: firstNameController, title: context.l10n.firstName, isEnabled: false),
+        CustomTextField(controller: lastNameController, title: context.l10n.lastName, isEnabled: false),
         // CustomTextField(controller: phoneController, title: context.l10n.phone, isEnabled: isEditing),
         CustomTextField(controller: dobController, title: context.l10n.dateOfBirthLabel, isEnabled: false),
         if (nationalIdController.text.isNotEmpty)

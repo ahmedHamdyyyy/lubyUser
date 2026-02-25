@@ -36,7 +36,7 @@ class _ChatScreenState extends State<ChatScreen> {
     super.dispose();
   }
 
-  bool hasSequenceNumbers(String input, {int minLength = 8}) {
+  bool hasSequenceNumbers(String input, {int minLength = 7}) {
     // Convert Arabic digits to English
     final normalized = input.replaceAllMapped(RegExp(r'[٠-٩]'), (m) => (m.group(0)!.codeUnitAt(0) - 0x0660).toString());
 
@@ -79,7 +79,7 @@ class _ChatScreenState extends State<ChatScreen> {
       children: [
         const SizedBox(height: 35),
         // User info header
-        UserInfoHeaderWidget(userName: widget.chat.vendorName, userImage: widget.chat.vendorImage),
+        UserInfoHeaderWidget(userName: widget.chat.vendorName, userImage: widget.chat.vendorImageUrl),
         // Messages list
         Expanded(
           child: StreamBuilder(
